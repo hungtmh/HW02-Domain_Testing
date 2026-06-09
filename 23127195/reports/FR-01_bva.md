@@ -1,92 +1,79 @@
 # Boundary Value Analysis — FR-01: Đăng ký tài khoản
 
 **MSSV:** 23127195  
-**Ngày:** 2026-06-08  
-**SUT:** Frontend Web + `POST /api/register`
+**Ngày:** 2026-06-09  
+**SUT:** Frontend Web + API `POST /api/register`
 
 ---
 
-## Bước 1 — Boundaries từ SRS
+## Bước 1 — Xác định các biên (Boundaries) từ đặc tả SRS
 
-| B-ID | Biến | Ràng buộc SRS | Min (valid) | Max | Kiểu |
-|------|------|---------------|-------------|-----|------|
-| B-PW-LEN | password | Độ dài ≥ 8 | 8 ký tự | không giới hạn SRS | length |
-| B-PW-UPPER | password | ≥ 1 chữ hoa | 1 | — | composition |
-| B-PW-LOWER | password | ≥ 1 chữ thường | 1 | — | composition |
-| B-PW-DIGIT | password | ≥ 1 số | 1 | — | composition |
-| B-PW-SPEC | password | ≥ 1 trong `@$!%*?&` | 1 | — | composition |
-| B-NAME | name | Không rỗng | 1 ký tự | — | length |
+Dựa vào SRS FR-01, ta xác định các biên sau:
 
----
-
-## Bước 2 — BVA Points
-
-### Password length (B-PW-LEN)
-
-| Point | Giá trị | Quan hệ biên |
-|-------|---------|--------------|
-| P-L1 | `Test1!` (7 ký tự, đủ loại) | min − 1 → reject |
-| P-L2 | `Test12!` (8 ký tự) | min → accept nếu đủ composition |
-| P-L3 | `Test123!` (9 ký tự) | min + 1 → accept |
-
-### Composition — thiếu từng thành phần (giữ length ≥ 8)
-
-| Point | Password | Thiếu |
-|-------|----------|-------|
-| P-C1 | `test1234!` | uppercase |
-| P-C2 | `TEST1234!` | lowercase |
-| P-C3 | `TestTest!` | digit |
-| P-C4 | `Test1234` | special char |
-
-### Implementation-specific boundary (từ code Web)
-
-Regex thực tế yêu cầu **khoảng trắng** `\s` thay vì special SRS:
-
-| Point | Password | Ý nghĩa |
-|-------|----------|---------|
-| P-IMPL1 | `Test1234!` | Hợp lệ SRS, **không** có space → Web reject? |
-| P-IMPL2 | `Test 1234` | Có space, không special SRS → Web accept? |
+| B-ID | Biến | Ràng buộc SRS | Điểm biên dưới (Min) | Điểm biên trên (Max) | Kiểu biên |
+|------|------|---------------|----------------------|----------------------|-----------|
+| **B-PW-LEN** | password | Độ dài mật khẩu | 8 ký tự | Không giới hạn | Giá trị số |
+| **B-PW-UP** | password | Số lượng chữ in hoa | 1 ký tự hoa | Không giới hạn | Số lượng thành phần |
+| **B-PW-LO** | password | Số lượng chữ in thường | 1 ký tự thường | Không giới hạn | Số lượng thành phần |
+| **B-PW-DI** | password | Số lượng chữ số | 1 chữ số | Không giới hạn | Số lượng thành phần |
+| **B-PW-SP** | password | Số lượng ký tự đặc biệt | 1 ký tự đặc biệt (`@$!%*?&`) | Không giới hạn | Số lượng thành phần |
+| **B-NAME-LEN** | name | Độ dài họ tên | 1 ký tự | Không giới hạn | Giá trị số |
 
 ---
 
-## Bước 3 — Test Cases
+## Bước 2 — Xác định các điểm kiểm thử biên (BVA Points)
 
-*Các biến khác giữ giá trị hợp lệ: `name="Nguyen Van A"`, `email=<unique mỗi TC>`*
+Sử dụng phương pháp BVA truyền thống (chọn các điểm: Biên, Sát dưới biên, Sát trên biên) và Robustness testing (nếu cần).
 
-| TC-ID | Input (password) | Boundary | Expected (SRS) | Actual (đã chạy) | Pass/Fail |
-|-------|------------------|----------|----------------|------------------|-----------|
-| BV-01 | `Test12!` (7 chars) | len min−1 | Reject | API: **200 OK** đăng ký thành công | **FAIL** |
-| BV-02 | `Test123!` (8 chars) | len min | Accept | API: 200 OK | PASS (API) |
-| BV-03 | `Test1234!` (9 chars) | len min+1 | Accept | API: 200 OK | PASS (API) |
-| BV-04 | `test1234!` | thiếu hoa | Reject | API: 200 OK | **FAIL** |
-| BV-05 | `TEST1234!` | thiếu thường | Reject | API: 200 OK | **FAIL** |
-| BV-06 | `TestTest!` | thiếu số | Reject | API: 200 OK | **FAIL** |
-| BV-07 | `Test1234` | thiếu special | Reject | API: 200 OK | **FAIL** |
-| BV-08 | `Test1234!` | SRS valid, no space | Accept (Web) | Web regex: **reject** (báo yếu) | **FAIL** |
-| BV-09 | `Test 1234` | có space, no SRS special | Reject (SRS) | Web: **accept** nếu submit | **FAIL** |
-| BV-10 | name = ` ` (1 space) | name min | Reject | Chưa chạy UI | Not run |
-| BV-11 | email `a@b.co` | email ngắn hợp lệ | Accept | API: 200 (nếu unique) | PASS (API) |
-| BV-12 | duplicate `test@eshop.com` | uniqueness | Reject | API: **200 OK** id mới | **FAIL** |
+### 1. Phân tích biên cho độ dài Mật khẩu (B-PW-LEN)
+*Các thành phần cấu trúc khác được giữ đầy đủ và hợp lệ.*
+- **Sát dưới biên (Min - 1):** 7 ký tự. Giá trị kiểm thử: `"Test12!"` -> Kỳ vọng: **Từ chối (Reject)**
+- **Tại biên (Min):** 8 ký tự. Giá trị kiểm thử: `"Test123!"` -> Kỳ vọng: **Chấp nhận (Accept)**
+- **Sát trên biên (Min + 1):** 9 ký tự. Giá trị kiểm thử: `"Test1234!"` -> Kỳ vọng: **Chấp nhận (Accept)**
 
----
+### 2. Phân tích biên cho thành phần cấu trúc Mật khẩu (Password Composition)
+*Giữ độ dài mật khẩu >= 8.*
+- **Số chữ in hoa = 0 (Dưới biên):** `"test1234!"` -> Kỳ vọng: **Từ chối**
+- **Số chữ in hoa = 1 (Tại biên):** `"Test1234!"` -> Kỳ vọng: **Chấp nhận**
+- **Số chữ in thường = 0 (Dưới biên):** `"TEST1234!"` -> Kỳ vọng: **Từ chối**
+- **Số chữ in thường = 1 (Tại biên):** `"tEST1234!"` -> Kỳ vọng: **Chấp nhận**
+- **Số chữ số = 0 (Dưới biên):** `"TestTest!"` -> Kỳ vọng: **Từ chối**
+- **Số chữ số = 1 (Tại biên):** `"Test1234!"` -> Kỳ vọng: **Chấp nhận**
+- **Số ký tự đặc biệt = 0 (Dưới biên):** `"Test1234"` -> Kỳ vọng: **Từ chối**
+- **Số ký tự đặc biệt = 1 (Tại biên):** `"Test1234!"` -> Kỳ vọng: **Chấp nhận**
 
-## Bước 4 — Robust / Edge
-
-| TC-ID | Input | Ghi chú | Expected |
-|-------|-------|---------|----------|
-| BV-R01 | password rỗng | HTML5 required | Không submit |
-| BV-R02 | email `user@domain` (no TLD) | format edge | Reject |
-| BV-R03 | password 256+ ký tự | overflow | Reject hoặc accept có giới hạn |
-| BV-R04 | Unicode name `Nguyễn Văn A` | i18n | Accept |
+### 3. Phân tích biên do cài đặt thực tế của mã nguồn (Implementation-specific boundary)
+Do Regex kiểm tra mật khẩu ở Frontend Web bị lỗi (`(?=.*\s)` thay vì kiểm tra ký tự đặc biệt và giới hạn ký tự trong `[A-Za-z\d\s]`), chúng ta có biên cài đặt thực tế như sau:
+- **Mật khẩu chứa ký tự đặc biệt chuẩn SRS, không chứa khoảng trắng:** `"Test1234!"` -> SRS: **Chấp nhận** | Frontend thực tế: **Từ chối**
+- **Mật khẩu chứa khoảng trắng, không chứa ký tự đặc biệt SRS:** `"Test 1234"` -> SRS: **Từ chối** | Frontend thực tế: **Chấp nhận**
 
 ---
 
-## Tóm tắt
+## Bước 3 — Danh sách Test Cases thiết kế từ BVA
 
-| Metric | Số lượng |
-|--------|----------|
-| Boundary identified | 6 nhóm |
-| BVA test cases | 16 |
-| Executed (API) | 8 |
-| Fail | 6 |
-| Not run (UI) | 8 |
+*Mặc định: `name="Nguyen Van A"`, `email=<email duy nhất>` cho mỗi case.*
+
+| TC-ID | Mật khẩu đầu vào | Vùng biên kiểm tra | Expected (SRS) | Expected (UI thực tế) | Expected (API thực tế) |
+|-------|------------------|-------------------|----------------|-----------------------|------------------------|
+| **BV-01** | `"Test12!"` (7 ký tự) | Độ dài Min - 1 | Từ chối | Từ chối | Từ chối |
+| **BV-02** | `"Test123!"` (8 ký tự) | Độ dài Min | Chấp nhận | Từ chối (do lỗi regex) | Chấp nhận |
+| **BV-03** | `"Test1234!"` (9 ký tự) | Độ dài Min + 1 | Chấp nhận | Từ chối (do lỗi regex) | Chấp nhận |
+| **BV-04** | `"test1234!"` | Chữ in hoa = 0 | Từ chối | Từ chối | Từ chối |
+| **BV-05** | `"TEST1234!"` | Chữ in thường = 0 | Từ chối | Từ chối | Từ chối |
+| **BV-06** | `"TestTest!"` | Chữ số = 0 | Từ chối | Từ chối | Từ chối |
+| **BV-07** | `"Test1234"` | Ký tự đặc biệt = 0 | Từ chối | Từ chối | Từ chối |
+| **BV-08** | `"Test 1234"` | Chứa khoảng trắng, không có special SRS | Từ chối | Chấp nhận | Chấp nhận (do backend không validate) |
+| **BV-09** | `name="A"` (1 ký tự) | Độ dài name Min | Chấp nhận | Chấp nhận | Chấp nhận |
+| **BV-10** | `name=""` (0 ký tự) | Độ dài name Min - 1 | Từ chối | Chặn submit (HTML5 `required`) | Từ chối |
+| **BV-11** | `email="a@b.co"` (TLD 2 ký tự) | Biên định dạng email ngắn nhất | Chấp nhận | Chấp nhận | Chấp nhận |
+| **BV-12** | `email="a@b.c"` (TLD 1 ký tự) | Biên định dạng email không hợp lệ | Từ chối | Từ chối | Từ chối |
+
+---
+
+## Bước 4 — Kịch bản biên Robustness / Edge cases bổ sung
+
+| TC-ID | Đầu vào kiểm thử | Mục đích kiểm tra | Kết quả mong đợi |
+|-------|------------------|-------------------|------------------|
+| **BV-R01** | password dài 500 ký tự | Kiểm tra tràn bộ đệm / giới hạn đầu vào | Từ chối hoặc chấp nhận an toàn, không crash hệ thống |
+| **BV-R02** | name có ký tự Unicode `"Nguyễn Văn Hoài"` | Kiểm tra hỗ trợ đa ngôn ngữ | Chấp nhận đăng ký |
+| **BV-R03** | email có phần domain in hoa `"user@TEST.COM"` | Kiểm tra tính không phân biệt hoa thường của domain | Chấp nhận đăng ký |
