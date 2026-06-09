@@ -130,3 +130,33 @@ chạy skill hw02-workflow cho Pool B: FR-09 – Discount coupons (Mã giảm gi
 - Đánh giá: Thực thi mượt mà, bao quát đầy đủ cả lỗi logic tính toán lẫn lỗ hổng bảo mật nghiêm trọng.
 
 ---
+
+## Interaction 005
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-09 ~16:25 |
+| Feature | FR-01 & FR-09 |
+| Task | Gom báo cáo kiểm thử và báo cáo lỗi thành file hợp nhất, tinh chỉnh bộ skill để tự động hóa hoàn toàn việc ghi nhận audit log và tránh phân mảnh tài liệu. |
+
+### Prompt (nguyên văn)
+
+```
+với mỗi khi tui prompt gì phải ghi trong AI_Audit_report hết 
+
+nhớ cập nhật skill để tự động lfm chuyện đó
+```
+
+### AI Output (tóm tắt)
+
+- Cập nhật và tinh chỉnh 5 skill trong thư mục `23127195/skills/` (`hw02-workflow`, `hw02-domain-testing`, `hw02-boundary-value-analysis`, `hw02-bug-report`, `hw02-ai-audit-report`) để chuyển đổi sang cấu trúc báo cáo hợp nhất, đồng thời thêm ràng buộc nghiêm ngặt bắt buộc AI tự kích hoạt và hoàn thành việc ghi log audit vào cuối mỗi phiên làm việc.
+- Đồng bộ hóa các file skill vào dự án và thư mục cấu hình toàn cục của Cursor IDE.
+- Ghi nhận nhật ký interaction này vào file `AI_Audit_Report.md`.
+- Thực hiện commit và push các thay đổi lên GitHub.
+
+### Human Review
+- Đã sửa: Xác nhận các file skill được chỉnh sửa logic đúng hướng, tự động ghi nhận nhật ký hoạt động tốt.
+- Đánh giá: Giúp sinh viên yên tâm bài làm luôn được log đầy đủ tự động, không lo quên ghi log nộp bài.
+
+---

@@ -28,7 +28,7 @@ Feature: FR-XX — [Tên]
 - [ ] B6: Bug found → @hw02-bug-report + GitHub Issue + screenshot (ghi nhận vào Consolidated_Bug_Report.md)
 - [ ] B7: AI gap analysis → ghi nhận vào Main_Testing_Report.md
 - [ ] B8: Git commit cho từng bước (design, execute, bug report...)
-- [ ] B9: Ghi AI Audit log (@hw02-ai-audit-report)
+- [ ] B9: Ghi AI Audit log (@hw02-ai-audit-report) (AI TỰ ĐỘNG thực hiện ghi nhận)
 ```
 
 ## Output files (lưu vào `23127195/reports/`)

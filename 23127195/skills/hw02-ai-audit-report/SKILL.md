@@ -59,16 +59,19 @@ Nếu chưa có, tạo với header:
 ---
 ```
 
-## Auto-log sau mỗi session AI
+## Auto-log TỰ ĐỘNG sau mỗi session AI (QUAN TRỌNG)
 
-Khi skill này được gọi cuối phiên làm việc, agent phải:
+Bất kỳ khi nào người dùng gửi một câu prompt và AI thực hiện xử lý (bất kể tính năng hay tác vụ nào):
+- AI **BẮT BUỘC** phải tự động kích hoạt ghi nhận nhật ký (Interaction) vào cuối lượt trả lời của mình vào file `AI_Audit_Report.md` mà không cần người dùng nhắc nhở.
+- Nhật ký ghi nhận phải bao gồm nguyên văn prompt của người dùng, tóm tắt câu trả lời của AI và phần Human Review đề xuất để sinh viên chỉnh sửa.
 
-1. Đánh số interaction tiếp theo (NNN+1)
-2. Ghi tool name = Cursor
-3. Ghi datetime hiện tại
-4. Trích prompt chính của user trong session
-5. Tóm tắt output agent đã tạo
-6. Ghi mục Human Review (để sinh viên điền hoặc agent đề xuất)
+### Các bước thực hiện tự động:
+1. Đọc file `23127195/reports/AI_Audit_Report.md` để đếm số lượng Interaction hiện tại.
+2. Đánh số interaction tiếp theo (NNN+1).
+3. Ghi datetime hiện tại và các trường thông tin tương ứng.
+4. Trích nguyên văn prompt của user trong session.
+5. Tóm tắt output AI đã tạo.
+6. Lưu lại vào cuối file.
 
 ## AI Critique (200–300 từ, bắt buộc)
 
