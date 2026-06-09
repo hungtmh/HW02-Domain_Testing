@@ -17,27 +17,20 @@ Test **Actual ≠ Expected (theo SRS)** → bug. Ghi cả UI bug, logic bug, sec
 1. Chạy test và ghi nhận các lỗi (Defects) phát hiện được.
 2. Lưu các ảnh screenshot lỗi vào thư mục `23127195/reports/FR-XX_bugs/BUG-NNN.png`.
 3. Với các lỗi tầng API, ghi rõ câu lệnh chạy test (PowerShell hoặc curl) để người dùng có thể tự chạy và tái hiện lỗi.
-4. Tổng hợp toàn bộ lỗi tìm được vào một file duy nhất: `23127195/reports/FR-XX_bug-report.md`.
+4. Tổng hợp toàn bộ lỗi tìm được vào một file báo cáo lỗi gộp duy nhất của dự án: **`23127195/reports/Consolidated_Bug_Report.md`**.
 5. **Tự động tạo GitHub Issues** trên repo nhóm cho từng bug phát hiện bằng cách chạy lệnh:
 ```powershell
 gh issue create --repo [repo_name] --title "[FR-XX] [BUG-NNN] Title" --body-file [body_markdown_file]
 ```
-Trong đó, file markdown thân của Issue phải chứa đường dẫn ảnh screenshot cục bộ hoặc link ảnh đã được push lên GitHub (như `![BUG-NNN](https://raw.githubusercontent.com/[username]/[repo]/main/23127195/reports/FR-XX_bugs/BUG-NNN.png)`) để GitHub hiển thị hình ảnh tự động.
+Trong đó, file markdown thân của Issue phải chứa đường dẫn ảnh screenshot đã được push lên GitHub (như `![BUG-NNN](https://raw.githubusercontent.com/[username]/[repo]/main/23127195/reports/FR-XX_bugs/BUG-NNN.png)`) để hiển thị hình ảnh tự động.
 6. Git commit: `test(FR-XX): report bugs for [feature name]`
 
-## Template Markdown báo cáo gộp
+## Cấu trúc ghi nhận vào Consolidated_Bug_Report.md
 
-Lưu vào file duy nhất `23127195/reports/FR-XX_bug-report.md`:
+Mở file **`Consolidated_Bug_Report.md`** và ghi nhận vào dưới phần của feature tương ứng:
 
 ```markdown
-# Consolidated Bug Report — FR-XX: [Tên feature]
-
-**MSSV:** 23127195  
-**SUT:** [Frontend Web / API / Admin]
-
-## Tổng hợp danh sách lỗi phát hiện (Bypass & UI Bugs)
-
----
+# FEATURE: FR-XX — [Tên feature]
 
 ### BUG-001: [Tiêu đề ngắn gọn]
 
@@ -78,9 +71,3 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/..." -Method Post -ContentType
 | Major | Lockout không hoạt động, trùng lặp trường bắt buộc unique, sai regex chặn nghiêm trọng |
 | Minor | Trường email sai input type, label sai tên, thiếu trường xác nhận trên UI |
 | Trivial | Typo chữ, nút submit sai màu sắc giao diện |
-
-## Tạo Issue bằng CLI (nếu có `gh`)
-
-```powershell
-gh issue create --title "[FR-XX] [BUG-001] Short description" --body "Mô tả lỗi, các bước tái hiện và kết quả thực tế..."
-```

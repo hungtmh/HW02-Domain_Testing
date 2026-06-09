@@ -1,53 +1,53 @@
-# HW02 Agent Skills — MSSV 23127195
+# 23127195 — HW02 Domain Testing — README
 
-Bộ Agent Skills hỗ trợ làm bài **HW02 Domain Testing** trên EShop.
+## Self-Assessment
 
-## Cài đặt vào Cursor
+| No. | Criteria | Max | Self-Assessed |
+|-----|----------|-----|---------------|
+| 1   | Feature A (FR-01: Domain + Boundary) | 25  | 25 |
+| 2   | Feature B (FR-09: Domain + Boundary) | 25  | 25 |
+| 3   | Feature C (Pending) | 25  | N/A |
+| 4   | Feature D Mobile (Pending) | 15  | N/A |
+| 5   | Agent Skills | 10  | 10 |
+|     | **Total** | **100** | **60** |
 
-Copy toàn bộ thư mục `skills/` vào một trong hai vị trí:
+---
 
-```powershell
-# Cá nhân (dùng mọi project)
-xcopy /E /I "d:\Kiem_thu\HW2\HW02-Group08\23127195\skills\*" "%USERPROFILE%\.cursor\skills\"
+## Features Selected
 
-# Hoặc chỉ project này
-xcopy /E /I "d:\Kiem_thu\HW2\HW02-Group08\23127195\skills\*" "d:\Kiem_thu\HW2\HW02-Group08\.cursor\skills\"
-```
+| Pool | FR | Tên | Component | URL |
+|------|----|-----|-----------|-----|
+| A | FR-01 | Đăng ký tài khoản | frontend-web | `http://localhost:5173/register` |
+| B | FR-09 | Mã giảm giá | frontend-web | `http://localhost:5173/checkout` |
+| C | - | Pending | frontend-admin | - |
+| D | - | Pending | frontend-mobile | - |
 
-Sau khi copy, gõ `@` trong chat Cursor và gõ tên skill (ví dụ `hw02-domain-testing`).
+---
 
-## Danh sách Skills
+## Test Summary
 
-| Skill | Mục đích |
-|-------|----------|
-| `hw02-workflow` | Điều phối toàn bộ quy trình HW02 cho 1 feature |
-| `hw02-domain-testing` | Thiết kế test case Domain Testing |
-| `hw02-boundary-value-analysis` | Thiết kế test case BVA |
-| `hw02-eshop-setup` | Chạy EShop, cấu hình mobile API |
-| `hw02-bug-report` | Viết bug report + GitHub Issue |
-| `hw02-ai-audit-report` | Ghi log AI Audit Report |
+| Metric | Count |
+|--------|-------|
+| Features tested | 2 (FR-01, FR-09) |
+| Test cases designed | 30 |
+| Executed | 27 |
+| Passed | 9 |
+| Failed | 18 |
+| Not yet executed | 3 |
+| Bugs found | 13 |
 
-## Cách dùng nhanh
+---
 
-```
-@hw02-workflow FR-02 Login và account lockout
-```
+## Demo Videos (Agent Skills)
 
-Hoặc từng bước:
+| Skill | YouTube Link / Video Path |
+|-------|--------------|
+| hw02-domain-testing on FR-01 / FR-09 | *[Link demo video]* |
+| hw02-boundary-value-analysis on FR-01 / FR-09 | *[Link demo video]* |
 
-```
-@hw02-domain-testing FR-01 Account registration
-@hw02-boundary-value-analysis FR-01 Account registration
-```
+---
 
-## Thư mục khác
+## Repository
 
-- `templates/` — mẫu báo cáo Markdown
-- `reports/` — nơi lưu báo cáo đã tạo (tự tạo khi làm bài)
-
-## Ghi chú nộp bài
-
-- Mỗi bước test → 1 git commit
-- Bug → GitHub Issues + screenshot
-- AI Audit Report → log mọi prompt/response
-- AI Critique: 200–300 từ
+- **GitHub Issues:** [hungtmh/HW02-Domain_Testing/issues](https://github.com/hungtmh/HW02-Domain_Testing/issues)
+- **Commit log:** [git_commit_log.txt](./reports/git_commit_log.txt)

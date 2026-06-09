@@ -87,27 +87,19 @@ Trả lời:
 
 ## AI Gap Analysis (theo từng feature)
 
-Trong `23127195/reports/FR-XX_ai-gap-analysis.md`:
+Ghi nhận AI Gap Analysis vào file báo cáo chính: **`23127195/reports/Main_Testing_Report.md`** tại mục:
+`# FEATURE: FR-XX — [Tên]` -> `## 4. AI Gap Analysis — FR-XX`
+
+### Cấu trúc Markdown ghi nhận:
 
 ```markdown
-# AI Gap Analysis — FR-XX
+## 4. AI Gap Analysis — FR-XX: [Tên feature]
 
-## Test cases AI bỏ sót
-| TC | Mô tả | Lý do AI miss |
-|----|-------|---------------|
-| DT-12 | OTP cross-email | AI không đọc constraint FR-03 |
+### 1. Những lỗi và kịch bản kiểm thử AI thông thường bỏ sót (AI Gaps)
+| Kịch bản kiểm thử / Lỗi bị bỏ sót | Lý do AI bỏ sót (Root cause of AI gap) | Bài học rút ra & Giải pháp khắc phục |
+|-----|-----|-----|
+| ... | | |
 
-## Bugs AI không phát hiện
-| Bug | Lý do |
-|-----|-------|
-| ... | Prompt quá chung / không đọc code |
-
-## Cải thiện prompt lần sau
-- Đưa trích SRS cụ thể
-- Yêu cầu đọc file implementation
-- Yêu cầu liệt kê boundary min-1, min, min+1
+### 2. Cách cải tiến prompt để tối ưu hóa AI
+1. ...
 ```
-
-## Nếu KHÔNG dùng AI
-
-Ghi một dòng: `I do not use any AI help in this exercise.`
