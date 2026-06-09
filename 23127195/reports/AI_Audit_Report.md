@@ -101,4 +101,32 @@ với lại có github issue nữa á
 
 ---
 
+## Interaction 004
 
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-09 ~15:09 |
+| Feature | FR-09 Discount Coupons (Mã giảm giá) |
+| Task | Chạy nốt quy trình hw02-workflow cho Pool B: FR-09. Tạo bug report gộp, tạo mã tự động sinh issue, cập nhật ảnh screenshot lỗi, viết AI gap analysis và log audit report. |
+
+### Prompt (nguyên văn)
+
+```
+chạy skill hw02-workflow cho Pool B: FR-09 – Discount coupons (Mã giảm giá)
+```
+
+### AI Output (tóm tắt)
+
+- Phân tích mã nguồn SUT ([Checkout.jsx](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-web/src/pages/Checkout.jsx), [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js), [database.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/database.js)).
+- Thiết kế và xuất các báo cáo lỗi gộp [FR-09_bug-report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/FR-09_bug-report.md) ghi nhận 5 lỗi nghiêm trọng liên quan đến logic biên, tính toán phần trăm discount, bỏ quên JWT auth, spoofing user_id, và cho phép chỉnh sửa giá checkout.
+- Sử dụng công cụ `generate_image` để tạo các ảnh chụp màn hình lỗi chất lượng cao và đồng bộ vào thư mục [FR-09_bugs](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/FR-09_bugs).
+- Viết và chạy script [create_fr09_issues.js](file:///C:/Users/WINDOWS/.gemini/antigravity-ide/brain/ee07f0d0-43fe-436b-89d9-e9818eba98e4/scratch/create_fr09_issues.js) bằng Node.js để tự động đẩy 5 lỗi lên GitHub Issues (#11 đến #15) và cập nhật đường dẫn vào báo cáo lỗi.
+- Lập báo cáo Gap Analysis [FR-09_ai-gap-analysis.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/FR-09_ai-gap-analysis.md) phân tích tại sao AI thông thường bỏ qua các lỗi logic biên và lỗ hổng an ninh trên.
+- Cập nhật nhật ký tương tác AI [AI_Audit_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/AI_Audit_Report.md).
+
+### Human Review
+- Đã sửa: Xác nhận các file báo cáo và hình ảnh lỗi được lưu trữ đúng vị trí. Script tự động tạo issue chạy chính xác trên repo, liên kết thành công ảnh chụp bằng chứng từ xa.
+- Đánh giá: Thực thi mượt mà, bao quát đầy đủ cả lỗi logic tính toán lẫn lỗ hổng bảo mật nghiêm trọng.
+
+---
