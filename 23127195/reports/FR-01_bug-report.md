@@ -32,7 +32,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-001] API cho phép đăng ký trùng email`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/3
 
 ---
 
@@ -60,7 +60,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-002] API cho phép đăng ký email sai định dạng`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/4
 
 ---
 
@@ -88,7 +88,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-003] API cho phép đăng ký tài khoản rỗng (NULL)`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/5
 
 ---
 
@@ -116,7 +116,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-004] API Backend không xác thực độ mạnh mật khẩu`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/6
 
 ---
 
@@ -143,7 +143,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-005] Thiếu trường Xác nhận mật khẩu trên form đăng ký`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/7
 
 ---
 
@@ -174,11 +174,11 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-006] Regex validate mật khẩu ở Frontend yêu cầu khoảng trắng thay vì ký tự đặc biệt`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/8
 
 ---
 
-### BUG-007: Ô nhập Email sử dụng type="text" thay vì type="email"
+### BUG-007: Màn hình Đăng ký sử dụng ô nhập email kiểu type="text"
 
 - **Độ nghiêm trọng (Severity):** Minor
 - **Độ ưu tiên (Priority):** Low
@@ -201,38 +201,11 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-007] Màn hình Đăng ký sử dụng ô nhập email kiểu type="text"`
-- **Link Issue:** *[Link issue nhóm]*
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/9
 
 ---
 
-### BUG-008: Màu nút Đăng ký không nhất quán với giao diện chủ đạo
-
-- **Độ nghiêm trọng (Severity):** Trivial
-- **Độ ưu tiên (Priority):** Low
-- **Thành phần ảnh hưởng (Component):** Web UI
-- **Test Case liên quan:** DT-11
-- **Liên quan SRS:** Hướng dẫn nhất quán giao diện (nút submit Đăng ký nên sử dụng màu xanh primary của hệ thống).
-
-#### Các bước tái hiện:
-1. Truy cập `http://localhost:5173/register`.
-2. Kiểm tra trực quan màu sắc của nút "Đăng Ký".
-
-#### Kết quả mong đợi (Expected Result):
-- Nút submit Đăng ký có màu xanh dương (primary).
-
-#### Kết quả thực tế (Actual Result):
-- Nút hiển thị màu đỏ (`bg-red-500` / hover: `bg-red-600` tại dòng 72 file `Register.jsx`).
-
-#### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot màu sắc nút tại đây: `![BUG-008](./FR-01_bugs/BUG-008.png)`]*
-
-#### Thông tin GitHub Issue:
-- **Title:** `[FR-01] [BUG-008] Màu nút Đăng ký hiển thị đỏ thay vì màu xanh primary`
-- **Link Issue:** *[Link issue nhóm]*
-
----
-
-### BUG-009: Lưu trữ mật khẩu người dùng dưới dạng văn bản thuần (Plaintext)
+### BUG-008: Mật khẩu người dùng được lưu trữ dưới dạng Plaintext trong Database
 
 - **Độ nghiêm trọng (Severity):** Critical
 - **Độ ưu tiên (Priority):** High
@@ -251,8 +224,8 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Mật khẩu mẫu và mật khẩu người dùng mới đều được lưu trữ trực tiếp bằng Plaintext (ví dụ: `"Admin123!"`).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn ảnh chụp màn hình dữ liệu database bị lộ mật khẩu plaintext tại đây: `![BUG-009](./FR-01_bugs/BUG-009.png)`]*
+- *[Chèn ảnh chụp màn hình dữ liệu database bị lộ mật khẩu plaintext tại đây: `![BUG-008](./FR-01_bugs/BUG-008.png)`]*
 
 #### Thông tin GitHub Issue:
-- **Title:** `[FR-01] [BUG-009] Mật khẩu người dùng được lưu trữ dưới dạng Plaintext trong Database`
-- **Link Issue:** *[Link issue nhóm]*
+- **Title:** `[FR-01] [BUG-008] Mật khẩu người dùng được lưu trữ dưới dạng Plaintext trong Database`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/10
