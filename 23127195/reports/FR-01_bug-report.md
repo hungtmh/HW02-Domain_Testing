@@ -28,7 +28,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Trả về HTTP 200 OK: `{"message":"User registered successfully","id":10}`.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot tại đây: `![BUG-001](./FR-01_bugs/BUG-001.png)`]*
+- ![BUG-001](./FR-01_bugs/BUG-001.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-001] API cho phép đăng ký trùng email`
@@ -56,7 +56,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Trả về HTTP 200 OK: `{"message":"User registered successfully","id":11}`.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot tại đây: `![BUG-002](./FR-01_bugs/BUG-002.png)`]*
+- ![BUG-002](./FR-01_bugs/BUG-002.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-002] API cho phép đăng ký email sai định dạng`
@@ -84,7 +84,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Trả về HTTP 200 OK: `{"message":"User registered successfully","id":12}` (Lưu các cột `name`, `email`, `password` đều có giá trị `NULL` vào DB).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot tại đây: `![BUG-003](./FR-01_bugs/BUG-003.png)`]*
+- ![BUG-003](./FR-01_bugs/BUG-003.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-003] API cho phép đăng ký tài khoản rỗng (NULL)`
@@ -112,7 +112,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Trả về HTTP 200 OK và lưu mật khẩu `"123"` vào DB.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot tại đây: `![BUG-004](./FR-01_bugs/BUG-004.png)`]*
+- ![BUG-004](./FR-01_bugs/BUG-004.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-004] API Backend không xác thực độ mạnh mật khẩu`
@@ -139,7 +139,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Chỉ hiển thị 3 trường: Họ Tên, Email, Mật khẩu. Hoàn toàn không có trường Xác nhận mật khẩu.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot giao diện đăng ký thiếu trường tại đây: `![BUG-005](./FR-01_bugs/BUG-005.png)`]*
+- ![BUG-005](./FR-01_bugs/BUG-005.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-005] Thiếu trường Xác nhận mật khẩu trên form đăng ký`
@@ -170,7 +170,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - `"Test 1234"` được thông qua vì regex của client (`flawedStrongPasswordRegex` tại `Register.jsx` dòng 15) yêu cầu khoảng trắng `\s` thay vì ký tự đặc biệt.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot tại đây: `![BUG-006](./FR-01_bugs/BUG-006.png)`]*
+- ![BUG-006](./FR-01_bugs/BUG-006.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-006] Regex validate mật khẩu ở Frontend yêu cầu khoảng trắng thay vì ký tự đặc biệt`
@@ -197,7 +197,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Thuộc tính thẻ input là: `<input type="text" ... />` (Dòng 48 file `Register.jsx`).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn screenshot Inspect HTML tại đây: `![BUG-007](./FR-01_bugs/BUG-007.png)`]*
+- ![BUG-007](./FR-01_bugs/BUG-007.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-007] Màn hình Đăng ký sử dụng ô nhập email kiểu type="text"`
@@ -224,7 +224,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/register" -Method Post -Conten
 - Mật khẩu mẫu và mật khẩu người dùng mới đều được lưu trữ trực tiếp bằng Plaintext (ví dụ: `"Admin123!"`).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- *[Chèn ảnh chụp màn hình dữ liệu database bị lộ mật khẩu plaintext tại đây: `![BUG-008](./FR-01_bugs/BUG-008.png)`]*
+- ![BUG-008](./FR-01_bugs/BUG-008.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-01] [BUG-008] Mật khẩu người dùng được lưu trữ dưới dạng Plaintext trong Database`

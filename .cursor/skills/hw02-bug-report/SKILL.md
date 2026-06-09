@@ -15,10 +15,15 @@ Test **Actual ≠ Expected (theo SRS)** → bug. Ghi cả UI bug, logic bug, sec
 ## Quy trình
 
 1. Chạy test và ghi nhận các lỗi (Defects) phát hiện được.
-2. Với các lỗi tầng API, ghi rõ câu lệnh chạy test (PowerShell hoặc curl) để người dùng có thể tự chạy và tái hiện lỗi.
-3. Tổng hợp toàn bộ lỗi tìm được vào một file duy nhất: `23127195/reports/FR-XX_bug-report.md`.
-4. Tạo **GitHub Issues** trên repo nhóm cho từng bug phát hiện được.
-5. Git commit: `test(FR-XX): report bugs for [feature name]`
+2. Lưu các ảnh screenshot lỗi vào thư mục `23127195/reports/FR-XX_bugs/BUG-NNN.png`.
+3. Với các lỗi tầng API, ghi rõ câu lệnh chạy test (PowerShell hoặc curl) để người dùng có thể tự chạy và tái hiện lỗi.
+4. Tổng hợp toàn bộ lỗi tìm được vào một file duy nhất: `23127195/reports/FR-XX_bug-report.md`.
+5. **Tự động tạo GitHub Issues** trên repo nhóm cho từng bug phát hiện bằng cách chạy lệnh:
+```powershell
+gh issue create --repo [repo_name] --title "[FR-XX] [BUG-NNN] Title" --body-file [body_markdown_file]
+```
+Trong đó, file markdown thân của Issue phải chứa đường dẫn ảnh screenshot cục bộ hoặc link ảnh đã được push lên GitHub (như `![BUG-NNN](https://raw.githubusercontent.com/[username]/[repo]/main/23127195/reports/FR-XX_bugs/BUG-NNN.png)`) để GitHub hiển thị hình ảnh tự động.
+6. Git commit: `test(FR-XX): report bugs for [feature name]`
 
 ## Template Markdown báo cáo gộp
 
