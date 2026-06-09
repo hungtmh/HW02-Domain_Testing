@@ -69,3 +69,36 @@ Con cursor nó làm hơi không đúng ý
 
 ---
 
+## Interaction 003
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-09 ~12:42 |
+| Feature | FR-01 Account Registration |
+| Task | Cấu hình lại skill tự động (yêu cầu thêm câu lệnh test) và gộp toàn bộ báo cáo lỗi |
+
+### Prompt (nguyên văn)
+
+```
+trong skill chỉnh sửa lại phải thêm các câu lệnh test backend hay gì đó nữa , nếu test thì phải ghi rõ lệnh, để tui chụp màn hình bug
+
+sửa lại đi với lại đừng chia nhiefu Bug-report làm gì (sửa lại trong skill luôn) chỉ 1 file .md bug-report chứa tất cả các lỗi, có câu lệnh chạy test kết quả mong muôn ,kết quả thực tế (FAil/pass) rồi screen shot vậy thôi ngắn gọn
+
+với lại có github issue nữa á
+```
+
+### AI Output (tóm tắt)
+
+- Chỉnh sửa lại các file skill `hw02-workflow` và `hw02-bug-report` để thay thế chuẩn đầu ra nhiều file bằng 1 file gộp duy nhất, bổ sung yêu cầu viết rõ câu lệnh test cụ thể.
+- Sao chép đồng bộ các skill mới cập nhật vào thư mục toàn cục của Cursor (`%USERPROFILE%\.cursor\skills\`) và cục bộ dự án.
+- Tạo báo cáo lỗi gộp [FR-01_bug-report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/FR-01_bug-report.md) tổng hợp toàn bộ 9 lỗi phát hiện kèm theo mã lệnh PowerShell test chi tiết cho từng API, các bước tái hiện, expected/actual và tiêu đề GitHub Issue tương ứng.
+- Xóa bỏ tất cả các file bug riêng rẽ (`BUG-001.md` đến `BUG-009.md`) để làm gọn thư mục.
+
+### Human Review
+- Đã sửa: Xác nhận các skill được ghi nhận và sao chép đúng vị trí. Chạy thử các câu lệnh PowerShell kiểm chứng bug hoạt động chính xác.
+- Đánh giá: File gộp ngắn gọn, xúc tích, dễ theo dõi để chụp màn hình và tạo GitHub Issue.
+
+---
+
+

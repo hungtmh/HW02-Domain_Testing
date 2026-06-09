@@ -14,104 +14,68 @@ Test **Actual ≠ Expected (theo SRS)** → bug. Ghi cả UI bug, logic bug, sec
 
 ## Quy trình
 
-1. Chụp screenshot / screen recording
-2. Ghi báo cáo Markdown trong `23127195/reports/FR-XX_bugs/`
-3. Tạo **GitHub Issue** trên repo nhóm — đính kèm screenshot
-4. Git commit: `test(FR-XX): report bug — [tóm tắt ngắn]`
+1. Chạy test và ghi nhận các lỗi (Defects) phát hiện được.
+2. Với các lỗi tầng API, ghi rõ câu lệnh chạy test (PowerShell hoặc curl) để người dùng có thể tự chạy và tái hiện lỗi.
+3. Tổng hợp toàn bộ lỗi tìm được vào một file duy nhất: `23127195/reports/FR-XX_bug-report.md`.
+4. Tạo **GitHub Issues** trên repo nhóm cho từng bug phát hiện được.
+5. Git commit: `test(FR-XX): report bugs for [feature name]`
 
-## Template Markdown
+## Template Markdown báo cáo gộp
 
-Lưu `23127195/reports/FR-XX_bugs/BUG-NNN.md`:
-
-```markdown
-# BUG-NNN: [Tiêu đề ngắn]
-
-## Metadata
-| Field | Value |
-|-------|-------|
-| Feature | FR-XX |
-| Severity | Critical / Major / Minor / Trivial |
-| Priority | High / Medium / Low |
-| Component | Web / Admin / Mobile / API |
-| Test Case | DT-05 / BV-03 |
-| Status | Open |
-
-## SRS Reference
-> Trích dẫn yêu cầu đúng từ README.md
-
-## Environment
-- OS: Windows 10
-- Browser/App: Chrome / Expo Go
-- Backend: localhost:3000
-
-## Steps to Reproduce
-1. ...
-2. ...
-3. ...
-
-## Expected Result (SRS)
-...
-
-## Actual Result
-...
-
-## Evidence
-![screenshot](./BUG-NNN_screenshot.png)
-
-## Notes
-- Có thể liên quan file: `frontend-web/src/pages/Login.jsx`
-```
-
-## Template GitHub Issue
-
-**Title:** `[FR-XX] Mô tả bug ngắn`
-
-**Body:**
+Lưu vào file duy nhất `23127195/reports/FR-XX_bug-report.md`:
 
 ```markdown
-## Mô tả
-...
+# Consolidated Bug Report — FR-XX: [Tên feature]
 
-## Liên quan SRS
-FR-XX: ...
+**MSSV:** 23127195  
+**SUT:** [Frontend Web / API / Admin]
 
-## Các bước tái hiện
-1. ...
-2. ...
+## Tổng hợp danh sách lỗi phát hiện (Bypass & UI Bugs)
 
-## Kết quả mong đợi
-...
+---
 
-## Kết quả thực tế
-...
+### BUG-001: [Tiêu đề ngắn gọn]
 
-## Test case
-DT-05 / BV-03
+- **Độ nghiêm trọng (Severity):** Critical / Major / Minor / Trivial
+- **Độ ưu tiên (Priority):** High / Medium / Low
+- **Thành phần ảnh hưởng (Component):** Web / API / DB
+- **Test Case liên quan:** DT-XX / BV-XX
+- **Liên quan SRS:** [Trích dẫn yêu cầu của SRS từ README.md]
 
-## Screenshot
-(đính kèm ảnh)
-```
-
-Tạo issue bằng CLI (nếu có `gh`):
-
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. [Nếu là API, ghi rõ câu lệnh chạy, ví dụ:]
 ```powershell
-gh issue create --title "[FR-02] Account not locked after 3 failed logins" --body-file 23127195/reports/FR-02_bugs/BUG-001.md
+Invoke-RestMethod -Uri "http://localhost:3000/api/..." -Method Post -ContentType "application/json" -Body '{"key":"value"}'
+```
+2. [Nếu là UI, ghi rõ các bước thao tác trên màn hình]
+
+#### Kết quả mong đợi (Expected Result):
+- ...
+
+#### Kết quả thực tế (Actual Result):
+- ...
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- [Chèn ảnh chụp màn hình tại đây: `![BUG-001](./FR-XX_bugs/BUG-001.png)`]
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-XX] [BUG-001] Mô tả ngắn`
+- **Link Issue:** [Link GitHub Issue hoặc trạng thái Issue]
+
+---
 ```
 
 ## Phân loại Severity
 
 | Level | Tiêu chí ví dụ EShop |
 |-------|----------------------|
-| Critical | Bypass auth, SQLi, thanh toán sai tiền |
-| Major | Lockout không hoạt động, coupon logic sai |
-| Minor | Label sai ("Tổng tạm tính"), thiếu step indicator |
-| Trivial | Typo, màu nút không nhất quán |
+| Critical | Bypass auth, SQLi, thanh toán sai tiền, lưu plaintext mật khẩu |
+| Major | Lockout không hoạt động, trùng lặp trường bắt buộc unique, sai regex chặn nghiêm trọng |
+| Minor | Trường email sai input type, label sai tên, thiếu trường xác nhận trên UI |
+| Trivial | Typo chữ, nút submit sai màu sắc giao diện |
 
-## Liên kết với test execution
+## Tạo Issue bằng CLI (nếu có `gh`)
 
-Cập nhật `FR-XX_test-execution.md`:
-
-```
-| TC-ID | Expected | Actual | Status | Bug-ID |
-| BV-03 | Lock 30s | No lock | FAIL | BUG-001 |
+```powershell
+gh issue create --title "[FR-XX] [BUG-001] Short description" --body "Mô tả lỗi, các bước tái hiện và kết quả thực tế..."
 ```

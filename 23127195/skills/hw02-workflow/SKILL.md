@@ -27,7 +27,7 @@ Feature: FR-XX — [Tên]
 - [ ] B5: Thực thi test trên SUT, ghi kết quả Pass/Fail/Not run
 - [ ] B6: Bug found → @hw02-bug-report + GitHub Issue + screenshot
 - [ ] B7: AI gap analysis — case/bug AI miss + lý do
-- [ ] B8: Git commit cho từng bước (domain design, BVA, execute, bug fix doc...)
+- [ ] B8: Git commit cho từng bước (domain design, BVA, execute, bug report...)
 - [ ] B9: Ghi AI Audit log (@hw02-ai-audit-report)
 ```
 
@@ -38,10 +38,13 @@ Feature: FR-XX — [Tên]
   FR-XX_domain-testing.md
   FR-XX_bva.md
   FR-XX_test-execution.md
+  FR-XX_bug-report.md
   FR-XX_ai-gap-analysis.md
-  FR-XX_bugs/
-    BUG-001_screenshot.png
 ```
+
+**LƯU Ý QUAN TRỌNG KHI TEST:** 
+- Mọi test case trên tầng API phải ghi rõ **câu lệnh test chạy thực tế** (ví dụ: lệnh PowerShell `Invoke-RestMethod` hoặc lệnh `curl` cụ thể kèm header/body).
+- Ghi nhận chi tiết kết quả trả về thực tế từ server để sinh viên dễ dàng chạy lại kiểm chứng và chụp màn hình bằng chứng (evidence).
 
 ## Commit message convention
 
@@ -51,7 +54,7 @@ test(FR-XX): [step] — mô tả ngắn
 Ví dụ:
 test(FR-02): design domain test cases for login
 test(FR-02): execute BVA TC-07 account lockout boundary
-test(FR-02): report bug — lockout counter increments twice
+test(FR-02): report bugs for login feature
 ```
 
 ## Test summary (cho README nộp bài)
