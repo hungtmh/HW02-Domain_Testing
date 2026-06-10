@@ -1,3 +1,6 @@
+118ec3b docs(HW02): format student name, group, and MSSV in all reports and README
+3242dc7 docs(HW02): update student name to Tran Manh Hung in README.md
+55749f7 docs(HW02): regenerate commit log with latest commits
 ac2c3db docs(HW02): rename reports and update student README.md
 aa01a0a docs(HW02): regenerate commit log with latest commits
 92a0475 docs(HW02): complete student README.md and log interaction 012
