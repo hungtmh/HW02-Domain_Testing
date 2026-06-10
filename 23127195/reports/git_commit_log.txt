@@ -1,33 +1,532 @@
-118ec3b docs(HW02): format student name, group, and MSSV in all reports and README
-3242dc7 docs(HW02): update student name to Tran Manh Hung in README.md
-55749f7 docs(HW02): regenerate commit log with latest commits
-ac2c3db docs(HW02): rename reports and update student README.md
-aa01a0a docs(HW02): regenerate commit log with latest commits
-92a0475 docs(HW02): complete student README.md and log interaction 012
-53d92a8 docs(HW02): regenerate commit log with latest commits
-18f461c docs(HW02): keep only factual bugs in AI gap analysis
-c3596dc docs(HW02): regenerate commit log with latest commits
-e84f853 docs(HW02): update AI gap analysis with factual bugs missed in previous runs
-ee84457 docs(HW02): regenerate commit log with latest commits
-d434b6b docs(HW02): append interaction 009 to AI audit report
-55266fb docs(HW02): regenerate commit log with latest commits
-df0b99a test(FR-02-mobile): integrate actual bug screenshots and update github issues
-0a10922 docs(HW02): regenerate commit log with latest commits
-2513fbf test(FR-02-mobile): execute BVA and report bugs for mobile login
-966296d docs(HW02): regenerate commit log with latest commits
-f22638a test(FR-14): replace static token placeholders with dynamic powershell commands
-5410073 docs(HW02): regenerate commit log with latest commits
-a0315b4 test(FR-14): execute BVA and report bugs for category CRUD
-c4e398c docs(HW02): regenerate commit log with latest commits
-5481498 test(FR-09): update bug screenshots and github issues
-f22b1f5 docs(HW02): regenerate commit log with latest commits
-9218882 docs(HW02): update skills to mandate automatic prompt logging and append interaction 005
-bc26565 docs(HW02): consolidate reports for FR-01 and FR-09, refactor custom skills
-0d59795 test(FR-09): complete test workflow and report bugs for discount coupons
-836d385 test(FR-01): embed actual screenshot paths in bug report and update skill definitions
-bf7674a test(FR-01): update consolidated bug report with exact issue links
-9efe267 Hùng: Chỉnh sửa lại chỉ còn 1 file bug report với cập nhật skill agent
-b67b81f Hùng: dùng AI skill antigravity sửa lại FR-01 đồng thời bổ sung Bug
-4b78ad4 Hùng: Dùng AI agent để làm FR01
-85af3ba first upload
-2f9bf2b Initial commit
+PS D:\Kiem_thu\HW2\HW02-Group08> cd 23127195
+PS D:\Kiem_thu\HW2\HW02-Group08\23127195> git log --graph --all --stat
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:30:52 2026 +0700
+|
+|     docs(HW02): format student name, group, and MSSV in all reports and README
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:30:52 2026 +0700
+|
+|     docs(HW02): format student name, group, and MSSV in all reports and README
+|
+|  23127195/README.md                  | 5 +++--
+|  23127195/reports/AI_Audit_Report.md | 2 +-
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:30:52 2026 +0700
+|
+|     docs(HW02): format student name, group, and MSSV in all reports and README
+|
+|  23127195/README.md                  | 5 +++--
+|  23127195/reports/AI_Audit_Report.md | 2 +-
+|  23127195/reports/Bug_Report.md      | 2 ++
+|  23127195/reports/Main_Report.md     | 2 ++
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:30:52 2026 +0700
+|
+|     docs(HW02): format student name, group, and MSSV in all reports and README
+|
+|  23127195/README.md                  | 5 +++--
+|  23127195/reports/AI_Audit_Report.md | 2 +-
+|  23127195/reports/Bug_Report.md      | 2 ++
+|  23127195/reports/Main_Report.md     | 2 ++
+|  4 files changed, 8 insertions(+), 3 deletions(-)
+|
+* commit 3242dc7d03cefaea522c757ebbe8aeec895ec857
+| Author: hungtmh <hungtmh20002@gmail.com>
+:...skipping...
+* commit de8dd4a60bac33c6f8e17be22741d6df657cde10 (HEAD -> main, origin/main, origin/HEAD)
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:31:26 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 3 +++
+|  1 file changed, 3 insertions(+)
+|
+* commit 118ec3b8f76df860ef4e169174b9dfd52419285c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:30:52 2026 +0700
+|
+|     docs(HW02): format student name, group, and MSSV in all reports and README
+|
+|  23127195/README.md                  | 5 +++--
+|  23127195/reports/AI_Audit_Report.md | 2 +-
+|  23127195/reports/Bug_Report.md      | 2 ++
+|  23127195/reports/Main_Report.md     | 2 ++
+|  4 files changed, 8 insertions(+), 3 deletions(-)
+|
+* commit 3242dc7d03cefaea522c757ebbe8aeec895ec857
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 15:29:24 2026 +0700
+|
+|     docs(HW02): update student name to Tran Manh Hung in README.md
+|
+|  23127195/README.md                  |  2 +-
+|  23127195/reports/AI_Audit_Report.md | 27 +++++++++++++++++++++++++++
+|  2 files changed, 28 insertions(+), 1 deletion(-)
+|
+* commit 55749f788527359b91f7f63d08e92a24520fa946
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:57:16 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit ac2c3db76e31914adb6059bd3cdffb79dcccf7a8
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:57:02 2026 +0700
+|
+|     docs(HW02): rename reports and update student README.md     
+|
+|  23127195/README.md                           | 15 +++++----    
+|  23127195/reports/AI_Audit_Report.md          | 30 ++++++++++++++++++
+|  ...solidated_Bug_Report.md => Bug_Report.md} |  0
+|  ...Main_Testing_Report.md => Main_Report.md} |  0
+|  4 files changed, 38 insertions(+), 7 deletions(-)
+|
+* commit aa01a0ad5a60e025b214fc8c8769e47bec7fc555
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:51:24 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit 92a04750367bd555576c230ac5781c4831e26464
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:51:09 2026 +0700
+|
+|     docs(HW02): complete student README.md and log interaction 012
+|
+|  23127195/README.md                  | 97 +++++++++++++++++----------
+|  23127195/reports/AI_Audit_Report.md | 36 ++++++++++
+|  2 files changed, 99 insertions(+), 34 deletions(-)
+|
+* commit 53d92a81eab5661f8fbb6225af8b475029c6b3ee
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:33:07 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit 18f461c43c8484798afffbc838b618f47ebfc424
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:32:54 2026 +0700
+|
+|     docs(HW02): keep only factual bugs in AI gap analysis       
+|
+|  23127195/reports/AI_Audit_Report.md     | 28 ++++++++++++      
+|  23127195/reports/Main_Testing_Report.md | 54 ++++-------------------
+|  2 files changed, 36 insertions(+), 46 deletions(-)
+|
+* commit c3596dc59493d4f48b3e610c877f500864c5f867
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:26:25 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit e84f853f933f70226a24236406f9d6690b1b57fa
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:26:12 2026 +0700
+|
+|     docs(HW02): update AI gap analysis with factual bugs missed in previous runs
+|
+|  23127195/reports/AI_Audit_Report.md     |  35 ++++++++++++++++ 
+|  23127195/reports/Main_Testing_Report.md |  48 +++++++++++++++++++---
+|  backend/database.sqlite                 | Bin 36864 -> 36864 bytes
+|  3 files changed, 78 insertions(+), 5 deletions(-)
+|
+* commit ee84457d9c3619d0e5682aa3bea6edfffc8ec5e2
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:20:19 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit d434b6b4fb7fa3edbd1d3b70d0de4f1bb51964ba
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:20:06 2026 +0700
+|
+|     docs(HW02): append interaction 009 to AI audit report       
+|
+|  23127195/reports/AI_Audit_Report.md | 30 +++++++++++++++++++++++++++
+|  1 file changed, 30 insertions(+)
+|
+* commit 55266fb0f3901e897de61efdf8ad83ce2f40f3db
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:19:41 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit df0b99a6a74f37d67fcaa54cc290c9c6f3079b71
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 12:19:28 2026 +0700
+|
+|     test(FR-02-mobile): integrate actual bug screenshots and update github issues
+|
+|  23127195/reports/Consolidated_Bug_Report.md  |  12 +++++++-----
+|  .../reports/FR-02-mobile_bugs/BUG-001.jpg    | Bin 0 -> 73350 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-002.jpg    | Bin 0 -> 96657 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-003.jpg    | Bin 0 -> 80805 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-004a.png   | Bin 0 -> 346369 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-004b.png   | Bin 0 -> 1852331 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-005a.png   | Bin 0 -> 237881 bytes
+|  .../reports/FR-02-mobile_bugs/BUG-005b.png   | Bin 0 -> 137188 bytes
+|  backend/database.sqlite                      | Bin 36864 -> 36864 bytes
+|  9 files changed, 7 insertions(+), 5 deletions(-)
+|
+* commit 0a1092270654165c42f4969d19d7716aa1f022e1
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 11:44:40 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit 2513fbfaacfabce47374efc5a0cb6ea32874ef81
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 11:44:28 2026 +0700
+|
+|     test(FR-02-mobile): execute BVA and report bugs for mobile login
+|
+|  23127195/README.md                          |  18 +-
+|  23127195/reports/AI_Audit_Report.md         |  35 ++++
+|  23127195/reports/Consolidated_Bug_Report.md | 153 +++++++++++++++
+|  23127195/reports/FR-14_bugs/BUG-001.png     | Bin 0 -> 113732 bytes
+|  23127195/reports/FR-14_bugs/BUG-002.png     | Bin 0 -> 98544 bytes
+|  23127195/reports/FR-14_bugs/BUG-003.png     | Bin 0 -> 97108 bytes
+|  23127195/reports/FR-14_bugs/BUG-004.png     | Bin 0 -> 100494 bytes
+|  23127195/reports/FR-14_bugs/BUG-005.png     | Bin 0 -> 96746 bytes
+|  23127195/reports/FR-14_bugs/BUG-006.png     | Bin 0 -> 49366 bytes
+|  23127195/reports/Main_Testing_Report.md     | 184 ++++++++++++++++++
+|  backend/database.sqlite                     | Bin 36864 -> 36864 bytes
+|  11 files changed, 381 insertions(+), 9 deletions(-)
+|
+* commit 966296d22abd62dd472f21454888839f8441749b
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 11:16:55 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit f22638a2968a6a2addad296d0a69ec4cb273587c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 11:16:45 2026 +0700
+|
+|     test(FR-14): replace static token placeholders with dynamic powershell commands
+|
+|  23127195/reports/Consolidated_Bug_Report.md |  40 +++++++++++++-----
+|  backend/database.sqlite                     | Bin 36864 -> 36864 bytes
+|  2 files changed, 30 insertions(+), 10 deletions(-)
+|
+* commit 5410073c6086d619a1bed6397f030cc214f66706
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 10:50:35 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | 2 ++
+|  1 file changed, 2 insertions(+)
+|
+* commit a0315b47415f68ee169f26496cf27f60077d285e
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 10:50:19 2026 +0700
+|
+|     test(FR-14): execute BVA and report bugs for category CRUD  
+|
+|  23127195/README.md                          |  18 +-
+|  23127195/reports/AI_Audit_Report.md         |  63 ++++++       
+|  23127195/reports/Consolidated_Bug_Report.md | 178 ++++++++++++++++
+|  23127195/reports/Main_Testing_Report.md     | 193 ++++++++++++++++++
+|  23127195/skills/hw02-bug-report/SKILL.md    |   5 +-
+|  backend/database.sqlite                     | Bin 36864 -> 36864 bytes
+|  6 files changed, 446 insertions(+), 11 deletions(-)
+|
+* commit c4e398c07017e94fffc32fc22647cc3aafb0ad59
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 10:43:47 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | Bin 1432 -> 829 bytes    
+|  1 file changed, 0 insertions(+), 0 deletions(-)
+|
+* commit 54814980e3c4301bade6cd764d2401b70e05247f
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Wed Jun 10 10:43:39 2026 +0700
+|
+|     test(FR-09): update bug screenshots and github issues       
+|
+|  23127195/reports/FR-09_bugs/BUG-002.png | Bin 474637 -> 89170 bytes
+|  23127195/reports/FR-09_bugs/BUG-003.png | Bin 469822 -> 59812 bytes
+|  23127195/reports/FR-09_bugs/BUG-004.png | Bin 687838 -> 80724 bytes
+|  23127195/reports/FR-09_bugs/BUG-005.png | Bin 464163 -> 83231 bytes
+|  backend/database.sqlite                 | Bin 36864 -> 36864 bytes
+|  5 files changed, 0 insertions(+), 0 deletions(-)
+|
+* commit f22b1f5d4516e858117cd373a083d7285f939b77
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 16:26:07 2026 +0700
+|
+|     docs(HW02): regenerate commit log with latest commits       
+|
+|  23127195/reports/git_commit_log.txt | Bin 1066 -> 1432 bytes   
+|  1 file changed, 0 insertions(+), 0 deletions(-)
+|
+* commit 92188827b599ddddadccd92921eaa7940d3f9a98
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 16:26:04 2026 +0700
+|
+|     docs(HW02): update skills to mandate automatic prompt logging and append interaction 005
+|
+|  .cursor/skills/hw02-ai-audit-report/SKILL.md | 23 ++++++++------
+|  .cursor/skills/hw02-workflow/SKILL.md        |  2 +-
+|  23127195/reports/AI_Audit_Report.md          | 30 ++++++++++++++++++
+|  .../skills/hw02-ai-audit-report/SKILL.md     | 23 ++++++++------
+|  23127195/skills/hw02-workflow/SKILL.md       |  2 +-
+|  5 files changed, 58 insertions(+), 22 deletions(-)
+|
+* commit bc26565881b88b85b801fa053839dd4649275bdb
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 16:22:16 2026 +0700
+|
+|     docs(HW02): consolidate reports for FR-01 and FR-09, refactor custom skills
+|
+|  .../skills/hw02-ai-audit-report/SKILL.md     | 113 ----        
+|  .../hw02-boundary-value-analysis/SKILL.md    | 108 ----        
+|  .../.cursor/skills/hw02-bug-report/SKILL.md  |  86 ----        
+|  .../skills/hw02-domain-testing/SKILL.md      | 120 -----       
+|  .../.cursor/skills/hw02-eshop-setup/SKILL.md | 117 -----       
+|  .../.cursor/skills/hw02-workflow/SKILL.md    |  91 ----        
+|  .cursor/skills/hw02-ai-audit-report/SKILL.md |  32 +-
+|  .../hw02-boundary-value-analysis/SKILL.md    |  68 +--
+|  .cursor/skills/hw02-bug-report/SKILL.md      |  23 +-
+|  .cursor/skills/hw02-domain-testing/SKILL.md  |  58 +--
+|  .cursor/skills/hw02-workflow/SKILL.md        |  25 +-
+|  23127195/README.md                           |  78 +--
+|  ...-report.md => Consolidated_Bug_Report.md} | 156 +++++-      
+|  23127195/reports/FR-01_ai-gap-analysis.md    |  32 --
+|  23127195/reports/FR-01_bva.md                |  79 ---
+|  23127195/reports/FR-01_domain-testing.md     | 124 -----       
+|  23127195/reports/FR-01_test-execution.md     |  61 ---
+|  23127195/reports/FR-09_ai-gap-analysis.md    |  32 --
+|  23127195/reports/FR-09_bug-report.md         | 153 ------      
+|  23127195/reports/FR-09_bugs/BUG-001.png      | Bin 442202 -> 81372 bytes
+|  23127195/reports/FR-09_bva.md                |  68 ---
+|  23127195/reports/FR-09_domain-testing.md     | 116 -----       
+|  23127195/reports/FR-09_test-execution.md     |  48 --
+|  23127195/reports/Main_Testing_Report.md      | 458 +++++++++++++++++
+|  23127195/reports/git_commit_log.txt          | Bin 0 -> 1066 bytes
+|  .../skills/hw02-ai-audit-report/SKILL.md     |  32 +-
+|  .../hw02-boundary-value-analysis/SKILL.md    |  68 +--
+|  23127195/skills/hw02-bug-report/SKILL.md     |  23 +-
+|  23127195/skills/hw02-domain-testing/SKILL.md |  58 +--
+|  23127195/skills/hw02-workflow/SKILL.md       |  25 +-
+|  30 files changed, 768 insertions(+), 1684 deletions(-)
+|
+* commit 0d59795848d284acf93646ddde2246f160c818c3
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 15:10:51 2026 +0700
+|
+|     test(FR-09): complete test workflow and report bugs for discount coupons
+|
+|  23127195/reports/AI_Audit_Report.md       |  28 ++++
+|  23127195/reports/FR-09_ai-gap-analysis.md |  32 ++++
+|  23127195/reports/FR-09_bug-report.md      | 153 ++++++++++++++++++++
+|  23127195/reports/FR-09_bugs/BUG-001.png   | Bin 0 -> 442202 bytes
+|  23127195/reports/FR-09_bugs/BUG-002.png   | Bin 0 -> 474637 byt
+es
+|  23127195/reports/FR-09_bugs/BUG-003.png   | Bin 0 -> 469822 bytes
+|  23127195/reports/FR-09_bugs/BUG-004.png   | Bin 0 -> 687838 bytes
+|  23127195/reports/FR-09_bugs/BUG-005.png   | Bin 0 -> 464163 bytes
+|  23127195/reports/FR-09_bva.md             |  68 +++++++++      
+|  23127195/reports/FR-09_domain-testing.md  | 116 +++++++++++++++
+|  23127195/reports/FR-09_test-execution.md  |  48 ++++++
+|  11 files changed, 445 insertions(+)
+|
+* commit 836d3859161695e2438b230814e8a114f031125c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 14:52:30 2026 +0700
+|
+|     test(FR-01): embed actual screenshot paths in bug report and update skill definitions
+|
+|  .../.cursor/skills/hw02-bug-report/SKILL.md    | 13 +++++++++----
+|  .cursor/skills/hw02-bug-report/SKILL.md        | 13 +++++++++----
+|  23127195/reports/FR-01_bug-report.md           | 16 ++++++++--------
+|  23127195/skills/hw02-bug-report/SKILL.md       | 13 +++++++++----
+|  4 files changed, 35 insertions(+), 20 deletions(-)
+|
+* commit bf7674aafa5d9194b427d25d0f29d1f0402166a1
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 14:39:28 2026 +0700
+|
+|     test(FR-01): update consolidated bug report with exact issue links
+|
+|  23127195/reports/FR-01_bug-report.md    |  51 +++++-----------------
+|  23127195/reports/FR-01_bugs/BUG-001.png | Bin 0 -> 85471 bytes 
+|  23127195/reports/FR-01_bugs/BUG-002.png | Bin 0 -> 31800 bytes 
+|  23127195/reports/FR-01_bugs/BUG-003.png | Bin 0 -> 25881 bytes 
+|  23127195/reports/FR-01_bugs/BUG-004.png | Bin 0 -> 32757 bytes 
+|  23127195/reports/FR-01_bugs/BUG-005.png | Bin 0 -> 89840 bytes 
+|  23127195/reports/FR-01_bugs/BUG-006.png | Bin 0 -> 105102 bytes
+|  23127195/reports/FR-01_bugs/BUG-007.png | Bin 0 -> 238219 bytes
+|  23127195/reports/FR-01_bugs/BUG-008.png | Bin 0 -> 172819 bytes
+|  backend/database.sqlite                 | Bin 36864 -> 36864 bytes
+|  10 files changed, 12 insertions(+), 39 deletions(-)
+|
+* commit 9efe267fabc5b1a7a509341ce586c487e9dedc33
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 12:45:08 2026 +0700
+|
+|     Hùng: Chỉnh sửa lại chỉ còn 1 file bug report với cập nhật skill agent
+|
+|  .../skills/hw02-ai-audit-report/SKILL.md     | 113 ++++++++    
+|  .../hw02-boundary-value-analysis/SKILL.md    | 108 +++++++     
+|  .../.cursor/skills/hw02-bug-report/SKILL.md  |  81 ++++++      
+|  .../skills/hw02-domain-testing/SKILL.md      | 120 ++++++++    
+|  .../.cursor/skills/hw02-eshop-setup/SKILL.md | 117 ++++++++    
+|  .../.cursor/skills/hw02-workflow/SKILL.md    |  91 ++++++      
+|  .cursor/skills/hw02-bug-report/SKILL.md      | 118 +++-----    
+|  .cursor/skills/hw02-workflow/SKILL.md        |  11 +-
+|  23127195/reports/AI_Audit_Report.md          |  33 +++
+|  23127195/reports/FR-01_bug-report.md         | 258 +++++++++++++++++
+|  23127195/reports/FR-01_bugs/BUG-001.md       |  35 ---
+|  23127195/reports/FR-01_bugs/BUG-002.md       |  43 ---
+|  23127195/reports/FR-01_bugs/BUG-003.md       |  44 ---
+|  23127195/reports/FR-01_bugs/BUG-004.md       |  37 ---
+|  23127195/reports/FR-01_bugs/BUG-005.md       |  36 ---
+|  23127195/reports/FR-01_bugs/BUG-006.md       |  38 ---
+|  23127195/reports/FR-01_bugs/BUG-007.md       |  50 ----        
+|  23127195/reports/FR-01_bugs/BUG-008.md       |  43 ---
+|  23127195/reports/FR-01_bugs/BUG-009.md       |  51 ----        
+|  23127195/skills/hw02-bug-report/SKILL.md     | 118 +++-----    
+|  23127195/skills/hw02-workflow/SKILL.md       |  11 +-
+|  backend/database.sqlite                      | Bin 36864 -> 36864 bytes
+|  22 files changed, 1017 insertions(+), 539 deletions(-)
+|
+* commit b67b81f4cd0c142c0e931f4ca1900b32d92974ce
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 11:37:02 2026 +0700
+|
+|     Hùng: dùng AI skill antigravity sửa lại FR-01 đồng thời bổ sung Bug
+|
+|  23127195/reports/AI_Audit_Report.md       |  34 ++++
+|  23127195/reports/AI_Critique.md           |  15 ++
+|  23127195/reports/FR-01_ai-gap-analysis.md |  52 +++---
+|  23127195/reports/FR-01_bugs/BUG-002.md    |  43 +++++
+|  23127195/reports/FR-01_bugs/BUG-003.md    |  44 +++++
+|  23127195/reports/FR-01_bugs/BUG-004.md    |  37 ++++
+|  23127195/reports/FR-01_bugs/BUG-005.md    |  36 ++++
+|  23127195/reports/FR-01_bugs/BUG-007.md    |  50 ++++++
+|  23127195/reports/FR-01_bugs/BUG-008.md    |  43 +++++
+|  23127195/reports/FR-01_bugs/BUG-009.md    |  51 ++++++
+|  23127195/reports/FR-01_bva.md             | 129 ++++++-------- 
+|  23127195/reports/FR-01_domain-testing.md  | 185 ++++++++++----------
+|  23127195/reports/FR-01_test-execution.md  |  84 +++++----      
+|  backend/database.sqlite                   | Bin 36864 -> 36864 bytes
+|  14 files changed, 563 insertions(+), 240 deletions(-)
+|
+* commit 4b78ad4d1828b18e6c7ef87c396c965076158d9c
+| Author: hungtmh <hungtmh20002@gmail.com>
+| Date:   Tue Jun 9 10:03:14 2026 +0700
+|
+|     Hùng: Dùng AI agent để làm FR01
+|
+|  .cursor/skills/hw02-ai-audit-report/SKILL.md |  113 +
+|  .../hw02-boundary-value-analysis/SKILL.md    |  108 +
+|  .cursor/skills/hw02-bug-report/SKILL.md      |  117 +
+|  .cursor/skills/hw02-domain-testing/SKILL.md  |  120 +
+|  .cursor/skills/hw02-eshop-setup/SKILL.md     |  117 +
+|  .cursor/skills/hw02-workflow/SKILL.md        |   88 +
+|  23127195/README.md                           |   53 +
+|  23127195/install-skills.ps1                  |   17 +
+|  23127195/reports/.gitkeep                    |    0
+|  23127195/reports/AI_Audit_Report.md          |   37 +
+|  23127195/reports/FR-01_ai-gap-analysis.md    |   44 +
+|  23127195/reports/FR-01_bugs/BUG-001.md       |   35 +
+|  23127195/reports/FR-01_bugs/BUG-006.md       |   38 +
+|  23127195/reports/FR-01_bva.md                |   92 +
+|  23127195/reports/FR-01_domain-testing.md     |  127 +
+|  23127195/reports/FR-01_test-execution.md     |   63 +
+|  .../skills/hw02-ai-audit-report/SKILL.md     |  113 +
+|  .../hw02-boundary-value-analysis/SKILL.md    |  108 +
+|  23127195/skills/hw02-bug-report/SKILL.md     |  117 +
+|  23127195/skills/hw02-domain-testing/SKILL.md |  120 +
+|  23127195/skills/hw02-eshop-setup/SKILL.md    |  117 +
+|  23127195/skills/hw02-workflow/SKILL.md       |   88 +
+|  23127195/templates/bva-template.md           |   37 +
+|  .../templates/domain-testing-template.md     |   50 +
+|  .../templates/submission-readme-template.md  |   45 +
+|  backend/database.sqlite                      |  Bin 36864 -> 36864 bytes
