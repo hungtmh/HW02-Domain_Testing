@@ -602,7 +602,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ A
 - Nhãn hiển thị trên giao diện là "Username" (Dòng 763 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- ![BUG-001](./FR-02-mobile_bugs/BUG-001.png)
+- ![BUG-001](./FR-02-mobile_bugs/BUG-001.jpg)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-02-Mobile] [BUG-001] Nhãn hiển thị trường nhập Email đăng nhập bị sai thành "Username"`
@@ -630,7 +630,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ A
 - Thẻ `TextInput` thiếu thuộc tính `keyboardType` (Dòng 764-770 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)), hiển thị bàn phím văn bản thông thường.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- ![BUG-002](./FR-02-mobile_bugs/BUG-002.png)
+- ![BUG-002](./FR-02-mobile_bugs/BUG-002.jpg)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-02-Mobile] [BUG-002] Ô nhập Email không cấu hình thuộc tính keyboardType="email-address"`
@@ -659,7 +659,7 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ A
 - Catch block của hàm `handleLogin` ghi đè toàn bộ lỗi và luôn hiển thị thông báo tĩnh: "Đăng nhập thất bại. Vui lòng kiểm tra lại." (Dòng 204-206 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- ![BUG-003](./FR-02-mobile_bugs/BUG-003.png)
+- ![BUG-003](./FR-02-mobile_bugs/BUG-003.jpg)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-02-Mobile] [BUG-003] Ứng dụng di động ghi đè và ẩn thông báo khóa tài khoản từ server`
@@ -692,7 +692,8 @@ Truy vấn trực tiếp cột `locked_until` trong cơ sở dữ liệu SQLite 
 - Thời gian khóa được đặt là 180 giây (3 phút) kể từ thời điểm đăng nhập sai lần thứ hai (Dòng 57 file [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js)).
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- ![BUG-004](./FR-02-mobile_bugs/BUG-004.png)
+- ![BUG-004a](./FR-02-mobile_bugs/BUG-004a.png)
+- ![BUG-004b](./FR-02-mobile_bugs/BUG-004b.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-02-Mobile] [BUG-004] API Backend cấu hình sai thời gian khóa tài khoản (180 giây thay vì 30 giây)`
@@ -723,7 +724,8 @@ Truy vấn trực tiếp cơ sở dữ liệu để xem giá trị cột `login_
 - Bộ đếm `login_attempts` tăng lên 2 đơn vị (giá trị bằng 2) chỉ sau 1 lần đăng nhập sai (Dòng 54 file [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js) thực hiện: `const newAttempts = user.login_attempts + 2;`). Lỗi này khiến người dùng bị khóa tài khoản chỉ sau 2 lần nhập sai (counter lên 4) thay vì 3 lần liên tiếp theo SRS.
 
 #### Bằng chứng kiểm thử (Evidence / Screenshot):
-- ![BUG-005](./FR-02-mobile_bugs/BUG-005.png)
+- ![BUG-005a](./FR-02-mobile_bugs/BUG-005a.png)
+- ![BUG-005b](./FR-02-mobile_bugs/BUG-005b.png)
 
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-02-Mobile] [BUG-005] Bộ đếm số lần đăng nhập sai tăng sai đơn vị (tăng 2 thay vì tăng 1)`
