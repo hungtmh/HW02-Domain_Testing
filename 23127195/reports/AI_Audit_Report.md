@@ -286,5 +286,40 @@ tui có cập nhật ảnh bug cho FR-02 mobile rồi á, có mấy BUG cần 2 
 
 ---
 
+## Interaction 010
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-10 12:30 |
+| Feature | Toàn bộ hệ thống (FR-01, FR-09, FR-14, FR-02 Mobile) |
+| Task | Rà soát mã nguồn thực tế để tìm kiếm các bug thực tế bị bỏ sót trong các lượt chạy trước (Factual AI Gaps) thay vì giả thuyết, cập nhật lại các phần AI Gap Analysis tương ứng trong Main_Testing_Report.md và push lên GitHub. |
+
+### Prompt (nguyên văn)
+
+```
+. AI gap analysis. If your AI tools miss any test cases or bugs, you must
+report them. Explain why the AI missed them — for example, due to the
+quality of your input (prompt), the limitations of the AI tool itself, or the
+inherent complexity of the feature under test.
+
+
+hãy chỉnh lại AI gap analysis, suy nghĩa thêm nhứng test case hay bug bị fail mà BẠN chưa tìm được, làm thực tế luôn , chứ không phải chế bịa ra như bạn đã làm ( bạn đã làm cho tôi là bạn suy nghĩ AI sẽ thiếu cái gì chứ không phải thực tế )
+```
+
+### AI Output (tóm tắt)
+
+- Tiến hành rà soát mã nguồn thực tế của SUT (cả tệp backend `server.js` lẫn frontend di động `App.js`) để tìm kiếm các bug thực tế bị bỏ sót trong các đợt chạy trước.
+- Phát hiện 5 lỗi nghiêm trọng: Lỗi leo thang đặc quyền Admin (`PUT /api/users/me`), SQL Injection (`GET /api/products`), Broken Object Level Authorization (`GET /api/orders/:id`), lỗi logic chuyển đổi trạng thái đơn hàng (`canceled` -> `delivered`), và lỗi regex số điện thoại di động Việt Nam.
+- Cập nhật lại toàn bộ nội dung của các bảng/phần **AI Gap Analysis** tương ứng trong tệp báo cáo tổng hợp [Main_Testing_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Main_Testing_Report.md) để ghi nhận chi tiết về các lỗi thực tế bị bỏ sót này, phân tích rõ lý do AI bỏ sót (do phạm vi prompt hẹp, chỉ tập trung chức năng đơn lẻ thay vì audit toàn diện).
+- Stage, commit và push các thay đổi lên GitHub.
+
+### Human Review
+- Đã sửa: AI đã đối chiếu trực tiếp mã nguồn thực tế và tự phản hồi trung thực các lỗi bảo mật và logic nghiêm trọng đã bỏ sót từ trước vào tài liệu báo cáo.
+- Đánh giá: Phân tích thực tế rất tốt, chính xác và có chiều sâu bảo mật cao.
+
+---
+
+
 
 
