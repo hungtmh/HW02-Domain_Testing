@@ -12,10 +12,10 @@
 
 | STT | Tiêu chí | Điểm tối đa | Điểm tự đánh giá | Minh chứng |
 |-----|----------|-------------|------------------|------------|
-| 1   | **Feature A** (FR-01: Đăng ký tài khoản) | 25 | **25** | Thiết kế Domain + BVA, thực thi 11 TC và phát hiện 8 lỗi trong [Main_Testing_Report.md](./reports/Main_Testing_Report.md) |
-| 2   | **Feature B** (FR-09: Áp dụng mã giảm giá) | 25 | **25** | Thiết kế Domain + BVA, thực thi 13 TC và phát hiện 5 lỗi trong [Main_Testing_Report.md](./reports/Main_Testing_Report.md) |
-| 3   | **Feature C** (FR-14: Quản lý danh mục Admin) | 25 | **25** | Thiết kế Domain + BVA, thực thi 16 TC và phát hiện 6 lỗi trong [Main_Testing_Report.md](./reports/Main_Testing_Report.md) |
-| 4   | **Feature D Mobile** (FR-02: Đăng nhập & Khóa di động) | 15 | **15** | Thiết kế Domain + BVA, thực thi 13 TC và phát hiện 5 lỗi trong [Main_Testing_Report.md](./reports/Main_Testing_Report.md) |
+| 1   | **Feature A** (FR-01: Đăng ký tài khoản) | 25 | **25** | Thiết kế Domain + BVA, thực thi 11 TC và phát hiện 8 lỗi trong [Main_Report.md](./reports/Main_Report.md) |
+| 2   | **Feature B** (FR-09: Áp dụng mã giảm giá) | 25 | **25** | Thiết kế Domain + BVA, thực thi 13 TC và phát hiện 5 lỗi trong [Main_Report.md](./reports/Main_Report.md) |
+| 3   | **Feature C** (FR-14: Quản lý danh mục Admin) | 25 | **25** | Thiết kế Domain + BVA, thực thi 16 TC và phát hiện 6 lỗi trong [Main_Report.md](./reports/Main_Report.md) |
+| 4   | **Feature D Mobile** (FR-02: Đăng nhập & Khóa di động) | 15 | **15** | Thiết kế Domain + BVA, thực thi 13 TC và phát hiện 5 lỗi trong [Main_Report.md](./reports/Main_Report.md) |
 | 5   | **Agent Skills** (Custom AI Agent Skills) | 10 | **10** | Định nghĩa, cài đặt 5 skill tự động hóa kiểm thử trong [skills/](./skills/) và video demo |
 |     | **TỔNG ĐIỂM** | **100** | **100** | **Đạt yêu cầu điểm tối đa (100/100)** |
 
@@ -66,9 +66,10 @@ Các skill của Agent được định nghĩa và triển khai đầy đủ bao
 ## 6. Cấu trúc thư mục báo cáo
 
 Toàn bộ tài liệu báo cáo của bài làm được tổ chức khoa học trong thư mục [reports/](./reports/):
-- **[Main_Testing_Report.md](./reports/Main_Testing_Report.md):** Báo cáo kiểm thử chính. Chứa toàn bộ các bước thiết kế Domain Testing, Phân tích giá trị biên BVA, Nhật ký thực thi kiểm thử thực tế và phân tích khoảng cách AI (AI Gap Analysis - đã tinh chỉnh loại bỏ các phần giả định, chỉ giữ lại các phân tích lỗi bảo mật/logic thực tế mà AI đã bỏ sót).
-- **[Consolidated_Bug_Report.md](./reports/Consolidated_Bug_Report.md):** Báo cáo lỗi hợp nhất. Mô tả chi tiết 24 lỗi phát hiện kèm theo câu lệnh PowerShell tái hiện cụ thể, expected/actual result, link issue tương ứng và bằng chứng ảnh chụp lỗi.
-- **[AI_Audit_Report.md](./reports/AI_Audit_Report.md):** Tệp ghi nhận nhật ký kiểm toán tương tác với AI Assistant từ Interaction 001 đến Interaction 011 một cách trung thực.
+- **[Main_Report.md](./reports/Main_Report.md):** Báo cáo kiểm thử chính. Chứa toàn bộ các bước thiết kế Domain Testing, Phân tích giá trị biên BVA, Nhật ký thực thi kiểm thử thực tế và phân tích khoảng cách AI (AI Gap Analysis - đã tinh chỉnh loại bỏ các phần giả định, chỉ giữ lại các phân tích lỗi bảo mật/logic thực tế mà AI đã bỏ sót).
+- **[Bug_Report.md](./reports/Bug_Report.md):** Báo cáo lỗi hợp nhất. Mô tả chi tiết 24 lỗi phát hiện kèm theo câu lệnh PowerShell tái hiện cụ thể, expected/actual result, link issue tương ứng và bằng chứng ảnh chụp lỗi.
+- **[AI_Critique.md](./reports/AI_Critique.md):** Bản tự kiểm và nhận xét quá trình sử dụng AI: chỉ ra những sai sót, thiên lệch giả định của AI, nguyên nhân bỏ sót lỗi thực tế và bài học kinh nghiệm thu được khi cộng tác với AI.
+- **[AI_Audit_Report.md](./reports/AI_Audit_Report.md):** Tệp ghi nhận nhật ký kiểm toán tương tác với AI Assistant từ Interaction 001 đến Interaction 013 một cách trung thực.
 - **[git_commit_log.txt](./reports/git_commit_log.txt):** Lịch sử commit Git trong suốt quá trình làm bài.
 - **[FR-01_bugs/](./reports/FR-01_bugs/)**: Thư mục chứa các ảnh chụp bằng chứng lỗi của tính năng Đăng ký.
 - **[FR-09_bugs/](./reports/FR-09_bugs/)**: Thư mục chứa các ảnh chụp bằng chứng lỗi của tính năng Mã giảm giá.
