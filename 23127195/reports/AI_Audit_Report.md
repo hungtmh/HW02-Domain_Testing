@@ -257,4 +257,34 @@ Với lại làm skill hw02-workflow cho Pool D: Mobile App – Đăng nhập đ
 
 ---
 
+## Interaction 009
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-10 12:20 |
+| Feature | FR-02 Mobile Login |
+| Task | Tích hợp ảnh chụp màn hình lỗi cho FR-02 di động (bao gồm cả định dạng .jpg và kịch bản lỗi có 2 ảnh phụ a/b), cập nhật file báo cáo lỗi gộp, chạy script PATCH cập nhật mô tả GitHub Issues từ #22 đến #26 và push lên GitHub. |
+
+### Prompt (nguyên văn)
+
+```
+tui có cập nhật ảnh bug cho FR-02 mobile rồi á, có mấy BUG cần 2 ảnh mới thấy rõ nên có gì bạn lưu ý
+```
+
+### AI Output (tóm tắt)
+
+- Nhận diện thư mục ảnh bug di động mới được thêm tại `23127195/reports/FR-02-mobile_bugs/`.
+- Phát hiện các ảnh BUG-001, BUG-002, BUG-003 là định dạng `.jpg`, còn các ảnh BUG-004 và BUG-005 có hai ảnh `a` và `b` định dạng `.png` để làm rõ bằng chứng.
+- Cập nhật các liên kết ảnh tương ứng trong báo cáo lỗi gộp [Consolidated_Bug_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Consolidated_Bug_Report.md).
+- Viết và chạy script Node.js [update_fr02_mobile_issues.js](file:///C:/Users/WINDOWS/.gemini/antigravity-ide/brain/b2ef291f-9f9d-4104-b4b2-5d0942573af7/scratch/update_fr02_mobile_issues.js) để cập nhật (PATCH) lại các GitHub Issues từ #22 đến #26 với thông tin định dạng ảnh mới và đường dẫn thô.
+- Thực hiện stage, commit và push các thay đổi bao gồm ảnh và báo cáo lên GitHub.
+
+### Human Review
+- Đã sửa: Sinh viên tự chụp ảnh lỗi (bao gồm cả các ảnh phụ a/b) và AI đồng bộ cập nhật hoàn toàn chính xác cả trên file báo cáo lẫn remote GitHub Issues.
+- Đánh giá: Giải quyết tốt trường hợp đặc biệt nhiều ảnh trên một lỗi để làm rõ bằng chứng kiểm thử trực quan.
+
+---
+
+
 
