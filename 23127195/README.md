@@ -1,7 +1,8 @@
-# MSSV 23127195 — HW02 Domain Testing & Boundary Value Analysis
+# Trần Mạnh Hùng Nhóm 08 mssv 23127195 — HW02 Domain Testing & Boundary Value Analysis
 
 ## 1. Thông tin sinh viên
-- **Họ và tên:** Trần Mạnh Hùng (Nhóm 08)
+- **Họ và tên:** Trần Mạnh Hùng
+- **Nhóm:** Nhóm 08
 - **MSSV:** 23127195
 - **Môn học:** Kiểm thử phần mềm (Software Testing)
 - **Bài tập:** HW02 — Domain Testing & Boundary Value Analysis (BVA)

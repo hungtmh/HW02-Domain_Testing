@@ -1,4 +1,4 @@
-# AI Audit Report — MSSV 23127195 — HW02
+# AI Audit Report — Trần Mạnh Hùng Nhóm 08 mssv 23127195 — HW02
 
 **Khai báo:** Tôi sử dụng AI tools cho các tác vụ sau trong bài HW02 Domain Testing.
 

@@ -1,5 +1,7 @@
 # Consolidated Bug Report — EShop Testing
 
+**Họ và tên:** Trần Mạnh Hùng  
+**Nhóm:** Nhóm 08  
 **MSSV:** 23127195  
 **SUT:** Giao diện Checkout, Register + API Backend + Database
 
