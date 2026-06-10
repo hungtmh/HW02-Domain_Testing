@@ -395,8 +395,12 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/apply-coupon" -Headers @{ Auth
 
 #### Lệnh chạy test thực tế:
 ```powershell
-# Sử dụng Token của người dùng thường (role = 'user')
-Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <User_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":"Normal User Category"}'
+# Đăng nhập bằng tài khoản người dùng thường để lấy Token và lưu vào biến $UserToken
+$res = Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"test@eshop.com","password":"Test1234!"}'
+$UserToken = $res.token
+
+# Gửi yêu cầu thêm danh mục sử dụng Token vừa lấy
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer $UserToken" } -Method Post -ContentType "application/json" -Body '{"name":"Normal User Category"}'
 ```
 
 #### Kết quả mong đợi (Expected Result):
@@ -424,8 +428,12 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Author
 
 #### Lệnh chạy test thực tế:
 ```powershell
-# Sử dụng Token của người dùng thường (role = 'user') để xóa danh mục ID = 8
-Invoke-RestMethod -Uri "http://localhost:3000/api/categories/8" -Headers @{ Authorization = "Bearer <User_JWT_Token>" } -Method Delete
+# Đăng nhập bằng tài khoản người dùng thường để lấy Token và lưu vào biến $UserToken
+$res = Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"test@eshop.com","password":"Test1234!"}'
+$UserToken = $res.token
+
+# Gửi yêu cầu xóa danh mục sử dụng Token vừa lấy
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories/8" -Headers @{ Authorization = "Bearer $UserToken" } -Method Delete
 ```
 
 #### Kết quả mong đợi (Expected Result):
@@ -453,8 +461,12 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories/8" -Headers @{ Auth
 
 #### Lệnh chạy test thực tế:
 ```powershell
-# Gửi request với name là chuỗi rỗng
-Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":""}'
+# Đăng nhập bằng tài khoản Admin để lấy Token và lưu vào biến $AdminToken
+$res = Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"admin@eshop.com","password":"Admin123!"}'
+$AdminToken = $res.token
+
+# Gửi request thêm danh mục với name là chuỗi rỗng
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer $AdminToken" } -Method Post -ContentType "application/json" -Body '{"name":""}'
 ```
 
 #### Kết quả mong đợi (Expected Result):
@@ -482,8 +494,12 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Author
 
 #### Lệnh chạy test thực tế:
 ```powershell
-# Gửi request với name là chuỗi chứa khoảng trắng
-Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":"   "}'
+# Đăng nhập bằng tài khoản Admin để lấy Token và lưu vào biến $AdminToken
+$res = Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"admin@eshop.com","password":"Admin123!"}'
+$AdminToken = $res.token
+
+# Gửi request thêm danh mục với name là chuỗi chứa khoảng trắng
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer $AdminToken" } -Method Post -ContentType "application/json" -Body '{"name":"   "}'
 ```
 
 #### Kết quả mong đợi (Expected Result):
@@ -511,8 +527,12 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Author
 
 #### Lệnh chạy test thực tế:
 ```powershell
-# Gửi yêu cầu xóa ID 9999 không tồn tại
-Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Delete
+# Đăng nhập bằng tài khoản Admin để lấy Token và lưu vào biến $AdminToken
+$res = Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"admin@eshop.com","password":"Admin123!"}'
+$AdminToken = $res.token
+
+# Gửi yêu cầu xóa ID 9999 không tồn tại sử dụng Token vừa lấy
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ Authorization = "Bearer $AdminToken" } -Method Delete
 ```
 
 #### Kết quả mong đợi (Expected Result):
