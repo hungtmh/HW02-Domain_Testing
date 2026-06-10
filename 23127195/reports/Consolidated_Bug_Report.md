@@ -577,3 +577,156 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ A
 - **Title:** `[FR-14] [BUG-006] Giao diện Web Admin cho phép thêm mới danh mục rỗng (Client-side validation bypass)`
 - **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/21
 
+---
+---
+
+# FEATURE: FR-02 (MOBILE) — ĐĂNG NHẬP & KHÓA TÀI KHOẢN (5 BUGS)
+
+### BUG-001: Nhãn hiển thị trường nhập Email đăng nhập bị sai thành "Username"
+
+- **Độ nghiêm trọng (Severity):** Trivial
+- **Độ ưu tiên (Priority):** Low
+- **Thành phần ảnh hưởng (Component):** Mobile UI
+- **Test Case liên quan:** DT-05 (Mobile)
+- **Liên quan SRS:** FR-02: Người dùng nhập Email và Mật khẩu để thực hiện đăng nhập.
+
+#### Các bước tái hiện:
+1. Mở ứng dụng di động EShop Mobile.
+2. Điều hướng tới màn hình Đăng nhập (`setView("login")`).
+3. Kiểm tra trực quan nhãn hiển thị của trường nhập liệu phía trên.
+
+#### Kết quả mong đợi (Expected Result):
+- Nhãn hiển thị phải là "Email" hoặc "Địa chỉ Email".
+
+#### Kết quả thực tế (Actual Result):
+- Nhãn hiển thị trên giao diện là "Username" (Dòng 763 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)).
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-001](./FR-02-mobile_bugs/BUG-001.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02-Mobile] [BUG-001] Nhãn hiển thị trường nhập Email đăng nhập bị sai thành "Username"`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/22
+
+---
+
+### BUG-002: Ô nhập Email không cấu hình thuộc tính keyboardType="email-address"
+
+- **Độ nghiêm trọng (Severity):** Minor
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** Mobile UI
+- **Test Case liên quan:** DT-06 (Mobile)
+- **Liên quan SRS:** Trải nghiệm người dùng và chuẩn thiết kế giao diện trên thiết bị di động.
+
+#### Các bước tái hiện:
+1. Mở ứng dụng và truy cập màn hình đăng nhập di động.
+2. Bấm vào ô nhập Email để kích hoạt bàn phím ảo của thiết bị.
+3. Quan sát layout bàn phím ảo được hiển thị.
+
+#### Kết quả mong đợi (Expected Result):
+- Thẻ `TextInput` nhập Email có cấu hình thuộc tính `keyboardType="email-address"` để hiển thị bàn phím ảo tích hợp phím `@` tiện lợi cho người dùng.
+
+#### Kết quả thực tế (Actual Result):
+- Thẻ `TextInput` thiếu thuộc tính `keyboardType` (Dòng 764-770 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)), hiển thị bàn phím văn bản thông thường.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-002](./FR-02-mobile_bugs/BUG-002.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02-Mobile] [BUG-002] Ô nhập Email không cấu hình thuộc tính keyboardType="email-address"`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/23
+
+---
+
+### BUG-003: Ứng dụng di động ghi đè và ẩn thông báo khóa tài khoản từ server
+
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** Mobile UI / Logic
+- **Test Case liên quan:** DT-08 (Mobile)
+- **Liên quan SRS:** FR-02: Nếu tài khoản bị tạm khóa, hệ thống phải trả về thông báo lỗi phù hợp.
+
+#### Các bước tái hiện:
+1. Thực hiện đăng nhập sai liên tiếp 2 lần để tài khoản bị khóa trên backend.
+2. Thử đăng nhập lại bằng mật khẩu đúng.
+3. Backend trả về HTTP `403` với lỗi: `{"error":"Tài khoản đã bị khóa. Vui lòng thử lại sau."}`.
+4. Quan sát thông báo lỗi được hiển thị trực tiếp trên giao diện màn hình ứng dụng di động.
+
+#### Kết quả mong đợi (Expected Result):
+- Giao diện ứng dụng di động hiển thị thông báo lỗi chi tiết nhận từ backend: "Tài khoản đã bị khóa. Vui lòng thử lại sau." để người dùng biết.
+
+#### Kết quả thực tế (Actual Result):
+- Catch block của hàm `handleLogin` ghi đè toàn bộ lỗi và luôn hiển thị thông báo tĩnh: "Đăng nhập thất bại. Vui lòng kiểm tra lại." (Dòng 204-206 file [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)).
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-003](./FR-02-mobile_bugs/BUG-003.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02-Mobile] [BUG-003] Ứng dụng di động ghi đè và ẩn thông báo khóa tài khoản từ server`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/24
+
+---
+
+### BUG-004: API Backend cấu hình sai thời gian khóa tài khoản (180 giây thay vì 30 giây)
+
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** API
+- **Test Case liên quan:** BV-04 (Mobile)
+- **Liên quan SRS:** FR-02: Tài khoản bị tạm khóa **30 giây** (môi trường demo) nếu đăng nhập sai liên tiếp từ 3 lần trở lên.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Đăng nhập sai lần 1 (attempts tăng lên 2)
+Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"test@eshop.com","password":"wrong"}'
+
+# Đăng nhập sai lần 2 (attempts tăng lên 4, vượt ngưỡng 3 và tài khoản bị khóa)
+Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"test@eshop.com","password":"wrong"}'
+```
+Truy vấn trực tiếp cột `locked_until` trong cơ sở dữ liệu SQLite để xem thời gian khóa được thiết lập.
+
+#### Kết quả mong đợi (Expected Result):
+- Thời gian khóa tài khoản kể từ thời điểm khóa là 30 giây.
+
+#### Kết quả thực tế (Actual Result):
+- Thời gian khóa được đặt là 180 giây (3 phút) kể từ thời điểm đăng nhập sai lần thứ hai (Dòng 57 file [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js)).
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-004](./FR-02-mobile_bugs/BUG-004.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02-Mobile] [BUG-004] API Backend cấu hình sai thời gian khóa tài khoản (180 giây thay vì 30 giây)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/25
+
+---
+
+### BUG-005: Bộ đếm số lần đăng nhập sai tăng sai đơn vị (tăng 2 thay vì tăng 1)
+
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API
+- **Test Case liên quan:** BV-03 (Mobile)
+- **Liên quan SRS:** FR-02: Sau mỗi lần đăng nhập sai, hệ thống tăng bộ đếm lên **đúng 1 đơn vị**.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Reset attempts về 0 trước khi chạy
+# Chạy request đăng nhập sai 1 lần
+Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email":"test@eshop.com","password":"wrong"}'
+```
+Truy vấn trực tiếp cơ sở dữ liệu để xem giá trị cột `login_attempts` của người dùng.
+
+#### Kết quả mong đợi (Expected Result):
+- Bộ đếm `login_attempts` tăng thêm đúng 1 đơn vị (giá trị bằng 1).
+
+#### Kết quả thực tế (Actual Result):
+- Bộ đếm `login_attempts` tăng lên 2 đơn vị (giá trị bằng 2) chỉ sau 1 lần đăng nhập sai (Dòng 54 file [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js) thực hiện: `const newAttempts = user.login_attempts + 2;`). Lỗi này khiến người dùng bị khóa tài khoản chỉ sau 2 lần nhập sai (counter lên 4) thay vì 3 lần liên tiếp theo SRS.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-005](./FR-02-mobile_bugs/BUG-005.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02-Mobile] [BUG-005] Bộ đếm số lần đăng nhập sai tăng sai đơn vị (tăng 2 thay vì tăng 1)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/26
+
+

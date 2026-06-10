@@ -649,3 +649,187 @@ Thực hiện kiểm thử gọi API trực tiếp thông qua script chạy tự
 2. **Prompt phân tích biên Robustness và lỗi ngầm định của SQLite.**
 3. **Prompt đối chiếu tĩnh mã nguồn frontend và backend API.**
 
+---
+---
+
+# FEATURE: FR-02 (MOBILE) — ĐĂNG NHẬP & KHÓA TÀI KHOẢN
+
+## 1. Domain Testing — FR-02 (Mobile)
+
+**SUT:** Giao diện Đăng nhập trên Mobile App (`App.js`) + API backend `/api/login` + Database cột `login_attempts` và `locked_until` của bảng `users`
+
+### Bước 1 — Phạm vi và SUT
+
+#### Tài liệu Đặc tả (SRS FR-02)
+- Người dùng nhập Email và Mật khẩu để đăng nhập.
+- Bộ đếm đăng nhập sai tăng đúng 1 đơn vị sau mỗi lần thất bại.
+- Đăng nhập sai liên tiếp từ 3 lần trở lên sẽ tạm khóa tài khoản trong 30 giây (môi trường demo).
+- Hệ thống trả về thông báo lỗi phù hợp khi bị khóa, không tiết lộ lý do cụ thể để bảo mật.
+- Đăng nhập thành công trả về JWT Token và gửi kèm qua header `Authorization: Bearer <token>` cho các API sau đó.
+
+#### Các file mã nguồn liên quan
+- **Frontend Mobile:** [App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js) (dòng 37-41, 186-207, 759-795)
+- **Backend API:** [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js) (dòng 32-66)
+- **Database Schema:** [database.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/database.js) (dòng 48-61 - bảng `users`)
+
+#### Phân tích sơ bộ từ mã nguồn thực tế (Code vs SRS)
+1. **Nhãn giao diện di động bị sai:** Nhãn hiển thị của ô nhập Email được đặt tên là `"Username"` thay vì `"Email"`.
+2. **Thiếu tối ưu bàn phím di động:** Ô nhập Email không cấu hình `keyboardType="email-address"`, gây bất tiện cho người dùng khi nhập trên điện thoại.
+3. **Che giấu lỗi khóa tài khoản ở Client:** Catch block của hàm `handleLogin` luôn ghi đè và ẩn tất cả các thông báo lỗi lỗi của server (bao gồm thông báo khóa tài khoản `403`) và chỉ hiển thị chuỗi tĩnh: `"Đăng nhập thất bại. Vui lòng kiểm tra lại."`.
+4. **Backend tăng attempts sai đơn vị:** Mỗi lần đăng nhập sai, backend thực hiện `user.login_attempts + 2` (tăng 2 đơn vị thay vì 1), dẫn đến việc người dùng bị khóa tài khoản chỉ sau 2 lần nhập sai liên tiếp.
+5. **Backend cấu hình sai thời gian khóa:** Backend khóa tài khoản trong 3 phút (180 giây) thay vì 30 giây theo SRS.
+
+### Bước 2 — Input Variables (Biến đầu vào)
+
+| ID | Biến | Kiểu dữ liệu | Nguồn | Ràng buộc từ SRS |
+|----|------|--------------|-------|------------------|
+| V1 | `email` | String | TextInput UI / API Body | Phải nhập đúng định dạng email |
+| V2 | `password` | String | TextInput UI / API Body | Mật khẩu tài khoản |
+| V3 | `login_attempts` | Integer | Database | Bộ đếm tăng 1 đơn vị mỗi lần nhập sai |
+| V4 | `locked_until` | Datetime | Database | Thời gian khóa (30 giây sau khi bị khóa) |
+
+**Bộ giá trị hợp lệ mặc định:**
+- `email`: `"test@eshop.com"`
+- `password`: `"Test1234!"`
+
+### Bước 3 — Domains (Miền giá trị)
+
+| Biến | Miền hợp lệ (Valid Domain) | Miền không hợp lệ (Invalid Domain) | Giá trị đặc biệt (Special/Edge Values) |
+|------|----------------------------|-----------------------------------|---------------------------------------|
+| **email** | Email đã đăng ký trong DB | Email chưa đăng ký, sai định dạng | Chuỗi rỗng `""`, ký tự đặc biệt |
+| **password** | Khớp với password lưu trong DB | Không khớp với password trong DB | Chuỗi rỗng `""` |
+| **login_attempts** | Số lần đăng nhập sai < 3 | Số lần đăng nhập sai >= 3 (bị khóa) | Bằng 0, số âm |
+| **locked_until** | Giá trị thời gian đã qua (hoặc NULL) | Giá trị thời gian lớn hơn thời điểm hiện tại | Giá trị rác |
+
+### Bước 4 — Equivalence Partitions (Phân vùng tương đương)
+
+| EP-ID | Loại vùng | Biến tác động | Mô tả phân vùng tương đương | Giá trị đại diện |
+|-------|-----------|---------------|-----------------------------|------------------|
+| **EP-E01** | Hợp lệ | `email` | Email đã đăng ký trong hệ thống | `"test@eshop.com"` |
+| **EP-E02** | Không hợp lệ | `email` | Email chưa đăng ký trong hệ thống | `"unknown@eshop.com"` |
+| **EP-E03** | Không hợp lệ | `email` | Để trống email | `""` |
+| **EP-P01** | Hợp lệ | `password` | Nhập đúng mật khẩu của tài khoản | `"Test1234!"` |
+| **EP-P02** | Không hợp lệ | `password` | Nhập sai mật khẩu | `"wrong_pass"` |
+| **EP-P03** | Không hợp lệ | `password` | Để trống mật khẩu | `""` |
+| **EP-L01** | Hợp lệ | `login_attempts` | Số lần đăng nhập sai chưa vượt ngưỡng | `0`, `1`, `2` |
+| **EP-L02** | Không hợp lệ | `login_attempts` | Số lần đăng nhập sai vượt ngưỡng khóa | `>= 3` |
+
+### Bước 5 — Constraints (Các ràng buộc nghiệp vụ)
+
+| C-ID | Ràng buộc nghiệp vụ / Hệ thống | Loại ràng buộc | Kết quả kỳ vọng |
+|------|-------------------------------|----------------|-----------------|
+| **C-01** | Khóa tài khoản liên tiếp | Ràng buộc chéo | Đăng nhập sai >= 3 lần liên tiếp thì tài khoản bị khóa trong 30 giây. |
+| **C-02** | Reset bộ đếm khi thành công | Logic nghiệp vụ | Đăng nhập thành công phải reset `login_attempts = 0` và `locked_until = NULL`. |
+| **C-03** | Bảo mật thông tin lỗi | Ràng buộc UI | Không thông báo chi tiết lỗi là sai email hay sai mật khẩu, nhưng cần báo nếu tài khoản đang bị khóa. |
+
+### Bước 6 — Test Cases thiết kế từ Domain Testing
+
+| TC-ID | Mô tả kịch bản kiểm thử | Input thực tế đầu vào | Kết quả mong đợi theo SRS | Phân vùng EP / Ràng buộc |
+|-------|-------------------------|-----------------------|---------------------------|-------------------------|
+| **DT-01** | Đăng nhập thành công (Happy Path) | email=`"test@eshop.com"`, password=`"Test1234!"` | Đăng nhập thành công, chuyển hướng về Home | EP-E01, EP-P01, C-02 |
+| **DT-02** | Đăng nhập với Email chưa đăng ký | email=`"unknown@eshop.com"`, password=`"wrong"` | Từ chối, báo lỗi sai email hoặc mật khẩu | EP-E02 |
+| **DT-03** | Đăng nhập với Email rỗng | email=`""`, password=`"Test1234!"` | Báo lỗi hoặc chặn yêu cầu gửi đi | EP-E03 |
+| **DT-04** | Đăng nhập với Mật khẩu rỗng | email=`"test@eshop.com"`, password=`""` | Báo lỗi hoặc chặn yêu cầu gửi đi | EP-P03 |
+| **DT-05** | Kiểm tra nhãn trường nhập Email trên di động | Đọc trực quan màn hình đăng nhập di động | Trường nhập Email hiển thị nhãn là "Email" | UI review |
+| **DT-06** | Kiểm tra tối ưu bàn phím di động cho trường Email | Click vào ô nhập Email | Bàn phím ảo di động hiển thị nút `@` nhanh | UI review |
+| **DT-07** | Đăng nhập thành công đính kèm header xác thực | Đăng nhập thành công và thực hiện xem đơn hàng | Request lấy đơn hàng có header `Authorization: Bearer <Token>` | C-02 |
+| **DT-08** | Hiển thị thông báo khi tài khoản bị khóa | Đăng nhập bằng mật khẩu đúng khi tài khoản đang bị khóa | Hiển thị thông báo tài khoản bị khóa trên giao diện di động | EP-L02, C-03 |
+
+---
+
+## 2. Boundary Value Analysis — FR-02 (Mobile)
+
+**SUT:** Giao diện đăng nhập di động + API backend `/api/login` + DB
+
+### Bước 1 — Xác định các biên (Boundaries) từ đặc tả SRS
+
+| B-ID | Biến | Ràng buộc SRS | Điểm biên dưới (Min) | Điểm biên trên (Max) | Kiểu biên |
+|------|------|---------------|----------------------|----------------------|-----------|
+| **B-LIMIT-CNT** | `login_attempts` | Ngưỡng khóa tài khoản | 3 lần | Không giới hạn | Số lần đếm |
+| **B-LOCK-DUR** | `lock_duration` | Thời gian khóa | 30 giây | 30 giây | Giá trị thời gian |
+
+### Bước 2 — Xác định các điểm kiểm thử biên (BVA Points)
+
+#### 1. Phân tích biên cho số lần đăng nhập sai liên tiếp (B-LIMIT-CNT)
+- **Sát dưới biên (Min - 1):** Đăng nhập sai 2 lần -> Kỳ vọng: **Tài khoản chưa khóa**
+- **Tại biên (Min):** Đăng nhập sai 3 lần -> Kỳ vọng: **Tài khoản bắt đầu khóa**
+- **Sát trên biên (Min + 1):** Đăng nhập sai 4 lần -> Kỳ vọng: **Tài khoản vẫn khóa**
+
+#### 2. Phân tích biên cho thời gian khóa tài khoản (B-LOCK-DUR)
+- **Sát dưới biên (Min - 1s):** Đợi 29 giây -> Kỳ vọng: **Tài khoản vẫn đang khóa**
+- **Tại biên (Min):** Đợi 30 giây -> Kỳ vọng: **Tài khoản tự động mở khóa**
+- **Sát trên biên (Min + 1s):** Đợi 31 giây -> Kỳ vọng: **Tài khoản đã mở khóa**
+
+### Bước 3 — Danh sách Test Cases thiết kế từ BVA
+
+| TC-ID | Đầu vào kiểm thử | Vùng biên kiểm tra | Expected (SRS) | Expected (Backend thực tế) | Kết quả kỳ vọng |
+|-------|------------------|-------------------|----------------|----------------------------|-----------------|
+| **BV-01** | Nhập sai mật khẩu 1 lần | Số lần sai = 1 | Không khóa | Không khóa (attempts = 2) | Chấp nhận |
+| **BV-02** | Nhập sai mật khẩu 2 lần | Số lần sai = 2 | Không khóa | Bị khóa tài khoản (attempts = 4) | **FAIL** (Khóa quá sớm) |
+| **BV-03** | Nhập sai mật khẩu 3 lần | Số lần sai = 3 | Khóa tài khoản | Bị khóa tài khoản | Chấp nhận |
+| **BV-04** | Đợi 30 giây sau khi bị khóa | Thời gian khóa Min | Tài khoản mở khóa | Tài khoản vẫn khóa (do khóa 180s) | **FAIL** (Khóa quá lâu) |
+| **BV-05** | Đợi 29 giây sau khi bị khóa | Thời gian khóa Min - 1 | Tài khoản vẫn khóa | Tài khoản vẫn khóa | Chấp nhận |
+
+---
+
+## 3. Test Execution — FR-02 (Mobile)
+
+**Ngày thực thi:** 2026-06-10  
+**Môi trường:** Windows 10, Node.js v22.20.0, SQLite, React Native Expo App (SUT)
+
+### Kết quả tổng hợp (Test Summary)
+
+| Chỉ số (Metric) | Số lượng (Count) |
+|-----------------|------------------|
+| Tổng số kịch bản thiết kế | 13 |
+| Đã thực thi (Executed) | 13 |
+| **ĐẠT (Pass)** | 5 |
+| **KHÔNG ĐẠT (Fail)** | 8 |
+| Chưa chạy (Not run) | 0 |
+
+### Nhật ký thực thi API Layer (`POST /api/login`)
+
+Thực hiện kiểm thử gọi trực tiếp API login ở backend:
+
+| TC-ID | Dữ liệu đầu vào (Request Body) | HTTP Code | Kết quả thực tế (Actual Result) | Kết quả mong đợi (Expected) | Trạng thái | Mã lỗi (Bug ID) |
+|-------|-----------------------------|-----------|---------------------------------|----------------------------|------------|-----------------|
+| **DT-01** | `email="test@eshop.com"`, `password="Test1234!"` | 200 OK | Đăng nhập thành công, trả về token và user | Đăng nhập thành công | **PASS** | — |
+| **DT-02** | `email="unknown@eshop.com"`, `password="wrong"` | 401 | `{"error":"Invalid email or password"}` | Từ chối đăng nhập | **PASS** | — |
+| **BV-01** | `password="wrong"` (Lần 1) | 401 | `attempts = 2` | attempts tăng lên 1 | **FAIL** | [BUG-005](./Consolidated_Bug_Report.md#bug-005-bo-dem-so-lan-dang-nhap-sai-tang-sai-don-vi-tang-2-thay-vi-tang-1) |
+| **BV-02** | `password="wrong"` (Lần 2) | 401 | `attempts = 4`, `locked_until` được đặt 180s | Tài khoản chưa bị khóa | **FAIL** | [BUG-005](./Consolidated_Bug_Report.md#bug-005-bo-dem-so-lan-dang-nhap-sai-tang-sai-don-vi-tang-2-thay-vi-tang-1) |
+| **DT-08** | `password="Test1234!"` (Đăng nhập khi đang khóa) | 403 | `{"error":"Tài khoản đã bị khóa. Vui lòng thử lại sau."}` | Từ chối đăng nhập, trả về mã lỗi 403 | **PASS** | — |
+| **BV-04** | Chờ 30 giây và thử lại | 403 | Vẫn bị lỗi khóa tài khoản 403 | Đăng nhập thành công (mở khóa sau 30s) | **FAIL** | [BUG-004](./Consolidated_Bug_Report.md#bug-004-api-backend-cau-hinh-sai-thoi-gian-khoa-tai-khoan-180-giay-thay-vi-30-giay) |
+
+### Nhật ký thực thi UI / Code Review (Mobile App)
+
+| TC-ID | Nội dung kiểm thử | Kết quả thực tế (UI & Code) | Kết quả mong đợi (SRS) | Trạng thái | Mã lỗi (Bug ID) |
+|-------|-------------------|-----------------------------|------------------------|------------|-----------------|
+| **DT-05** | Nhãn trường nhập Email trên giao diện | Nhãn hiển thị là `"Username"` (Dòng 763 file `App.js`) | Nhãn phải là `"Email"` | **FAIL** | [BUG-001](./Consolidated_Bug_Report.md#bug-001-nhan-hien-thi-truong-nhap-email-dang-nhap-bi-sai-thanh-username) |
+| **DT-06** | Ô nhập Email thiếu thuộc tính tối ưu | Thẻ TextInput không có thuộc tính `keyboardType` (Dòng 764-770) | TextInput có thuộc tính `keyboardType="email-address"` | **FAIL** | [BUG-002](./Consolidated_Bug_Report.md#bug-002-o-nhap-email-khong-cau-hinh-thuoc-tinh-keyboardtype%3Demail-address) |
+| **DT-08** | Giao diện di động ẩn lỗi khóa tài khoản | Catch block ghi đè toàn bộ lỗi và chỉ hiện thông báo tĩnh: `"Đăng nhập thất bại. Vui lòng kiểm tra lại."` (Dòng 204-206) | Hiển thị thông báo lỗi khóa từ backend để người dùng biết | **FAIL** | [BUG-003](./Consolidated_Bug_Report.md#bug-003-ung-dung-di-dong-ghi-de-va-an-thong-bao-khoa-tai-khoan-tu-server) |
+| **DT-07** | Đăng nhập thành công gửi kèm token | Headers được đính kèm: `{ Authorization: "Bearer <token>" }` | Headers đính kèm token hợp lệ | **PASS** | — |
+
+### Đánh giá & Khuyến nghị
+- **Mobile UI:** Cập nhật lại nhãn hiển thị từ `Username` thành `Email`, thêm thuộc tính `keyboardType="email-address"` vào TextInput của email.
+- **Mobile Logic:** Thay đổi catch block trong hàm `handleLogin` để hiển thị lỗi thực tế từ server trả về (`error.message`) thay vì ghi đè bằng một câu thông báo chung chung.
+- **Backend API:** Sửa logic cộng dồn attempts ở tệp `server.js` thành `user.login_attempts + 1` và đổi thời gian tạm khóa tài khoản thành 30 giây (`30000` ms) thay vì 3 phút để phù hợp với môi trường demo SRS.
+
+---
+
+## 4. AI Gap Analysis — FR-02 (Mobile)
+
+### 1. Những lỗi và kịch bản kiểm thử AI thông thường bỏ sót (AI Gaps)
+
+| Kịch bản kiểm thử / Lỗi bị bỏ sót | Lý do AI bỏ sót (Root cause of AI gap) | Bài học rút ra & Giải pháp khắc phục |
+|-----------------------------------|----------------------------------------|-------------------------------------|
+| **1. Nhãn UI hiển thị sai "Username" thay vì "Email" (BUG-001)** | AI chỉ kiểm tra xem chức năng đăng nhập có hoạt động không chứ không đọc kỹ mã JSX để so khớp nhãn hiển thị thực tế với SRS. | Yêu cầu AI kiểm tra tĩnh các nhãn tĩnh của các thành phần giao diện xem có khớp 100% với SRS. |
+| **2. Thiếu thuộc tính keyboardType cho thiết bị di động (BUG-002)** | AI thường bỏ qua các chi tiết tối ưu hóa dành riêng cho từng nền tảng (Platform-specific UX features) như cấu hình bàn phím ảo di động. | Thiết lập quy định kiểm tra thuộc tính nền tảng di động đối với các trường nhập liệu chuẩn (Email, Số điện thoại, Số lượng). |
+| **3. Client che giấu thông tin lỗi khóa tài khoản (BUG-003)** | AI thấy hàm `handleLogin` có cấu trúc bắt lỗi và hiển thị thông điệp lỗi nên mặc nhiên giả định nó sẽ hiển thị đúng lỗi từ server, mà không đọc kỹ nội dung hàm catch. | Ép buộc AI kiểm tra chi tiết cách thức bắt lỗi và hiển thị thông báo lỗi trên UI có sử dụng dữ liệu thực tế (`error.message`) trả về từ API hay không. |
+| **4. Backend cộng attempts và cấu hình thời gian khóa sai (BUG-004, BUG-005)** | AI giả định backend luôn chạy đúng logic tăng 1 đơn vị và thời gian 30s. Nó bỏ qua khâu kiểm tra cơ sở dữ liệu SQLite sau mỗi lần đăng nhập sai. | Yêu cầu kiểm thử hộp xám (Grey-box testing) bắt buộc phải truy vấn và ghi nhận giá trị thực tế trong DB sau mỗi bước kiểm thử. |
+
+### 2. Cách cải tiến prompt để tối ưu hóa AI
+1. **Prompt yêu cầu rà soát cấu trúc xử lý lỗi và hiển thị thông báo lỗi ở client.**
+2. **Prompt kiểm tra tối ưu hóa giao diện di động (Platform UX attributes).**
+3. **Prompt yêu cầu truy vấn trực tiếp cơ sở dữ liệu để kiểm tra trạng thái bộ đếm.**
+
+

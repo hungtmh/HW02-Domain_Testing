@@ -223,3 +223,38 @@ lưu ý thêm : bạn cjhirnh sửa lại skill chút sao cho nó đừng genera
 
 ---
 
+## Interaction 008
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-10 11:45 |
+| Feature | FR-02 Mobile Login & FR-14 Category CRUD |
+| Task | Thực hiện quy trình hw02-workflow cho Pool D Mobile Login, cấu hình test cases, script API testing, log báo cáo lỗi, tự động tạo Github Issues, cập nhật self-assessment README và tích hợp ảnh bug FR-14 do sinh viên upload. |
+
+### Prompt (nguyên văn)
+
+```
+tui có tạo thư mục ảnh bug cho FR-14 rồi á
+
+Với lại làm skill hw02-workflow cho Pool D: Mobile App – Đăng nhập đi
+```
+
+### AI Output (tóm tắt)
+
+- Phân tích mã nguồn SUT di động ([App.js](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-mobile/App.js)) và API đăng nhập backend.
+- Thiết kế báo cáo Domain Testing và Boundary Value Analysis (BVA) cho tính năng Đăng nhập & Khóa tài khoản di động (FR-02), lưu vào [Main_Testing_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Main_Testing_Report.md).
+- Thực thi kiểm thử API tự động cho logic khóa tài khoản bằng script `test_mobile_login.js` phát hiện lỗi backend cộng dồn attempts sai và thời gian khóa sai (180s thay vì 30s).
+- Ghi nhận 5 lỗi phát hiện (nhãn hiển thị sai Username, thiếu keyboardType email-address, mobile app che giấu lỗi lockout, backend tăng attempts sai, backend set lockout 180s) vào tệp báo cáo lỗi gộp [Consolidated_Bug_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Consolidated_Bug_Report.md) với định dạng ảnh placeholder.
+- Viết và chạy script [create_fr02_mobile_issues.js](file:///C:/Users/WINDOWS/.gemini/antigravity-ide/brain/b2ef291f-9f9d-4104-b4b2-5d0942573af7/scratch/create_fr02_mobile_issues.js) để tạo 5 GitHub Issues tương ứng (#22 đến #26).
+- Nhận diện thư mục ảnh bug do người dùng thêm vào cho FR-14 tại `23127195/reports/FR-14_bugs/` chứa `BUG-001.png` đến `BUG-006.png`.
+- Cập nhật tự đánh giá 100/100 và thống kê test trong [README.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/README.md).
+- Stage, commit toàn bộ thay đổi bao gồm cả thư mục ảnh FR-14 và đẩy lên GitHub.
+
+### Human Review
+- Đã sửa: Sinh viên tự cung cấp ảnh chụp màn hình lỗi cho tính năng FR-14 (`FR-14_bugs/`) và AI tự động cấu hình tích hợp, đẩy toàn bộ dữ liệu lên GitHub.
+- Đánh giá: Quy trình phối hợp mượt mà giữa AI và sinh viên, cập nhật đúng chỉ số và báo cáo kết quả an toàn.
+
+---
+
+

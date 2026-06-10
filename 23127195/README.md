@@ -7,9 +7,9 @@
 | 1   | Feature A (FR-01: Domain + Boundary) | 25  | 25 |
 | 2   | Feature B (FR-09: Domain + Boundary) | 25  | 25 |
 | 3   | Feature C (FR-14: Domain + Boundary) | 25  | 25 |
-| 4   | Feature D Mobile (Pending) | 15  | N/A |
+| 4   | Feature D Mobile (FR-02: Domain + Boundary) | 15  | 15 |
 | 5   | Agent Skills | 10  | 10 |
-|     | **Total** | **100** | **85** |
+|     | **Total** | **100** | **100** |
 
 ---
 
@@ -20,7 +20,7 @@
 | A | FR-01 | Đăng ký tài khoản | frontend-web | `http://localhost:5173/register` |
 | B | FR-09 | Mã giảm giá | frontend-web | `http://localhost:5173/checkout` |
 | C | FR-14 | Quản lý danh mục | frontend-admin | `http://localhost:5174` |
-| D | - | Pending | frontend-mobile | - |
+| D | FR-02 | Đăng nhập & Khóa tài khoản | frontend-mobile | N/A |
 
 ---
 
@@ -28,13 +28,13 @@
 
 | Metric | Count |
 |--------|-------|
-| Features tested | 3 (FR-01, FR-09, FR-14) |
-| Test cases designed | 46 |
-| Executed | 43 |
-| Passed | 16 |
-| Failed | 27 |
+| Features tested | 4 (FR-01, FR-09, FR-14, FR-02-Mobile) |
+| Test cases designed | 59 |
+| Executed | 56 |
+| Passed | 21 |
+| Failed | 35 |
 | Not yet executed | 3 |
-| Bugs found | 19 |
+| Bugs found | 24 |
 
 ---
 
