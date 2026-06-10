@@ -456,3 +456,196 @@ Thực hiện kiểm thử API trực tiếp bằng PowerShell `Invoke-RestMetho
 1. **Prompt yêu cầu kiểm tra tĩnh công thức toán học và logic so sánh.**
 2. **Prompt định hướng kiểm thử an ninh (Security & Access Control).**
 3. **Prompt kiểm thử hộp xám (Grey-box testing) kết hợp giao diện và dữ liệu.**
+
+---
+---
+
+# FEATURE: FR-14 — QUẢN LÝ DANH MỤC (CATEGORY CRUD)
+
+## 1. Domain Testing — FR-14
+
+**SUT:** Giao diện Web Admin (`http://localhost:5174`) + API `POST/DELETE /api/categories` + Database bảng `categories`
+
+### Bước 1 — Phạm vi và SUT
+
+#### Tài liệu Đặc tả (SRS FR-14)
+- Admin có quyền Thêm / Xem / Xóa danh mục.
+- Tên danh mục là bắt buộc, không được phép để trống.
+- Ngoài ra, đối chiếu theo **FR-12: Kiểm soát truy cập (Access Control)**, tất cả các API này phải yêu cầu xác thực JWT và người dùng có vai trò là admin (`role = 'admin'`).
+
+#### Các file mã nguồn liên quan
+- **Frontend Admin UI:** [App.jsx](file:///d:/Kiem_thu/HW2/HW02-Group08/frontend-admin/src/App.jsx) (dòng 103, 142-151, 153-160, 294-335)
+- **Backend API:** [server.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/server.js) (dòng 243-278)
+- **Database Schema:** [database.js](file:///d:/Kiem_thu/HW2/HW02-Group08/backend/database.js) (dòng 22-26 - bảng `categories`)
+
+#### Phân tích sơ bộ từ mã nguồn thực tế (Code vs SRS)
+1. **API categories thiếu phân quyền Admin:** `POST`, `PUT`, và `DELETE /api/categories` sử dụng middleware `authenticateToken` để kiểm tra đăng nhập nhưng **hoàn toàn bỏ quên** khâu kiểm tra vai trò admin (`req.user.role === 'admin'`). Điều này cho phép tài khoản người dùng thường thực thi được toàn bộ các thao tác CRUD danh mục.
+2. **Thiếu validate tên danh mục ở Backend:** API `POST /api/categories` không kiểm tra giá trị `name` trước khi thực thi truy vấn SQLite `INSERT INTO categories`. Bảng `categories` cũng không cấu hình cột `name` là `NOT NULL`, do đó hệ thống cho phép tạo các danh mục có tên rỗng `""` hoặc `null`.
+3. **Không xử lý lỗi xóa ID không tồn tại:** API `DELETE /api/categories/:id` không kiểm tra xem ID có tồn tại trước khi xóa hay không, và không kiểm tra `this.changes` sau khi chạy `DELETE`. Hệ thống luôn trả về `200 OK` ("Category deleted") đối với mọi ID rác gửi lên.
+4. **Thiếu validate phía client trên Web Admin:** Form "Thêm mới" danh mục trên giao diện Admin không thực hiện kiểm tra `categoryName` rỗng trước khi gửi lên backend API.
+
+### Bước 2 — Input Variables (Biến đầu vào)
+
+| ID | Biến | Kiểu dữ liệu | Nguồn | Ràng buộc từ SRS |
+|----|------|--------------|-------|------------------|
+| V1 | `name` | String | Form UI / API Body | Bắt buộc nhập, không được để trống |
+| V2 | `token` | String (JWT) | Headers | Token của tài khoản Admin (`role = 'admin'`) |
+| V3 | `id` | Integer | URL Parameter | ID của danh mục, phải tồn tại khi xóa |
+
+**Bộ giá trị hợp lệ mặc định (để kiểm thử đơn lỗi):**
+- `name`: `"Sách"`
+- `token`: `<Valid Admin Token>`
+- `id`: `1` (Điện thoại - tồn tại mặc định)
+
+### Bước 3 — Domains (Miền giá trị)
+
+| Biến | Miền hợp lệ (Valid Domain) | Miền không hợp lệ (Invalid Domain) | Giá trị đặc biệt (Special/Edge Values) |
+|------|----------------------------|-----------------------------------|---------------------------------------|
+| **name** | Chuỗi chữ từ 1 ký tự trở lên | Chuỗi rỗng `""` | Khoảng trắng đầu/cuối, SQL Injection (`' OR 1=1--`), thẻ HTML/XSS |
+| **token** | Token JWT hợp lệ của admin | Token JWT của user thường, token sai định dạng | Không truyền token (Guest) |
+| **id** | ID nguyên dương đang tồn tại trong DB | ID không tồn tại trong DB | ID là số âm, bằng 0, ký tự không phải số |
+
+### Bước 4 — Equivalence Partitions (Phân vùng tương đương)
+
+| EP-ID | Loại vùng | Biến tác động | Mô tả phân vùng tương đương | Giá trị đại diện |
+|-------|-----------|---------------|-----------------------------|------------------|
+| **EP-N01** | Hợp lệ | `name` | Tên danh mục thông thường hợp lệ | `"Sách"` |
+| **EP-N02** | Không hợp lệ | `name` | Tên danh mục bị bỏ trống | `""` |
+| **EP-N03** | Không hợp lệ | `name` | Tên danh mục chỉ gồm khoảng trắng | `"   "` |
+| **EP-A01** | Hợp lệ | `token` | Token hợp lệ của tài khoản Admin | `role = 'admin'` |
+| **EP-A02** | Không hợp lệ | `token` | Token của tài khoản User thường | `role = 'user'` |
+| **EP-A03** | Không hợp lệ | `token` | Khách vãng lai chưa đăng nhập | *Không gửi token* |
+| **EP-I01** | Hợp lệ | `id` | ID tồn tại trong DB | `1` |
+| **EP-I02** | Không hợp lệ | `id` | ID không tồn tại trong DB | `9999` |
+
+### Bước 5 — Constraints (Các ràng buộc nghiệp vụ)
+
+| C-ID | Ràng buộc nghiệp vụ / Hệ thống | Loại ràng buộc | Kết quả kỳ vọng |
+|------|-------------------------------|----------------|-----------------|
+| **C-01** | Quyền hạn thao tác | Ràng buộc chéo | Chỉ admin mới được Thêm/Xóa danh mục. Hệ thống từ chối các role khác. |
+| **C-02** | Bắt buộc nhập tên | Ràng buộc định dạng | Validate dữ liệu ở cả Client và Server để từ chối tên rỗng. |
+| **C-03** | Tham chiếu toàn vẹn | Ràng buộc DB | Ràng buộc xử lý lỗi khi xóa danh mục không tồn tại hoặc ID không hợp lệ. |
+
+### Bước 6 — Test Cases thiết kế từ Domain Testing
+
+| TC-ID | Mô tả kịch bản kiểm thử | Input thực tế đầu vào | Kết quả mong đợi theo SRS | Phân vùng EP / Ràng buộc |
+|-------|-------------------------|-----------------------|---------------------------|-------------------------|
+| **DT-01** | Admin thêm danh mục hợp lệ (Happy Path) | token=`Admin`, name=`"Sach"` | Thêm danh mục thành công, trả về HTTP 200/201 | EP-N01, EP-A01, C-02 |
+| **DT-02** | Admin thêm danh mục với tên rỗng | token=`Admin`, name=`""` | Từ chối, báo lỗi tên bắt buộc (HTTP 400 Bad Request) | EP-N02, C-02 |
+| **DT-03** | Admin thêm danh mục chỉ chứa khoảng trắng | token=`Admin`, name=`"   "` | Từ chối, báo lỗi tên không hợp lệ (HTTP 400 Bad Request) | EP-N03, C-02 |
+| **DT-04** | User thường thêm danh mục (Access Bypass) | token=`User`, name=`"Normal User Category"` | Từ chối thao tác, báo lỗi phân quyền (HTTP 403 Forbidden) | EP-A02, C-01 |
+| **DT-05** | Khách vãng lai thêm danh mục | token=`Không có`, name=`"Guest Category"` | Từ chối thao tác, báo lỗi xác thực (HTTP 401 Unauthorized) | EP-A03, C-01 |
+| **DT-06** | Admin xóa danh mục đang tồn tại (Happy Path) | token=`Admin`, id=`<ID vừa tạo>` | Xóa danh mục thành công, trả về HTTP 200 OK | EP-I01, EP-A01, C-01 |
+| **DT-07** | Admin xóa danh mục không tồn tại | token=`Admin`, id=`9999` | Báo lỗi không tìm thấy danh mục (HTTP 404 Not Found) | EP-I02, C-03 |
+| **DT-08** | User thường xóa danh mục (Access Bypass) | token=`User`, id=`1` | Từ chối thao tác, báo lỗi phân quyền (HTTP 403 Forbidden) | EP-A02, C-01 |
+| **DT-09** | Khách vãng lai xóa danh mục | token=`Không có`, id=`1` | Từ chối thao tác, báo lỗi xác thực (HTTP 401 Unauthorized) | EP-A03, C-01 |
+| **DT-10** | SQL Injection trong trường Tên danh mục | name=`"Books' OR 1=1--"` | Lưu trữ an toàn tên dạng chuỗi, không lỗi DB | Giá trị đặc biệt |
+| **DT-11** | XSS (Cross-Site Scripting) trong Tên danh mục | name=`"<script>alert('XSS')</script>"` | Lưu trữ an toàn, render escape tránh thực thi mã độc | Giá trị đặc biệt |
+
+---
+
+## 2. Boundary Value Analysis — FR-14
+
+**SUT:** Giao diện Web Admin + API `POST/DELETE /api/categories`
+
+### Bước 1 — Xác định các biên (Boundaries) từ đặc tả SRS
+
+Dựa vào SRS FR-14, ta xác định các biên sau:
+
+| B-ID | Biến | Ràng buộc SRS | Điểm biên dưới (Min) | Điểm biên trên (Max) | Kiểu biên |
+|------|------|---------------|----------------------|----------------------|-----------|
+| **B-NAME-LEN** | `name` | Độ dài tên danh mục | 1 ký tự | Không giới hạn | Giá trị số |
+| **B-ID-VAL** | `id` | Giá trị ID danh mục để xóa | 1 | Không giới hạn | Giá trị số nguyên |
+
+### Bước 2 — Xác định các điểm kiểm thử biên (BVA Points)
+
+#### 1. Phân tích biên cho độ dài tên danh mục (B-NAME-LEN)
+- **Sát dưới biên (Min - 1):** 0 ký tự (`name=""`). Kỳ vọng: **Từ chối (Reject)**
+- **Tại biên (Min):** 1 ký tự (`name="A"`). Kỳ vọng: **Chấp nhận (Accept)**
+- **Sát trên biên (Min + 1):** 2 ký tự (`name="AB"`). Kỳ vọng: **Chấp nhận (Accept)**
+
+#### 2. Phân tích biên cho ID danh mục (B-ID-VAL)
+- **Sát dưới biên (Min - 1):** `id = 0`. Kỳ vọng: **Từ chối (Reject / HTTP 404)**
+- **Dưới biên nữa:** `id = -1`. Kỳ vọng: **Từ chối**
+- **Tại biên (Min):** `id = 1`. Kỳ vọng: **Chấp nhận (Xóa nếu có quyền admin và tồn tại)**
+
+### Bước 3 — Danh sách Test Cases thiết kế từ BVA
+
+*Mặc định: Sử dụng token Admin hợp lệ.*
+
+| TC-ID | Đầu vào kiểm thử | Vùng biên kiểm tra | Expected (SRS) | Expected (Backend thực tế) | Kết quả kỳ vọng |
+|-------|------------------|-------------------|----------------|----------------------------|-----------------|
+| **BV-01** | `name = ""` | Độ dài tên Min - 1 | Từ chối | Chấp nhận (do thiếu validate) | **FAIL** (Lỗi logic biên) |
+| **BV-02** | `name = "A"` | Độ dài tên Min | Chấp nhận | Chấp nhận | Chấp nhận |
+| **BV-03** | `name = "AB"` | Độ dài tên Min + 1 | Chấp nhận | Chấp nhận | Chấp nhận |
+| **BV-04** | `id = 0` | ID biên dưới Min - 1 | Từ chối | Chấp nhận trả về `200` | **FAIL** (Lỗi logic biên) |
+| **BV-05** | `id = -1` | ID âm | Từ chối | Chấp nhận trả về `200` | **FAIL** (Lỗi logic biên) |
+
+---
+
+## 3. Test Execution — FR-14
+
+**Ngày thực thi:** 2026-06-10  
+**Môi trường:** Windows 10, Node.js v22.20.0, SQLite, Chrome / Admin Web (:5174)
+
+### Kết quả tổng hợp (Test Summary)
+
+| Chỉ số (Metric) | Số lượng (Count) |
+|-----------------|------------------|
+| Tổng số kịch bản thiết kế | 16 |
+| Đã thực thi (Executed) | 16 |
+| **ĐẠT (Pass)** | 7 |
+| **KHÔNG ĐẠT (Fail)** | 9 |
+| Chưa chạy (Not run) | 0 |
+
+### Nhật ký thực thi API Layer (`POST/DELETE /api/categories`)
+
+Thực hiện kiểm thử gọi API trực tiếp thông qua script chạy tự động:
+
+| TC-ID | Dữ liệu đầu vào (Request Body / URL) | HTTP Code | Kết quả thực tế (Actual Result) | Kết quả mong đợi (Expected) | Trạng thái | Mã lỗi (Bug ID) |
+|-------|-----------------------------|-----------|---------------------------------|----------------------------|------------|-----------------|
+| **DT-01** | POST name=`"Sach"`, Admin Token | 200 OK | `{"message":"Category created","id":4}` | Thêm thành công danh mục | **PASS** | — |
+| **DT-02** | POST name=`""`, Admin Token | 200 OK | `{"message":"Category created","id":5}` | Từ chối, báo lỗi `400 Bad Request` | **FAIL** | [BUG-003](./Consolidated_Bug_Report.md#bug-003-api-post-apicategories-khong-validate-ten-danh-muc-bi-bo-trong-empty-name) |
+| **DT-03** | POST name=`"   "`, Admin Token | 200 OK | `{"message":"Category created","id":6}` | Từ chối, báo lỗi `400 Bad Request` | **FAIL** | [BUG-004](./Consolidated_Bug_Report.md#bug-004-api-post-apicategories-cho-phep-tao-danh-muc-chi-chua-khoang-trang) |
+| **DT-04** | POST name=`"Normal User Category"`, User Token | 200 OK | `{"message":"Category created","id":7}` | Từ chối, báo lỗi phân quyền `403` | **FAIL** | [BUG-001](./Consolidated_Bug_Report.md#bug-001-api-post-apicategories-thieu-kiem-soat-phan-quyen-broken-access-control) |
+| **DT-05** | POST name=`"Guest Category"`, Không Token | 401 | `{"error":"Unauthorized"}` | Từ chối, báo lỗi xác thực `401` | **PASS** | — |
+| **DT-06** | DELETE `/api/categories/8`, Admin Token | 200 OK | `{"message":"Category deleted"}` | Xóa thành công danh mục | **PASS** | — |
+| **DT-07** | DELETE `/api/categories/9999`, Admin Token | 200 OK | `{"message":"Category deleted"}` | Báo lỗi không tìm thấy `404` | **FAIL** | [BUG-005](./Consolidated_Bug_Report.md#bug-005-api-delete-apicategoriesid-phan-hoi-thanh-cong-khi-xoa-id-khong-ton-tai-hoac-khong-hop-le) |
+| **DT-08** | DELETE `/api/categories/8`, User Token | 200 OK | `{"message":"Category deleted"}` | Từ chối, báo lỗi phân quyền `403` | **FAIL** | [BUG-002](./Consolidated_Bug_Report.md#bug-002-api-delete-apicategoriesid-thieu-kiem-soat-phan-quyen-broken-access-control) |
+| **DT-09** | DELETE `/api/categories/8`, Không Token | 401 | `{"error":"Unauthorized"}` | Từ chối, báo lỗi xác thực `401` | **PASS** | — |
+| **DT-10** | POST name=`"Books' OR 1=1--"`, Admin Token | 200 OK | `{"message":"Category created","id":9}` | Lưu trữ an toàn không lỗi SQL | **PASS** | — |
+| **DT-11** | POST name=`"<script>alert('XSS')</script>"`, Admin Token | 200 OK | `{"message":"Category created","id":10}` | Lưu trữ an toàn chuỗi thô | **PASS** | — |
+| **BV-01** | POST name=`""`, Admin Token | 200 OK | Tạo thành công ID 5 | Từ chối biên dưới | **FAIL** | [BUG-003](./Consolidated_Bug_Report.md#bug-003-api-post-apicategories-khong-validate-ten-danh-muc-bi-bo-trong-empty-name) |
+| **BV-02** | POST name=`"A"`, Admin Token | 200 OK | Tạo thành công | Chấp nhận | **PASS** | — |
+| **BV-04** | DELETE `/api/categories/0`, Admin Token | 200 OK | `{"message":"Category deleted"}` | Từ chối ID không hợp lệ | **FAIL** | [BUG-005](./Consolidated_Bug_Report.md#bug-005-api-delete-apicategoriesid-phan-hoi-thanh-cong-khi-xoa-id-khong-ton-tai-hoac-khong-hop-le) |
+| **BV-05** | DELETE `/api/categories/-1`, Admin Token | 200 OK | `{"message":"Category deleted"}` | Từ chối ID không hợp lệ | **FAIL** | [BUG-005](./Consolidated_Bug_Report.md#bug-005-api-delete-apicategoriesid-phan-hoi-thanh-cong-khi-xoa-id-khong-ton-tai-hoac-khong-hop-le) |
+
+### Nhật ký thực thi UI / Code Review (Web Admin)
+
+| TC-ID | Nội dung kiểm thử | Kết quả thực tế (UI & Code) | Kết quả mong đợi (SRS) | Trạng thái | Mã lỗi (Bug ID) |
+|-------|-------------------|-----------------------------|------------------------|------------|-----------------|
+| **DT-02 (UI)** | Thêm danh mục rỗng trên giao diện | Form submit trực tiếp lên API, không có khâu validate client | Chặn submit, báo lỗi rỗng | **FAIL** | [BUG-006](./Consolidated_Bug_Report.md#bug-006-giao-dien-web-admin-cho-phep-them-moi-danh-muc-rong-client-side-validation-bypass) |
+
+### Đánh giá & Khuyến nghị
+- **Phân quyền (Broken Access Control):** Cần sửa middleware hoặc thêm middleware kiểm tra vai trò admin (kiểm tra `req.user && req.user.role === 'admin'`) trên các API: `POST /api/categories`, `PUT /api/categories/:id`, `DELETE /api/categories/:id`.
+- **Ràng buộc nghiệp vụ (Business Rules):** Bổ sung khâu validate dữ liệu `name` không rỗng ở backend trước khi thực thi truy vấn cơ sở dữ liệu. Đồng thời, thêm kiểm tra `categoryName.trim()` ở client-side để hiển thị cảnh báo giao diện tốt hơn.
+- **SQLite error handling:** Sửa API DELETE để kiểm tra xem bản ghi có bị ảnh hưởng hay không (bằng cách kiểm tra `this.changes === 0`) nhằm trả về lỗi `404 Not Found` khi xóa ID rác.
+
+---
+
+## 4. AI Gap Analysis — FR-14
+
+### 1. Những lỗi và kịch bản kiểm thử AI thông thường bỏ sót (AI Gaps)
+
+| Kịch bản kiểm thử / Lỗi bị bỏ sót | Lý do AI bỏ sót (Root cause of AI gap) | Bài học rút ra & Giải pháp khắc phục |
+|-----------------------------------|----------------------------------------|-------------------------------------|
+| **1. Thiếu kiểm tra phân quyền role = 'admin' (BUG-001, BUG-002)** | AI mặc định coi `authenticateToken` là đủ để bảo vệ các tuyến API Admin, mà không phân tích sâu rằng token đó có chứa vai trò `user` hay `admin`. | Luôn yêu cầu AI thực hiện kiểm thử leo thang đặc quyền (Privilege Escalation) bằng cách gửi yêu cầu Admin bằng token của người dùng thông thường. |
+| **2. Backend cho phép thêm tên rỗng (BUG-003, BUG-004)** | AI có thói quen tin cậy vào việc thiết kế DB sẽ có thuộc tính `NOT NULL` và backend tự động kiểm tra rỗng. | Ép buộc AI thực hiện kiểm thử hộp xám (Grey-box testing) đọc trực tiếp cấu trúc bảng SQLite và code API để đối chiếu ràng buộc dữ liệu. |
+| **3. Xóa ID không tồn tại trả về thành công (BUG-005)** | AI giả định lệnh delete trong SQLite sẽ tự động báo lỗi nếu không khớp bản ghi nào. Tuy nhiên SQLite cho phép chạy lệnh delete không khớp bản ghi và trả về thành công (0 changes) mà không ném ra lỗi. | Nhắc nhở AI kiểm tra cấu trúc xử lý phản hồi API thực tế của các thao tác có điều kiện (Update/Delete) để xác nhận có kiểm tra số lượng dòng ảnh hưởng (`this.changes`). |
+| **4. Bỏ qua validate phía Client (BUG-006)** | AI thường cho rằng form UI có HTML5 validation `required` hoặc JS validate. Nó không thực hiện code review giao diện UI admin để xem nút bấm có bị chặn hay không. | Ràng buộc AI kiểm tra mã nguồn tệp `.jsx` quản lý form UI để xác nhận các hàm submit có hàm kiểm tra logic biên hay không. |
+
+### 2. Cách cải tiến prompt để tối ưu hóa AI
+1. **Prompt yêu cầu kiểm thử bảo mật phân quyền chéo (Role-based access check).**
+2. **Prompt phân tích biên Robustness và lỗi ngầm định của SQLite.**
+3. **Prompt đối chiếu tĩnh mã nguồn frontend và backend API.**
+

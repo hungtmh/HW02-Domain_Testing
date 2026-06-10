@@ -379,3 +379,181 @@ Invoke-RestMethod -Uri "http://localhost:3000/api/apply-coupon" -Headers @{ Auth
 #### Thông tin GitHub Issue:
 - **Title:** `[FR-09] [BUG-005] Cho phép chỉnh sửa tổng tiền thanh toán và Checkout với giá tùy ý`
 - **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/15
+
+---
+---
+
+# FEATURE: FR-14 — QUẢN LÝ DANH MỤC (6 BUGS)
+
+### BUG-001: API POST /api/categories thiếu kiểm soát phân quyền (Broken Access Control)
+
+- **Độ nghiêm trọng (Severity):** Critical
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API / Security
+- **Test Case liên quan:** DT-04
+- **Liên quan SRS:** FR-12: Tất cả các API có tính ảnh hưởng dữ liệu liên quan đến categories (POST/PUT/DELETE) phải yêu cầu Token JWT hợp lệ và `role = 'admin'` trong Token.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Sử dụng Token của người dùng thường (role = 'user')
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <User_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":"Normal User Category"}'
+```
+
+#### Kết quả mong đợi (Expected Result):
+- API từ chối yêu cầu và trả về lỗi `403 Forbidden` do tài khoản không phải admin.
+
+#### Kết quả thực tế (Actual Result):
+- API trả về `200 OK` và thêm danh mục mới thành công: `{"message":"Category created","id":7}`.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-001](./FR-14_bugs/BUG-001.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-001] API POST /api/categories thiếu kiểm soát phân quyền (Broken Access Control)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/16
+
+---
+
+### BUG-002: API DELETE /api/categories/:id thiếu kiểm soát phân quyền (Broken Access Control)
+
+- **Độ nghiêm trọng (Severity):** Critical
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API / Security
+- **Test Case liên quan:** DT-08
+- **Liên quan SRS:** FR-12: Tất cả các API có tính ảnh hưởng dữ liệu liên quan đến categories (POST/PUT/DELETE) phải yêu cầu Token JWT hợp lệ và `role = 'admin'` trong Token.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Sử dụng Token của người dùng thường (role = 'user') để xóa danh mục ID = 8
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories/8" -Headers @{ Authorization = "Bearer <User_JWT_Token>" } -Method Delete
+```
+
+#### Kết quả mong đợi (Expected Result):
+- API từ chối yêu cầu và trả về lỗi `403 Forbidden` do tài khoản không phải admin.
+
+#### Kết quả thực tế (Actual Result):
+- API xử lý thành công `200 OK` và phản hồi: `{"message":"Category deleted"}`.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-002](./FR-14_bugs/BUG-002.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-002] API DELETE /api/categories/:id thiếu kiểm soát phân quyền (Broken Access Control)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/17
+
+---
+
+### BUG-003: API POST /api/categories không validate tên danh mục bị bỏ trống (Empty Name)
+
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API
+- **Test Case liên quan:** DT-02, BV-01
+- **Liên quan SRS:** FR-14: Tên danh mục là bắt buộc, không được để trống.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Gửi request với name là chuỗi rỗng
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":""}'
+```
+
+#### Kết quả mong đợi (Expected Result):
+- API từ chối đăng ký danh mục rỗng và trả về lỗi `400 Bad Request`.
+
+#### Kết quả thực tế (Actual Result):
+- API trả về `200 OK`: `{"message":"Category created","id":5}` và tạo danh mục rỗng thành công trong cơ sở dữ liệu.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-003](./FR-14_bugs/BUG-003.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-003] API POST /api/categories không validate tên danh mục bị bỏ trống (Empty Name)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/18
+
+---
+
+### BUG-004: API POST /api/categories cho phép tạo danh mục chỉ chứa khoảng trắng
+
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API
+- **Test Case liên quan:** DT-03
+- **Liên quan SRS:** FR-14: Tên danh mục là bắt buộc, không được để trống.
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Gửi request với name là chuỗi chứa khoảng trắng
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Post -ContentType "application/json" -Body '{"name":"   "}'
+```
+
+#### Kết quả mong đợi (Expected Result):
+- API tự động cắt khoảng trắng đầu/cuối (trim) và từ chối do tên danh mục rỗng (HTTP 400 Bad Request).
+
+#### Kết quả thực tế (Actual Result):
+- API trả về `200 OK`: `{"message":"Category created","id":6}` và tạo danh mục chỉ chứa khoảng trắng thành công.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-004](./FR-14_bugs/BUG-004.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-004] API POST /api/categories cho phép tạo danh mục chỉ chứa khoảng trắng`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/19
+
+---
+
+### BUG-005: API DELETE /api/categories/:id phản hồi thành công khi xóa ID không tồn tại hoặc không hợp lệ
+
+- **Độ nghiêm trọng (Severity):** Minor
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** API
+- **Test Case liên quan:** DT-07, BV-04, BV-05
+- **Liên quan SRS:** Ràng buộc nghiệp vụ API (Xóa tài nguyên không tồn tại phải trả về mã lỗi thích hợp).
+
+#### Lệnh chạy test thực tế:
+```powershell
+# Gửi yêu cầu xóa ID 9999 không tồn tại
+Invoke-RestMethod -Uri "http://localhost:3000/api/categories/9999" -Headers @{ Authorization = "Bearer <Admin_JWT_Token>" } -Method Delete
+```
+
+#### Kết quả mong đợi (Expected Result):
+- API trả về lỗi `404 Not Found` hoặc phản hồi lỗi thích hợp chỉ ra danh mục không tồn tại.
+
+#### Kết quả thực tế (Actual Result):
+- API trả về `200 OK`: `{"message":"Category deleted"}`.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-005](./FR-14_bugs/BUG-005.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-005] API DELETE /api/categories/:id phản hồi thành công khi xóa ID không tồn tại hoặc không hợp lệ`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/20
+
+---
+
+### BUG-006: Giao diện Web Admin cho phép thêm mới danh mục rỗng (Client-side validation bypass)
+
+- **Độ nghiêm trọng (Severity):** Minor
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** Web UI
+- **Test Case liên quan:** Code Review / UI
+- **Liên quan SRS:** FR-14: Tên danh mục là bắt buộc, không được để trống.
+
+#### Các bước tái hiện:
+1. Đăng nhập với tài khoản Admin vào trang Admin (`http://localhost:5174`).
+2. Chọn tab "Danh mục".
+3. Để trống ô nhập "Tên danh mục mới".
+4. Bấm nút "Thêm mới".
+
+#### Kết quả mong đợi (Expected Result):
+- Client hiển thị cảnh báo lỗi hoặc vô hiệu hóa nút "Thêm mới" nếu ô nhập trống.
+
+#### Kết quả thực tế (Actual Result):
+- Client cho phép gửi trực tiếp request lên API và làm mới trang sau khi thêm danh mục rỗng thành công.
+
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-006](./FR-14_bugs/BUG-006.png)
+
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-14] [BUG-006] Giao diện Web Admin cho phép thêm mới danh mục rỗng (Client-side validation bypass)`
+- **Link Issue:** https://github.com/hungtmh/HW02-Domain_Testing/issues/21
+

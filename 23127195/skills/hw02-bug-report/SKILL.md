@@ -15,15 +15,16 @@ Test **Actual ≠ Expected (theo SRS)** → bug. Ghi cả UI bug, logic bug, sec
 ## Quy trình
 
 1. Chạy test và ghi nhận các lỗi (Defects) phát hiện được.
-2. Lưu các ảnh screenshot lỗi vào thư mục `23127195/reports/FR-XX_bugs/BUG-NNN.png`.
+2. Xác định đường dẫn ảnh screenshot lỗi là `23127195/reports/FR-XX_bugs/BUG-NNN.png`. **LƯU Ý QUAN TRỌNG:** Không tự động chạy công cụ tạo ảnh hoặc sinh ảnh giả lập/tầm bậy, hãy để trống/giữ nguyên định dạng đường dẫn để sinh viên tự chụp và chèn ảnh thật vào sau.
 3. Với các lỗi tầng API, ghi rõ câu lệnh chạy test (PowerShell hoặc curl) để người dùng có thể tự chạy và tái hiện lỗi.
 4. Tổng hợp toàn bộ lỗi tìm được vào một file báo cáo lỗi gộp duy nhất của dự án: **`23127195/reports/Consolidated_Bug_Report.md`**.
 5. **Tự động tạo GitHub Issues** trên repo nhóm cho từng bug phát hiện bằng cách chạy lệnh:
 ```powershell
 gh issue create --repo [repo_name] --title "[FR-XX] [BUG-NNN] Title" --body-file [body_markdown_file]
 ```
-Trong đó, file markdown thân của Issue phải chứa đường dẫn ảnh screenshot đã được push lên GitHub (như `![BUG-NNN](https://raw.githubusercontent.com/[username]/[repo]/main/23127195/reports/FR-XX_bugs/BUG-NNN.png)`) để hiển thị hình ảnh tự động.
+Trong đó, file markdown thân của Issue phải chứa đường dẫn ảnh screenshot dự kiến sẽ được push lên GitHub (như `![BUG-NNN](https://raw.githubusercontent.com/[username]/[repo]/main/23127195/reports/FR-XX_bugs/BUG-NNN.png)`) để hiển thị hình ảnh tự động sau khi sinh viên chụp ảnh thật.
 6. Git commit: `test(FR-XX): report bugs for [feature name]`
+
 
 ## Cấu trúc ghi nhận vào Consolidated_Bug_Report.md
 

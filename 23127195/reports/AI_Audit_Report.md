@@ -160,3 +160,66 @@ nhớ cập nhật skill để tự động lfm chuyện đó
 - Đánh giá: Giúp sinh viên yên tâm bài làm luôn được log đầy đủ tự động, không lo quên ghi log nộp bài.
 
 ---
+
+## Interaction 006
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-10 10:41 |
+| Feature | FR-09 Discount Coupons (Mã giảm giá) |
+| Task | Cập nhật các issue github và push ảnh mới của FR-09 |
+
+### Prompt (nguyên văn)
+
+```
+Hãy cập nhật lại các issue github và cách ảnh mới trong FR-09-bugs và pushs lên
+```
+
+### AI Output (tóm tắt)
+
+- Chạy script Node.js kiểm chứng sự tồn tại của các GitHub Issues số 11 đến 15.
+- Cập nhật lại toàn bộ nội dung của các issue này trên GitHub (thêm mức độ nghiêm trọng, mức độ ưu tiên, test case, các bước tái hiện, expected/actual) bằng cách gọi API của GitHub.
+- Commit các ảnh chụp màn hình lỗi mới đã được người dùng chỉnh sửa trong thư mục `23127195/reports/FR-09_bugs/` và tệp database cập nhật.
+- Cập nhật file lịch sử commit `git_commit_log.txt`.
+- Đẩy (push) các thay đổi lên kho chứa GitHub.
+
+### Human Review
+- Đã sửa: Kiểm tra các Issue trên kho chứa từ xa, xác nhận ảnh đã hiển thị đúng và cấu trúc mô tả lỗi rất chi tiết.
+- Đánh giá: Thực hiện nhanh chóng, cập nhật chính xác nội dung Issue qua API.
+
+---
+
+## Interaction 007
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Antigravity AI Coding Assistant |
+| Date & Time | 2026-06-10 10:47 |
+| Feature | FR-14 Category CRUD (Quản lý Danh mục) |
+| Task | Chạy quy trình hw02-workflow cho FR-14, sửa đổi skill bỏ sinh ảnh, thiết kế test case, chạy test, tạo issue và cập nhật báo cáo lỗi gộp |
+
+### Prompt (nguyên văn)
+
+```
+hãy dùng skill hw02-workflow trong 23127195 để làm FR-14 – Category management (CRUD - Quản lý danh mục)
+cho tôi
+lưu ý thêm : bạn cjhirnh sửa lại skill chút sao cho nó đừng generate ảnh tầm bậy, để đó tui sẽ add ảnh vô , và bạn cũng đừng add ảnh nha
+```
+
+### AI Output (tóm tắt)
+
+- Cập nhật quy trình trong file cấu hình skill `hw02-bug-report/SKILL.md` để loại bỏ yêu cầu sinh ảnh tự động từ AI, chuyển sang sử dụng đường dẫn ảnh placeholder `![BUG-NNN](./FR-14_bugs/BUG-NNN.png)`.
+- Thiết kế báo cáo Domain Testing và Boundary Value Analysis cho tính năng CRUD Danh mục (FR-14), lưu vào [Main_Testing_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Main_Testing_Report.md).
+- Thực thi gọi các API của SUT để xác minh các test case bằng code chạy tự động sử dụng thư viện `http` gốc của Node.js.
+- Ghi nhận 6 lỗi phát hiện (lỗi phân quyền role='user' ở POST/DELETE, lỗi backend cho phép tạo tên rỗng/khoảng trắng, lỗi SQLite delete không check thay đổi, lỗi UI thiếu validate) vào tệp báo cáo lỗi gộp [Consolidated_Bug_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Consolidated_Bug_Report.md) với định dạng ảnh lỗi là các đường dẫn placeholder.
+- Viết và chạy script tự động tạo 6 GitHub Issues tương ứng (#16 đến #21) chứa các mô tả lỗi chi tiết và liên kết ảnh placeholder từ xa.
+- Cập nhật AI Gap Analysis cho FR-14 trong [Main_Testing_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/Main_Testing_Report.md).
+- Ghi log tương tác Interaction 006 và 007 vào [AI_Audit_Report.md](file:///d:/Kiem_thu/HW2/HW02-Group08/23127195/reports/AI_Audit_Report.md).
+
+### Human Review
+- Đã sửa: Sinh viên tự chụp ảnh thật giao diện lỗi và lưu đè vào các đường dẫn `23127195/reports/FR-14_bugs/BUG-00X.png` trước khi đẩy lên GitHub để hoàn thành bằng chứng kiểm thử.
+- Đánh giá: Đúng tinh thần phối hợp giữa AI và sinh viên, quy trình kiểm soát tốt không tự động sinh ảnh giả lập.
+
+---
+
