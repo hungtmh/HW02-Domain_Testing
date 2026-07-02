@@ -1,0 +1,36 @@
+77c2daf docs: add 23127259 HW02 reports
+596bee8 Chỉnh sửa rõ commit log
+de8dd4a docs(HW02): regenerate commit log with latest commits
+118ec3b docs(HW02): format student name, group, and MSSV in all reports and README
+3242dc7 docs(HW02): update student name to Tran Manh Hung in README.md
+55749f7 docs(HW02): regenerate commit log with latest commits
+ac2c3db docs(HW02): rename reports and update student README.md
+aa01a0a docs(HW02): regenerate commit log with latest commits
+92a0475 docs(HW02): complete student README.md and log interaction 012
+53d92a8 docs(HW02): regenerate commit log with latest commits
+18f461c docs(HW02): keep only factual bugs in AI gap analysis
+c3596dc docs(HW02): regenerate commit log with latest commits
+e84f853 docs(HW02): update AI gap analysis with factual bugs missed in previous runs
+ee84457 docs(HW02): regenerate commit log with latest commits
+d434b6b docs(HW02): append interaction 009 to AI audit report
+55266fb docs(HW02): regenerate commit log with latest commits
+df0b99a test(FR-02-mobile): integrate actual bug screenshots and update github issues
+0a10922 docs(HW02): regenerate commit log with latest commits
+2513fbf test(FR-02-mobile): execute BVA and report bugs for mobile login
+966296d docs(HW02): regenerate commit log with latest commits
+f22638a test(FR-14): replace static token placeholders with dynamic powershell commands
+5410073 docs(HW02): regenerate commit log with latest commits
+a0315b4 test(FR-14): execute BVA and report bugs for category CRUD
+c4e398c docs(HW02): regenerate commit log with latest commits
+5481498 test(FR-09): update bug screenshots and github issues
+f22b1f5 docs(HW02): regenerate commit log with latest commits
+9218882 docs(HW02): update skills to mandate automatic prompt logging and append interaction 005
+bc26565 docs(HW02): consolidate reports for FR-01 and FR-09, refactor custom skills
+0d59795 test(FR-09): complete test workflow and report bugs for discount coupons
+836d385 test(FR-01): embed actual screenshot paths in bug report and update skill definitions
+bf7674a test(FR-01): update consolidated bug report with exact issue links
+9efe267 Hùng: Chỉnh sửa lại chỉ còn 1 file bug report với cập nhật skill agent
+b67b81f Hùng: dùng AI skill antigravity sửa lại FR-01 đồng thời bổ sung Bug
+4b78ad4 Hùng: Dùng AI agent để làm FR01
+85af3ba first upload
+2f9bf2b Initial commit
