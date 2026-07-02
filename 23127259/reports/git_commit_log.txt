@@ -1,4 +1,4 @@
-77c2daf docs: add 23127259 HW02 reports
+e30bc02 docs: add 23127259 HW02 reports
 596bee8 Chỉnh sửa rõ commit log
 de8dd4a docs(HW02): regenerate commit log with latest commits
 118ec3b docs(HW02): format student name, group, and MSSV in all reports and README
