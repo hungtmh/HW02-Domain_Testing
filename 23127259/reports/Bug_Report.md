@@ -334,21 +334,21 @@
 
 Các bug đã được tạo issue thật trên GitHub repo nhóm để team có thể theo dõi và xử lý:
 
-- **BUG-FR02-001:** [#27](https://github.com/hungtmh/HW02-Domain_Testing/issues/27) - [23127259][BUG-FR02-001] Failed login counter increases by 2 instead of 1
-- **BUG-FR02-002:** [#28](https://github.com/hungtmh/HW02-Domain_Testing/issues/28) - [23127259][BUG-FR02-002] Account lockout duration is 180 seconds instead of 30 seconds
-- **BUG-FR02-003:** [#29](https://github.com/hungtmh/HW02-Domain_Testing/issues/29) - [23127259][BUG-FR02-003] Login email field does not use type="email"
-- **BUG-FR07-001:** [#30](https://github.com/hungtmh/HW02-Domain_Testing/issues/30) - [23127259][BUG-FR07-001] Adding same product creates duplicate rows
-- **BUG-FR07-002:** [#31](https://github.com/hungtmh/HW02-Domain_Testing/issues/31) - [23127259][BUG-FR07-002] Cart quantity has no +/- controls
-- **BUG-FR07-003:** [#32](https://github.com/hungtmh/HW02-Domain_Testing/issues/32) - [23127259][BUG-FR07-003] Delete cart item does not show confirmation dialog
-- **BUG-FR07-004:** [#33](https://github.com/hungtmh/HW02-Domain_Testing/issues/33) - [23127259][BUG-FR07-004] Cart total label is wrong
-- **BUG-FR07-005:** [#34](https://github.com/hungtmh/HW02-Domain_Testing/issues/34) - [23127259][BUG-FR07-005] Empty cart has no illustration
-- **BUG-FR16-001:** [#35](https://github.com/hungtmh/HW02-Domain_Testing/issues/35) - [23127259][BUG-FR16-001] Normal user can call admin product import API
-- **BUG-FR16-002:** [#36](https://github.com/hungtmh/HW02-Domain_Testing/issues/36) - [23127259][BUG-FR16-002] Product import is not atomic when a row is invalid
-- **BUG-FR16-003:** [#37](https://github.com/hungtmh/HW02-Domain_Testing/issues/37) - [23127259][BUG-FR16-003] Product import accepts negative price
-- **BUG-FR16-004:** [#38](https://github.com/hungtmh/HW02-Domain_Testing/issues/38) - [23127259][BUG-FR16-004] CSV parser does not support quoted commas
-- **BUG-MOB-001:** [#39](https://github.com/hungtmh/HW02-Domain_Testing/issues/39) - [23127259][BUG-MOB-001] Mobile API URL is hard-coded
-- **BUG-MOB-002:** [#40](https://github.com/hungtmh/HW02-Domain_Testing/issues/40) - [23127259][BUG-MOB-002] Search query is not URL-encoded
-- **BUG-MOB-003:** [#41](https://github.com/hungtmh/HW02-Domain_Testing/issues/41) - [23127259][BUG-MOB-003] Product search has no empty state
-- **BUG-MOB-004:** [#42](https://github.com/hungtmh/HW02-Domain_Testing/issues/42) - [23127259][BUG-MOB-004] Product images use resizeMode="stretch"
+- **BUG-FR02-001:** [#27](https://github.com/hungtmh/HW02-Domain_Testing/issues/27) - [FR-02] [BUG-001] Failed login counter increases by 2 instead of 1
+- **BUG-FR02-002:** [#28](https://github.com/hungtmh/HW02-Domain_Testing/issues/28) - [FR-02] [BUG-002] Account lockout duration is 180 seconds instead of 30 seconds
+- **BUG-FR02-003:** [#29](https://github.com/hungtmh/HW02-Domain_Testing/issues/29) - [FR-02] [BUG-003] Login email field does not use type="email"
+- **BUG-FR07-001:** [#30](https://github.com/hungtmh/HW02-Domain_Testing/issues/30) - [FR-07] [BUG-001] Adding same product creates duplicate rows
+- **BUG-FR07-002:** [#31](https://github.com/hungtmh/HW02-Domain_Testing/issues/31) - [FR-07] [BUG-002] Cart quantity has no +/- controls
+- **BUG-FR07-003:** [#32](https://github.com/hungtmh/HW02-Domain_Testing/issues/32) - [FR-07] [BUG-003] Delete cart item does not show confirmation dialog
+- **BUG-FR07-004:** [#33](https://github.com/hungtmh/HW02-Domain_Testing/issues/33) - [FR-07] [BUG-004] Cart total label is wrong
+- **BUG-FR07-005:** [#34](https://github.com/hungtmh/HW02-Domain_Testing/issues/34) - [FR-07] [BUG-005] Empty cart has no illustration
+- **BUG-FR16-001:** [#35](https://github.com/hungtmh/HW02-Domain_Testing/issues/35) - [FR-16] [BUG-001] Normal user can call admin product import API
+- **BUG-FR16-002:** [#36](https://github.com/hungtmh/HW02-Domain_Testing/issues/36) - [FR-16] [BUG-002] Product import is not atomic when a row is invalid
+- **BUG-FR16-003:** [#37](https://github.com/hungtmh/HW02-Domain_Testing/issues/37) - [FR-16] [BUG-003] Product import accepts negative price
+- **BUG-FR16-004:** [#38](https://github.com/hungtmh/HW02-Domain_Testing/issues/38) - [FR-16] [BUG-004] CSV parser does not support quoted commas
+- **BUG-MOB-001:** [#39](https://github.com/hungtmh/HW02-Domain_Testing/issues/39) - [Mobile-Product-Listing] [BUG-001] Mobile API URL is hard-coded
+- **BUG-MOB-002:** [#40](https://github.com/hungtmh/HW02-Domain_Testing/issues/40) - [Mobile-Product-Listing] [BUG-002] Search query is not URL-encoded
+- **BUG-MOB-003:** [#41](https://github.com/hungtmh/HW02-Domain_Testing/issues/41) - [Mobile-Product-Listing] [BUG-003] Product search has no empty state
+- **BUG-MOB-004:** [#42](https://github.com/hungtmh/HW02-Domain_Testing/issues/42) - [Mobile-Product-Listing] [BUG-004] Product images use resizeMode="stretch"
 
 Evidence chính thức vẫn nằm trong các thư mục `reports/*_bugs/` và được link trong từng issue.
