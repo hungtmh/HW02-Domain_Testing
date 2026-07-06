@@ -1,0 +1,34 @@
+# ==========================================
+# File của teammate (không thuộc phần của tôi)
+# ==========================================
+.cursor/
+23127195/
+README.md
+api_specification.md
+backend/
+frontend-admin/
+frontend-mobile/
+frontend-web/
+package-lock.json
+run_servers.sh
+setup_guide.md
+
+# ==========================================
+# Node.js / npm
+# ==========================================
+node_modules/
+npm-debug.log*
+
+# ==========================================
+# Môi trường & hệ thống
+# ==========================================
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Database local
+# ==========================================
+*.sqlite
+*.db
