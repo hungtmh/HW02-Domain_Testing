@@ -111,4 +111,4 @@ Toàn bộ tài liệu được tổ chức theo format repo nhóm giống thư 
 - **SUT local:** `/Users/thangnhi/Downloads/eshop-sut`
 - **Folder bài nộp:** `/Users/thangnhi/Downloads/HW02-Domain_Testing/23127259`
 - **GitHub repo nhóm:** https://github.com/hungtmh/HW02-Domain_Testing
-- **GitHub Issues:** hiện để `TBD` trong bug report vì chưa tạo issue thật trên GitHub.
+- **GitHub Issues:** GitHub Issues đã tạo cho 16 bug: [#27](https://github.com/hungtmh/HW02-Domain_Testing/issues/27) đến [#42](https://github.com/hungtmh/HW02-Domain_Testing/issues/42). Danh sách chi tiết nằm trong [reports/Bug_Report.md](./reports/Bug_Report.md).

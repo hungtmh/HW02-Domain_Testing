@@ -176,8 +176,8 @@ Tôi đã hoàn tất Markdown reports và evidence. Hãy hỗ trợ tôi kiểm
 ### Human Review
 
 - Tôi kiểm tra lại preview video FR-07 BUG-003 trong PDF.
-- Tôi xác nhận evidence cuối cùng nằm đúng thư mục và được report tham chiếu.
-- Tôi giữ ghi chú `GitHub Issue: TBD` ở các bug chưa tạo issue thật trên GitHub.
+- Tôi xác nhận evidence cuối cùng nằm đúng thư mục, được report tham chiếu và được liên kết từ GitHub Issues.
+- Tôi cập nhật link GitHub Issues thật (#27-#42) vào bug report sau khi tạo issue trên repo nhóm.
 
 ---
 
