@@ -3,308 +3,301 @@
 **Họ và tên:** Nguyễn Tấn Thắng  
 **Nhóm:** Nhóm 08  
 **MSSV:** 23127259  
-**SUT:** Web Client + Web Admin + Mobile App + API Backend  
+**Ngày cập nhật:** 2026-07-06  
+**SUT:** Web Client + Web Admin + Mobile App + API Backend
+
+**Evidence run:** 2026-07-05 20:13 ICT, test data prefix `live_hw02_1783257224503`. Ảnh/video bug trong các thư mục evidence là minh chứng từ thao tác UI/API trực tiếp trên EShop SUT. Riêng FR-07 BUG-003 dùng video `.mov`; PDF dùng ảnh preview để hiển thị ổn định.
 
 ---
 
-# FEATURE: FR-02 - LOGIN AND ACCOUNT LOCKOUT (2 BUGS)
+# Bug Report - FR-02 Login and Account Lockout
 
-### BUG-FR02-001: Failed login counter tăng 2 thay vì 1
+## BUG-FR02-001: Failed login counter increases by 2 instead of 1
 
 - **Severity:** Major
 - **Priority:** High
 - **Component:** API Backend
-- **Test Case liên quan:** DT-FR02-03, DT-FR02-04, BV-FR02-02, BV-FR02-03
+- **Related test cases:** FR02-TC04, FR02-TC05, FR02-TC06
 
-#### Expected Result:
-- Mỗi lần login sai chỉ tăng `login_attempts` đúng 1.
+**Expected:** After one wrong password, `login_attempts = 1`; after two wrong passwords, `login_attempts = 2` and the account is not locked yet.
 
-#### Actual Result:
-- `backend/server.js` dùng `user.login_attempts + 2`, dẫn đến khóa sớm sau 2 lần sai.
+**Actual:** After one wrong password, `login_attempts = 2`; after two wrong passwords, `login_attempts = 4` and `locked_until` is created.
 
-#### Evidence / Screenshot:
-- ![BUG-FR02-001](./FR-02_bugs/BUG-001.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-02] [BUG-FR02-001] Failed login counter increases by 2 instead of 1`
-- **Link Issue:** TBD
+![BUG-FR02-001](./FR-02_bugs/BUG-001.png)
 
 ---
 
-### BUG-FR02-002: Thời gian khóa là 180 giây thay vì 30 giây
+## BUG-FR02-002: Account lockout duration is 180 seconds instead of 30 seconds
 
 - **Severity:** Medium
 - **Priority:** Medium
 - **Component:** API Backend
-- **Test Case liên quan:** BV-FR02-06
+- **Related test cases:** FR02-TC07
 
-#### Expected Result:
-- Tài khoản bị khóa 30 giây.
+**Expected:** Account is locked for about 30 seconds.
 
-#### Actual Result:
-- Code dùng `Date.now() + 180000`, khóa 180 giây.
+**Actual:** Account is locked for about 180 seconds because backend uses `Date.now() + 180000`.
 
-#### Evidence / Screenshot:
-- ![BUG-FR02-002](./FR-02_bugs/BUG-002.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-02] [BUG-FR02-002] Account lockout duration is 180 seconds instead of 30 seconds`
-- **Link Issue:** TBD
+![BUG-FR02-002](./FR-02_bugs/BUG-002.png)
 
 ---
 
-# FEATURE: FR-07 - SHOPPING CART (5 BUGS)
+## BUG-FR02-003: Login email field does not use `type="email"`
 
-### BUG-FR07-001: Thêm cùng sản phẩm tạo dòng trùng
+- **Severity:** Minor
+- **Priority:** Medium
+- **Component:** Frontend Web Login
+- **Related test cases:** FR02-TC03
+
+**Expected:** Login email field uses HTML5 `type="email"`.
+
+**Actual:** Login form uses label `Username` and input `type="text"`.
+
+**Evidence:**
+
+![BUG-FR02-003](./FR-02_bugs/BUG-003.png)
+
+---
+
+# Bug Report - FR-07 Shopping Cart
+
+## BUG-FR07-001: Adding same product creates duplicate rows
+
+- **Severity:** Major
+- **Priority:** High
+- **Component:** Cart API / Frontend Cart Context
+- **Related test cases:** FR07-TC03
+
+**Expected:** Adding the same product twice produces one row with `quantity = 2`.
+
+**Actual:** Cart creates duplicate rows for the same product.
+
+**Evidence:**
+
+![BUG-FR07-001](./FR-07_bugs/BUG-001.png)
+
+---
+
+## BUG-FR07-002: Cart quantity has no `+/-` controls
 
 - **Severity:** Major
 - **Priority:** High
 - **Component:** Frontend Web Cart
+- **Related test cases:** FR07-TC04
 
-#### Expected Result:
-- Sản phẩm trùng được gộp và tăng quantity.
+**Expected:** Quantity column has `+` and `-` controls.
 
-#### Actual Result:
-- `addToCart` append item mới, tạo dòng duplicate.
+**Actual:** Quantity is shown as plain text.
 
-#### Evidence / Screenshot:
-- ![BUG-FR07-001](./FR-07_bugs/BUG-001.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-07] [BUG-FR07-001] Adding the same product creates duplicate cart rows`
-- **Link Issue:** TBD
+![BUG-FR07-002](./FR-07_bugs/BUG-002.png)
 
 ---
 
-### BUG-FR07-002: Không có nút +/- chỉnh quantity
-
-- **Severity:** Major
-- **Priority:** High
-- **Component:** Frontend Web Cart
-
-#### Expected Result:
-- Cột quantity có nút `+/-`.
-
-#### Actual Result:
-- Quantity chỉ là text.
-
-#### Evidence / Screenshot:
-- ![BUG-FR07-002](./FR-07_bugs/BUG-002.png)
-
-#### GitHub Issue:
-- **Title:** `[FR-07] [BUG-FR07-002] Cart quantity cannot be adjusted`
-- **Link Issue:** TBD
-
----
-
-### BUG-FR07-003: Xóa sản phẩm không có confirm dialog
+## BUG-FR07-003: Delete cart item does not show confirmation dialog
 
 - **Severity:** Medium
 - **Priority:** Medium
 - **Component:** Frontend Web Cart
+- **Related test cases:** FR07-TC05
 
-#### Expected Result:
-- Có confirm dialog trước khi xóa.
+**Expected:** Clicking `Xóa` shows a confirmation dialog before removing the item.
 
-#### Actual Result:
-- Click `Xóa` gọi `removeFromCart(index)` trực tiếp.
+**Actual:** The item is removed immediately without a confirm dialog.
 
-#### Evidence / Screenshot:
-- ![BUG-FR07-003](./FR-07_bugs/BUG-003.png)
+**Video Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-07] [BUG-FR07-003] Delete cart item does not show confirmation dialog`
-- **Link Issue:** TBD
+<video controls src="./FR-07_bugs/BUG-003.mov" width="720"></video>
+
+[Open video evidence: BUG-003.mov](./FR-07_bugs/BUG-003.mov)
+
+**PDF Preview:**
+
+![BUG-FR07-003 preview](./FR-07_bugs/BUG-003-preview.png)
 
 ---
 
-### BUG-FR07-004: Nhãn tổng tiền sai
+## BUG-FR07-004: Cart total label is wrong
 
 - **Severity:** Medium
 - **Priority:** Medium
 - **Component:** Frontend Web Cart
+- **Related test cases:** FR07-TC07
 
-#### Expected Result:
-- Nhãn tổng tiền là `Tổng cộng`.
+**Expected:** Total label is `Tổng cộng`.
 
-#### Actual Result:
-- UI hiển thị `Tổng tạm tính`.
+**Actual:** UI shows `Tổng tạm tính`.
 
-#### Evidence / Screenshot:
-- ![BUG-FR07-004](./FR-07_bugs/BUG-004.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-07] [BUG-FR07-004] Cart total label should be "Tổng cộng"`
-- **Link Issue:** TBD
+![BUG-FR07-004](./FR-07_bugs/BUG-004.png)
 
 ---
 
-### BUG-FR07-005: Empty cart thiếu hình minh họa
+## BUG-FR07-005: Empty cart has no illustration
 
 - **Severity:** Minor
 - **Priority:** Low
 - **Component:** Frontend Web Cart
+- **Related test cases:** FR07-TC01
 
-#### Expected Result:
-- Empty cart có hình minh họa/icon và message.
+**Expected:** Empty cart has an illustration/icon and a clear message.
 
-#### Actual Result:
-- Chỉ có text và link.
+**Actual:** Empty cart only shows text and a continue shopping link.
 
-#### Evidence / Screenshot:
-- ![BUG-FR07-005](./FR-07_bugs/BUG-005.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-07] [BUG-FR07-005] Empty cart has no illustration`
-- **Link Issue:** TBD
+![BUG-FR07-005](./FR-07_bugs/BUG-005.png)
 
 ---
 
-# FEATURE: FR-16 - PRODUCT IMPORT FROM CSV (3 BUGS)
+# Bug Report - FR-16 Product Import from CSV
 
-### BUG-FR16-001: User thường gọi được API import admin
+## BUG-FR16-001: Normal user can call admin product import API
 
 - **Severity:** Critical
 - **Priority:** High
 - **Component:** API Backend / Access Control
+- **Related test cases:** FR16-TC04
 
-#### Expected Result:
-- User thường bị HTTP 403.
+**Expected:** Normal user token is rejected with HTTP 403 and no product is inserted.
 
-#### Actual Result:
-- API chỉ kiểm token, không kiểm `role = admin`.
+**Actual:** Normal user token receives HTTP 200 and the product is inserted.
 
-#### Evidence / Screenshot:
-- ![BUG-FR16-001](./FR-16_bugs/BUG-001.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-16] [BUG-FR16-001] Normal user can call admin product import API`
-- **Link Issue:** TBD
+![BUG-FR16-001](./FR-16_bugs/BUG-001.png)
 
 ---
 
-### BUG-FR16-002: Import không rollback khi có dòng lỗi
+## BUG-FR16-002: Product import is not atomic when a row is invalid
 
 - **Severity:** Major
 - **Priority:** High
 - **Component:** API Backend / Database
+- **Related test cases:** FR16-TC05
 
-#### Expected Result:
-- Có bất kỳ dòng lỗi nào thì toàn bộ import rollback.
+**Expected:** If any row is invalid, the whole import is rejected and rolled back.
 
-#### Actual Result:
-- API insert từng dòng độc lập, batch lỗi vẫn insert một phần.
+**Actual:** API reports `inserted = 1/2`; the valid row is still inserted even though another row has an error.
 
-#### Evidence / Screenshot:
-- ![BUG-FR16-002](./FR-16_bugs/BUG-002.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-16] [BUG-FR16-002] Product import is not atomic`
-- **Link Issue:** TBD
+![BUG-FR16-002 step 1](./FR-16_bugs/BUG-002-1.png)
+
+![BUG-FR16-002 step 2](./FR-16_bugs/BUG-002-2.png)
 
 ---
 
-### BUG-FR16-003: Import cho phép giá âm
+## BUG-FR16-003: Product import accepts negative price
 
 - **Severity:** Major
 - **Priority:** High
 - **Component:** API Backend Validation
+- **Related test cases:** FR16-TC06
 
-#### Expected Result:
-- Reject `price <= 0`.
+**Expected:** Product with `price <= 0` is rejected.
 
-#### Actual Result:
-- Backend không validate `price`.
+**Actual:** Product with negative price is inserted.
 
-#### Evidence / Screenshot:
-- ![BUG-FR16-003](./FR-16_bugs/BUG-003.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[FR-16] [BUG-FR16-003] Product import accepts negative price`
-- **Link Issue:** TBD
+![BUG-FR16-003](./FR-16_bugs/BUG-003.png)
 
 ---
 
-# FEATURE: MOBILE PRODUCT LISTING/SEARCH (4 BUGS)
+## BUG-FR16-004: CSV parser does not support quoted commas
 
-### BUG-MOB-001: Mobile app hard-code API URL
+- **Severity:** Medium
+- **Priority:** Medium
+- **Component:** Web Admin CSV Import
+- **Related test cases:** FR16-TC07
+
+**Expected:** CSV fields wrapped in double quotes can contain commas.
+
+**Actual:** Admin parser uses `line.split(",")`, so quoted commas break the column mapping.
+
+**Evidence:**
+
+![BUG-FR16-004](./FR-16_bugs/BUG-004.png)
+
+---
+
+# Bug Report - Mobile Product Listing/Search
+
+## BUG-MOB-001: Mobile API URL is hard-coded
 
 - **Severity:** Medium
 - **Priority:** Medium
 - **Component:** Mobile App Config
+- **Related test cases:** MOB-TC05
 
-#### Expected Result:
-- API URL có thể cấu hình theo môi trường.
+**Expected:** API URL is configurable by environment/device.
 
-#### Actual Result:
-- Source hard-code `http://192.168.10.13:3000/api`.
+**Actual:** `API_URL` is hard-coded to a LAN IP, making product listing/search fail on other devices or emulators.
 
-#### Evidence / Screenshot:
-- ![BUG-MOB-001](./Mobile-product-listing_bugs/BUG-001.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[Mobile] [BUG-MOB-001] Product listing uses hard-coded API URL`
-- **Link Issue:** TBD
+![BUG-MOB-001](./Mobile-product-listing_bugs/BUG-001.jpg)
 
 ---
 
-### BUG-MOB-002: Search query không được encode
+## BUG-MOB-002: Search query is not URL-encoded
 
-- **Severity:** Medium
-- **Priority:** Medium
-- **Component:** Mobile Search
+- **Severity:** Major
+- **Priority:** High
+- **Component:** Mobile Product Search
+- **Related test cases:** MOB-TC04
 
-#### Expected Result:
-- Query dùng `encodeURIComponent`.
+**Expected:** Search keyword with special characters is URL-encoded.
 
-#### Actual Result:
-- Source nội suy trực tiếp `?search=${query}`.
+**Actual:** Search query is concatenated directly into the URL.
 
-#### Evidence / Screenshot:
-- ![BUG-MOB-002](./Mobile-product-listing_bugs/BUG-002.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[Mobile] [BUG-MOB-002] Search query is not URL encoded`
-- **Link Issue:** TBD
+![BUG-MOB-002](./Mobile-product-listing_bugs/BUG-002.jpg)
 
 ---
 
-### BUG-MOB-003: Không có empty state khi search không có kết quả
+## BUG-MOB-003: Product search has no empty state
 
 - **Severity:** Medium
 - **Priority:** Medium
 - **Component:** Mobile Product Listing
+- **Related test cases:** MOB-TC03
 
-#### Expected Result:
-- Có message khi không có sản phẩm phù hợp.
+**Expected:** No-result search shows a clear empty state message.
 
-#### Actual Result:
-- Không có `ListEmptyComponent` hoặc no-result message.
+**Actual:** Empty result does not show a proper empty state.
 
-#### Evidence / Screenshot:
-- ![BUG-MOB-003](./Mobile-product-listing_bugs/BUG-003.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[Mobile] [BUG-MOB-003] Product search has no empty state`
-- **Link Issue:** TBD
+![BUG-MOB-003](./Mobile-product-listing_bugs/BUG-003.jpg)
 
 ---
 
-### BUG-MOB-004: Ảnh sản phẩm mobile có thể bị méo
+## BUG-MOB-004: Product images use `resizeMode="stretch"`
 
 - **Severity:** Minor
 - **Priority:** Low
-- **Component:** Mobile Product Card
+- **Component:** Mobile Product Listing / Detail
+- **Related test cases:** MOB-TC07
 
-#### Expected Result:
-- Ảnh giữ đúng tỷ lệ.
+**Expected:** Product images preserve their aspect ratio.
 
-#### Actual Result:
-- Image dùng `resizeMode="stretch"`.
+**Actual:** Product images are stretched and can appear distorted.
 
-#### Evidence / Screenshot:
-- ![BUG-MOB-004](./Mobile-product-listing_bugs/BUG-004.png)
+**Evidence:**
 
-#### GitHub Issue:
-- **Title:** `[Mobile] [BUG-MOB-004] Product image can be distorted`
-- **Link Issue:** TBD
+![BUG-MOB-004](./Mobile-product-listing_bugs/BUG-004.jpg)
+
+---
+
+## GitHub Issues
+
+Các issue thật trên GitHub chưa được tạo riêng cho từng bug tại thời điểm đóng gói, nên report giữ trạng thái `TBD` khi cần đối chiếu issue URL. Evidence chính thức vẫn nằm trong các thư mục `reports/*_bugs/`.

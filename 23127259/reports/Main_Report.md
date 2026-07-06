@@ -1,301 +1,284 @@
-# Main Testing Report - EShop Testing
+# Main Testing Report - EShop Domain Testing
 
 **Họ và tên:** Nguyễn Tấn Thắng  
 **Nhóm:** Nhóm 08  
 **MSSV:** 23127259  
-**Ngày lập:** 2026-07-03  
+**Ngày chạy test/evidence:** 2026-07-05 20:13 ICT  
+**Ngày đồng bộ báo cáo:** 2026-07-06  
+**SUT:** `/Users/thangnhi/Downloads/eshop-sut`  
+**Backend:** `http://localhost:3000/api`
 
 ---
 
-# FEATURE: FR-02 - LOGIN AND ACCOUNT LOCKOUT
+## 1. Test Run Evidence
 
-## 1. Domain Testing - FR-02
+Backend đã chạy sẵn trên port `3000`, sau đó em chạy API test bằng Node `fetch` và kiểm tra SQLite trực tiếp để xác nhận state sau request. Các test có dữ liệu ghi DB dùng prefix `live_hw02_1783257224503`; sau test đã cleanup và kiểm tra lại không còn user/product test.
 
-**SUT:** Web Client Login + API `POST /api/login`
+| Check | Result |
+|-------|--------|
+| Admin login `admin@eshop.com / Admin123!` | PASS - HTTP 200, có JWT |
+| Normal user test login | PASS - HTTP 200, có JWT |
+| Cleanup product/user test | PASS - DB không còn record `live_hw02_%` |
+| `frontend-web npm run lint` | FAIL - 23 errors, 1 warning có sẵn trong source |
+| `frontend-admin npm run lint` | FAIL - 4 errors có sẵn trong source |
 
-### Bước 1 - Phạm vi và SUT
+Ảnh/video evidence được lưu trong các thư mục `reports/*_bugs/` và là minh chứng từ quá trình thao tác UI/API trực tiếp trên EShop SUT. Riêng FR-07 BUG-003 dùng video `.mov` để thể hiện thao tác bấm `Xóa` không xuất hiện confirm dialog; bản PDF dùng ảnh preview của video để bảo đảm minh chứng hiển thị ổn định. Lint failure không được tính là bug riêng cho 4 feature, nhưng được ghi nhận vì ảnh hưởng chất lượng source.
 
-**SRS FR-02:**
-- User nhập Email và Password.
-- Sai mật khẩu tăng counter đúng 1.
-- Sai từ 3 lần trở lên bị khóa 30 giây.
-- Login thành công trả JWT và reset counter.
-
-**Files liên quan:**
-- `backend/server.js`
-- `backend/database.js`
-- `frontend-web/src/pages/Login.jsx`
-
-**Code review:** `server.js` tăng `login_attempts + 2` và khóa `180000ms` thay vì 30 giây.
-
-### Bước 2 - Input Variables
-
-| ID | Biến | Kiểu | Nguồn | Ràng buộc SRS |
-|----|------|------|-------|---------------|
-| V1 | email | String | Form/API | Email tồn tại, đúng định dạng |
-| V2 | password | String | Form/API | Khớp tài khoản |
-| V3 | login_attempts | Integer | DB | Tăng đúng 1 |
-| V4 | locked_until | Datetime/null | DB | Khóa 30 giây |
-
-### Bước 3 - Domains
-
-| Biến | Valid Domain | Invalid Domain | Special |
-|------|--------------|----------------|---------|
-| email | `test@eshop.com` | unknown, rỗng, sai format | email đúng nhưng password sai |
-| password | đúng | sai, rỗng | sai liên tiếp 1,2,3 lần |
-| attempts | 0,1,2 trước khóa | tăng sai | 2/3 boundary |
-| locked_until | null/hết hạn | còn hiệu lực | 29s,30s,31s |
-
-### Bước 4 - Equivalence Partitions
-
-| EP-ID | Loại | Mô tả | Giá trị đại diện |
-|-------|------|-------|------------------|
-| EP-L01 | Hợp lệ | Email/password đúng | `test@eshop.com` / `Test1234!` |
-| EP-L02 | Không hợp lệ | Email không tồn tại | `none@eshop.com` |
-| EP-L03 | Không hợp lệ | Password sai | `Wrong123!` |
-| EP-L04 | Không hợp lệ | Account đang khóa | `locked_until > now` |
-| EP-L05 | Hợp lệ | Account hết khóa | `locked_until < now` |
-
-### Bước 5 - Constraints
-
-| C-ID | Ràng buộc | Hành vi kỳ vọng |
-|------|-----------|-----------------|
-| C-01 | Sai password tăng counter | `attempts = old + 1` |
-| C-02 | Sai 3 lần | Khóa 30 giây |
-| C-03 | Login đúng | Reset counter và trả JWT |
-
-### Bước 6 - Domain Test Cases
-
-| TC-ID | Mô tả | Input | Expected | Actual | Result | Bug |
-|-------|-------|-------|----------|--------|--------|-----|
-| DT-FR02-01 | Login hợp lệ | correct email/password | HTTP 200, token | PASS evidence cũ | PASS | - |
-| DT-FR02-02 | Email không tồn tại | unknown email | HTTP 401 | Not run | NOT RUN | - |
-| DT-FR02-03 | Sai password lần 1 | wrong password | attempts +1 | attempts +2 | FAIL | BUG-FR02-001 |
-| DT-FR02-04 | Sai 2 lần rồi login đúng | 2 wrong + correct | Chưa khóa | Bị khóa | FAIL | BUG-FR02-001 |
-| DT-FR02-05 | Sai lần 3 | 3 wrong | Khóa 30s | Khóa sớm | FAIL | BUG-FR02-001 |
-| DT-FR02-06 | Login khi khóa | correct password | HTTP 403 | HTTP 403 | PASS | - |
-
-## 2. Boundary Value Analysis - FR-02
-
-| TC-ID | Boundary | Input | Expected | Actual | Result | Bug |
-|-------|----------|-------|----------|--------|--------|-----|
-| BV-FR02-01 | attempts = 0 | Login đúng | Success | PASS | PASS | - |
-| BV-FR02-02 | attempts = 1 | Sai 1 lần | counter = 1 | counter = 2 | FAIL | BUG-FR02-001 |
-| BV-FR02-03 | attempts = 2 | Sai 2 lần | Chưa khóa | Đã khóa | FAIL | BUG-FR02-001 |
-| BV-FR02-04 | attempts = 3 | Sai lần 3 | Khóa | Khóa sớm | FAIL | BUG-FR02-001 |
-| BV-FR02-05 | lock = 30s | Login tại giây 30 | Cho login | Code khóa 180s | FAIL | BUG-FR02-002 |
-
-## 3. Test Execution - FR-02
-
-| Metric | Count |
-|--------|------:|
-| Designed | 15 |
-| Executed/Reviewed | 7 |
-| Pass | 2 |
-| Fail | 5 |
-| Not run | 8 |
-| Bugs | 2 |
+Các bug report chi tiết được gom trong `Bug_Report.md`, AI audit nằm trong `AI_Audit_Report.md`, AI critique nằm trong `AI_Critique.md`. Tất cả các Markdown report chính trong `reports/` đã được render lại thành PDF tương ứng trong cùng thư mục.
 
 ---
 
-# FEATURE: FR-07 - SHOPPING CART
+# FEATURE A: FR-02 - Login and Account Lockout
 
-## 1. Domain Testing - FR-07
+## 1.1 Domain Analysis
 
-**SUT:** Web Cart page + `CartContext.jsx`
+### SRS chính
 
-**SRS FR-07:**
-- Hiển thị sản phẩm, đơn giá, số lượng có `+/-`, thành tiền, thao tác.
-- Thêm cùng sản phẩm tăng số lượng, không tạo dòng mới.
-- Xóa có dialog xác nhận.
-- Có nút tiếp tục mua sắm.
-- Tổng tiền nhãn `Tổng cộng`.
-- Cart trống có hình minh họa.
+- Người dùng nhập Email và Mật khẩu.
+- Mỗi lần đăng nhập sai tăng bộ đếm đúng 1.
+- Sai từ 3 lần liên tiếp thì khóa tài khoản 30 giây.
+- Đăng nhập thành công trả JWT và reset số lần sai.
+- Trường email trên form login phải dùng `type="email"`.
 
-**Files liên quan:** `frontend-web/src/context/CartContext.jsx`, `frontend-web/src/pages/Cart.jsx`.
+### Input variables
 
-### Input Variables
+| ID | Biến | Domain hợp lệ | Domain không hợp lệ / edge |
+|----|------|---------------|-----------------------------|
+| V1 | `email` | Email tồn tại, đúng định dạng | Không tồn tại, rỗng, sai định dạng |
+| V2 | `password` | Khớp mật khẩu user | Sai, rỗng |
+| V3 | `login_attempts` | 0, 1, 2, 3 | Tăng sai, không reset |
+| V4 | `locked_until` | `null` hoặc đã hết hạn | Còn hiệu lực; boundary 29s, 30s, 31s |
 
-| ID | Biến | Kiểu | Ràng buộc |
-|----|------|------|-----------|
-| V1 | product.id | Integer | Nhận diện sản phẩm trùng |
-| V2 | quantity | Integer | > 0 |
-| V3 | cart | Array | Không có duplicate row |
-| V4 | remove action | UI event | Phải confirm trước khi xóa |
-
-### Domains and EP
+### Equivalence partitions
 
 | EP-ID | Loại | Mô tả | Đại diện |
 |-------|------|-------|----------|
-| EP-CART-01 | Hợp lệ | Empty cart | `[]` |
-| EP-CART-02 | Hợp lệ | One product | iPhone x1 |
-| EP-CART-03 | Hợp lệ | Same product twice | iPhone x2 một dòng |
-| EP-CART-04 | Không hợp lệ | Same product tạo 2 dòng | iPhone row + iPhone row |
-| EP-CART-05 | Không hợp lệ | Quantity không chỉnh được | plain text |
+| EP-FR02-01 | Valid | Email/password đúng | `admin@eshop.com / Admin123!` |
+| EP-FR02-02 | Invalid | Email không tồn tại | `missing@example.com` |
+| EP-FR02-03 | Invalid | Password sai | `Wrong123!` |
+| EP-FR02-04 | State | Tài khoản chưa khóa sau 1-2 lần sai | attempts = 1, 2 |
+| EP-FR02-05 | State | Tài khoản bị khóa sau 3 lần sai | attempts >= 3 |
 
-### Domain Test Cases
+## 1.2 Executed Test Cases
 
 | TC-ID | Mô tả | Expected | Actual | Result | Bug |
 |-------|-------|----------|--------|--------|-----|
-| DT-FR07-01 | Cart trống | Message + hình minh họa | Không có hình | FAIL | BUG-FR07-005 |
-| DT-FR07-02 | Add new product | One row qty 1 | PASS source | PASS | - |
-| DT-FR07-03 | Add duplicate product | Tăng quantity | Tạo dòng mới | FAIL | BUG-FR07-001 |
-| DT-FR07-04 | Quantity controls | Có `+/-` | Plain text | FAIL | BUG-FR07-002 |
-| DT-FR07-05 | Delete item | Có confirm | Xóa trực tiếp | FAIL | BUG-FR07-003 |
-| DT-FR07-06 | Continue shopping | Về home | Link `/` | PASS | - |
-| DT-FR07-07 | Total label | `Tổng cộng` | `Tổng tạm tính` | FAIL | BUG-FR07-004 |
+| FR02-TC01 | Login đúng bằng user mới tạo | HTTP 200, có JWT | HTTP 200, token = true | PASS | - |
+| FR02-TC02 | Login email không tồn tại | HTTP 401, lỗi generic | HTTP 401, `Invalid email or password` | PASS | - |
+| FR02-TC03 | Form login dùng email input | `<input type="email">` | `Login.jsx` dùng `type="text"` và label `Username` | FAIL | BUG-FR02-003 |
+| FR02-TC04 | Sai password lần 1 | `login_attempts = 1`, chưa khóa | HTTP 401, DB `login_attempts = 2`, `locked_until = null` | FAIL | BUG-FR02-001 |
+| FR02-TC05 | Sai password lần 2 | `login_attempts = 2`, chưa khóa | HTTP 401, DB `login_attempts = 4`, có `locked_until` | FAIL | BUG-FR02-001 |
+| FR02-TC06 | Login đúng sau 2 lần sai | Vẫn login được vì chưa đủ 3 lần sai | HTTP 403, tài khoản đã bị khóa | FAIL | BUG-FR02-001 |
+| FR02-TC07 | Thời gian khóa | Khoảng 30 giây | Khoảng 180 giây | FAIL | BUG-FR02-002 |
 
-## 2. Boundary Value Analysis - FR-07
+## 1.3 Boundary Value Analysis
 
-| TC-ID | Boundary | Input | Expected | Actual | Result | Bug |
-|-------|----------|-------|----------|--------|--------|-----|
-| BV-FR07-01 | cart count = 0 | Empty | Empty state + image | No image | FAIL | BUG-FR07-005 |
-| BV-FR07-02 | cart count = 1 | One item | One row | PASS | PASS | - |
-| BV-FR07-03 | same product = 2 | Add twice | One row qty 2 | Duplicate row | FAIL | BUG-FR07-001 |
-| BV-FR07-04 | quantity = -1 | Invalid qty | Reject/normalize | No validation | FAIL | BUG-FR07-002 |
-| BV-FR07-05 | quantity = 0 | Invalid qty | Reject/normalize | No validation | FAIL | BUG-FR07-002 |
-| BV-FR07-06 | quantity = 1 | Valid qty | Accept | PASS | PASS | - |
+| Boundary | Expected | Actual từ test/source | Result |
+|----------|----------|-----------------------|--------|
+| attempts = 0 | Login đúng pass, attempts reset | HTTP 200 có token | PASS |
+| attempts = 1 | Chưa khóa, attempts = 1 | attempts = 2 | FAIL |
+| attempts = 2 | Chưa khóa | Đã tạo `locked_until` | FAIL |
+| attempts = 3 | Bắt đầu khóa | Bị khóa sớm do counter tăng 2 | FAIL |
+| lock time = 30s | Hết khóa quanh giây 30 | Source dùng `180000ms` | FAIL |
+| email field type | HTML5 email validation | Source dùng `type="text"` | FAIL |
 
-## 3. Test Execution - FR-07
+## 1.4 Metrics - FR-02
 
-| Metric | Count |
-|--------|------:|
-| Designed | 18 |
-| Executed/Reviewed | 12 |
-| Pass | 4 |
-| Fail | 8 |
-| Not run | 6 |
-| Bugs | 5 |
+| Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
+|----------|-------------------|------|------|---------|------|
+| 12 | 7 | 2 | 5 | 5 | 3 |
 
 ---
 
-# FEATURE: FR-16 - PRODUCT IMPORT FROM CSV
+# FEATURE B: FR-07 - Shopping Cart
 
-## 1. Domain Testing - FR-16
+## 2.1 Domain Analysis
 
-**SUT:** Admin import API `POST /api/admin/import-products`
+### SRS chính
 
-**SRS FR-16:**
-- Chỉ admin được import.
-- CSV header đúng: `name,price,description,imageUrl,category_id`.
+- Giỏ hàng hiển thị sản phẩm, đơn giá, số lượng có nút `+/-`, thành tiền và thao tác.
+- Thêm cùng sản phẩm phải tăng số lượng, không tạo dòng mới.
+- Xóa sản phẩm phải có dialog xác nhận.
+- Có nút tiếp tục mua sắm.
+- Tổng tiền phải hiển thị nhãn `Tổng cộng`.
+- Giỏ hàng trống phải có hình minh họa và thông báo rõ ràng.
+
+### Input variables
+
+| ID | Biến | Domain hợp lệ | Domain không hợp lệ / edge |
+|----|------|---------------|-----------------------------|
+| V1 | `product.id` | Product tồn tại | Trùng id, null |
+| V2 | `quantity` | Số nguyên dương | 0, âm, text |
+| V3 | `cart` | Empty, one row, many unique rows | Duplicate rows cùng product |
+| V4 | remove action | Confirm rồi xóa | Xóa trực tiếp không confirm |
+
+## 2.2 Executed Test Cases
+
+| TC-ID | Mô tả | Expected | Actual | Result | Bug |
+|-------|-------|----------|--------|--------|-----|
+| FR07-TC01 | Giỏ hàng trống | Có thông báo + hình minh họa/icon | `Cart.jsx` chỉ có text và link, không có ảnh/icon | FAIL | BUG-FR07-005 |
+| FR07-TC02 | Thêm sản phẩm mới | Có một dòng quantity = 1 | Source/API thêm được một dòng | PASS | - |
+| FR07-TC03 | Thêm cùng sản phẩm 2 lần | Một dòng, quantity = 2 | API trả 2 dòng `id=1`, mỗi dòng `quantity=1` | FAIL | BUG-FR07-001 |
+| FR07-TC04 | Cột số lượng | Có nút `+` và `-` | `Cart.jsx` chỉ render `{item.quantity}` | FAIL | BUG-FR07-002 |
+| FR07-TC05 | Xóa sản phẩm | Hiển thị confirm dialog trước khi xóa | Button gọi `removeFromCart(index)` trực tiếp | FAIL | BUG-FR07-003 |
+| FR07-TC06 | Tiếp tục mua sắm | Có link quay về trang chủ | Có link về `/` | PASS | - |
+| FR07-TC07 | Nhãn tổng tiền | Hiển thị `Tổng cộng` | Hiển thị `Tổng tạm tính` | FAIL | BUG-FR07-004 |
+
+## 2.3 Boundary Value Analysis
+
+| Boundary | Expected | Actual | Result |
+|----------|----------|--------|--------|
+| cart count = 0 | Empty state có minh họa | Không có minh họa | FAIL |
+| cart count = 1 | Một sản phẩm hiển thị đúng | Source/API hỗ trợ | PASS |
+| same product count = 2 | Gộp thành quantity = 2 | Tạo duplicate row | FAIL |
+| quantity = 1 | Giá dòng = price x 1 | Công thức đúng | PASS |
+| quantity controls | Có thể tăng/giảm qua UI | Không có nút `+/-` | FAIL |
+
+## 2.4 Metrics - FR-07
+
+| Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
+|----------|-------------------|------|------|---------|------|
+| 12 | 7 | 2 | 5 | 5 | 5 |
+
+## 2.5 Video Evidence - FR-07 BUG-003
+
+BUG-FR07-003 được ghi nhận bằng video thao tác UI: khi bấm `Xóa` trong giỏ hàng, sản phẩm bị xóa ngay mà không hiển thị confirm dialog.
+
+<video controls src="./FR-07_bugs/BUG-003.mov" width="720"></video>
+
+[Open video evidence: FR-07_bugs/BUG-003.mov](./FR-07_bugs/BUG-003.mov)
+
+![BUG-FR07-003 preview](./FR-07_bugs/BUG-003-preview.png)
+
+---
+
+# FEATURE C: FR-16 - Product Import from CSV
+
+## 3.1 Domain Analysis
+
+### SRS chính
+
+- Chỉ admin được import nhiều sản phẩm từ CSV.
+- CSV phải có header `name,price,description,imageUrl,category_id`.
+- Trường chứa dấu phẩy trong dấu nháy kép phải được hỗ trợ theo RFC 4180.
 - `name` không rỗng.
-- `price` > 0.
-- Có lỗi bất kỳ dòng nào thì rollback toàn bộ.
+- `price` là số dương.
+- Nếu có lỗi ở bất kỳ dòng nào, toàn bộ import phải rollback.
 
-### Variables and Domains
+### Input variables
 
-| Biến | Valid Domain | Invalid Domain | Boundary |
-|------|--------------|----------------|----------|
-| token.role | admin | user/no token | user token |
-| rows | 1+ valid rows | empty array | 0,1,many |
-| name | non-empty | empty/whitespace | length 0/1 |
-| price | > 0 | 0, negative, text | -1,0,1 |
+| ID | Biến | Domain hợp lệ | Domain không hợp lệ / edge |
+|----|------|---------------|-----------------------------|
+| V1 | token role | `admin` | user thường, thiếu token |
+| V2 | rows | Array không rỗng | Rỗng, không phải array |
+| V3 | `name` | Không rỗng | Rỗng |
+| V4 | `price` | Number > 0 | 0, âm, text |
+| V5 | transaction | All-or-nothing | Partial insert |
+| V6 | CSV field | Quoted comma đúng RFC 4180 | `split(",")` làm lệch cột |
 
-### Domain Test Cases
+## 3.2 Executed Test Cases
 
 | TC-ID | Mô tả | Expected | Actual | Result | Bug |
 |-------|-------|----------|--------|--------|-----|
-| DT-FR16-01 | Admin valid row | Insert 1 | Not run | NOT RUN | - |
-| DT-FR16-02 | User thường import | HTTP 403 | HTTP 200 | FAIL | BUG-FR16-001 |
-| DT-FR16-03 | No token | HTTP 401 | Not run | NOT RUN | - |
-| DT-FR16-04 | Missing name | Reject + rollback | Partial insert | FAIL | BUG-FR16-002 |
-| DT-FR16-05 | Negative price | Reject | Inserted | FAIL | BUG-FR16-003 |
-| DT-FR16-06 | Mixed invalid batch | Insert 0 | Inserted 2/3 | FAIL | BUG-FR16-002 |
+| FR16-TC01 | Import không có token | HTTP 401 | HTTP 401 `Unauthorized` | PASS | - |
+| FR16-TC02 | Import rows rỗng bằng admin | HTTP 400 | HTTP 400 `Không có dữ liệu để import` | PASS | - |
+| FR16-TC03 | Admin import 1 product hợp lệ | HTTP 200, inserted = 1, DB có product | HTTP 200, inserted = 1, DB có product | PASS | - |
+| FR16-TC04 | User thường gọi API import admin | HTTP 403, không insert | HTTP 200, inserted = 1, DB có product | FAIL | BUG-FR16-001 |
+| FR16-TC05 | Batch có 1 dòng valid + 1 dòng thiếu name | Reject toàn batch, rollback | HTTP 200, inserted = 1/2, dòng valid vẫn vào DB | FAIL | BUG-FR16-002 |
+| FR16-TC06 | Import price = -1000 | Reject, không insert | HTTP 200, inserted = 1, DB `price = -1000` | FAIL | BUG-FR16-003 |
+| FR16-TC07 | CSV field chứa dấu phẩy trong dấu nháy kép | Parse đúng một field | Admin source dùng `line.split(",")`, sẽ tách sai cột | FAIL | BUG-FR16-004 |
 
-## 2. Boundary Value Analysis - FR-16
+## 3.3 Boundary Value Analysis
 
-| TC-ID | Boundary | Input | Expected | Actual | Result | Bug |
-|-------|----------|-------|----------|--------|--------|-----|
-| BV-FR16-01 | rows = 0 | empty array | HTTP 400 | Not run | NOT RUN | - |
-| BV-FR16-02 | rows = 1 | one valid row | Insert | Not run | NOT RUN | - |
-| BV-FR16-03 | name length = 0 | `""` | Reject rollback | Rollback missing | FAIL | BUG-FR16-002 |
-| BV-FR16-04 | name length = 1 | `"A"` | Accept | Not run | NOT RUN | - |
-| BV-FR16-05 | price = -1 | negative | Reject | Inserted | FAIL | BUG-FR16-003 |
-| BV-FR16-06 | price = 0 | zero | Reject | Not run | NOT RUN | - |
-| BV-FR16-07 | price = 1 | min valid | Accept | Not run | NOT RUN | - |
+| Boundary | Expected | Actual | Result |
+|----------|----------|--------|--------|
+| rows = 0 | Reject | HTTP 400 | PASS |
+| rows = 1 valid | Insert 1 dòng | HTTP 200, inserted 1 | PASS |
+| rows = 2, dòng 2 invalid | Rollback toàn bộ | Insert 1 dòng valid | FAIL |
+| price = 1 | Accept | Admin valid import pass với price dương | PASS |
+| price = 0 | Reject | Source không có check `price > 0` | FAIL |
+| price < 0 | Reject | Insert price âm | FAIL |
 
-## 3. Test Execution - FR-16
+## 3.4 Metrics - FR-16
 
-| Metric | Count |
-|--------|------:|
-| Designed | 15 |
-| Executed/Reviewed | 4 |
-| Pass | 0 |
-| Fail | 4 |
-| Not run | 11 |
-| Bugs | 3 |
+| Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
+|----------|-------------------|------|------|---------|------|
+| 12 | 7 | 3 | 4 | 5 | 4 |
 
 ---
 
-# FEATURE: MOBILE PRODUCT LISTING/SEARCH
+# FEATURE D: Mobile App - Product Listing/Search
 
-## 1. Domain Testing - Mobile Product listing/search
+## 4.1 Domain Analysis
 
-**SUT:** `frontend-mobile/App.js`, mobile home product list/search.
+### SRS áp dụng
 
-**Rules:**
-- Hiển thị product list với ảnh, tên, giá.
-- Search theo tên sản phẩm.
+Mobile listing/search được kiểm theo yêu cầu tương ứng của product listing:
+
+- Hiển thị danh sách sản phẩm.
+- Tìm kiếm theo tên sản phẩm.
 - Có loading state.
-- Có empty state khi không có kết quả.
-- Query search encode an toàn.
-- API URL cấu hình theo môi trường.
+- Không có kết quả phải hiển thị empty state.
+- Ảnh sản phẩm phải giữ tỷ lệ chuẩn.
+- API URL nên cấu hình theo môi trường để chạy được trên thiết bị khác nhau.
 
-### Variables and Domains
+### Input variables
 
-| Biến | Valid Domain | Invalid Domain | Boundary |
-|------|--------------|----------------|----------|
-| API_URL | reachable backend | hard-code IP sai mạng | device/emulator |
-| search | keyword thường | special chars chưa encode | length 0/1/long |
-| products | 1/many | 0 result không message | count 0/1/many |
-| image | giữ aspect ratio | stretch méo ảnh | wide/tall image |
+| ID | Biến | Domain hợp lệ | Domain không hợp lệ / edge |
+|----|------|---------------|-----------------------------|
+| V1 | API URL | Cấu hình đúng môi trường | Hard-code IP LAN cũ |
+| V2 | search query | Chuỗi bình thường | Có `&`, `?`, khoảng trắng, ký tự đặc biệt |
+| V3 | API response | Array có sản phẩm, array rỗng | HTML/error string |
+| V4 | image mode | Giữ tỷ lệ ảnh | Stretch làm méo ảnh |
 
-### Domain Test Cases
+## 4.2 Executed Test Cases
 
 | TC-ID | Mô tả | Expected | Actual | Result | Bug |
 |-------|-------|----------|--------|--------|-----|
-| DT-MOB-01 | Load product list | Hiển thị list | FlatList | PASS | - |
-| DT-MOB-02 | Loading state | `Đang tải...` | Có loading text | PASS | - |
-| DT-MOB-03 | Search keyword | Matching products | API search | PASS | - |
-| DT-MOB-04 | No result | Empty state | Missing | FAIL | BUG-MOB-003 |
-| DT-MOB-05 | Special chars query | Encoded | Direct interpolation | FAIL | BUG-MOB-002 |
-| DT-MOB-06 | Different device IP | Configurable | Hard-coded IP | FAIL | BUG-MOB-001 |
-| DT-MOB-07 | Image ratio | Preserve ratio | `stretch` | FAIL | BUG-MOB-004 |
+| MOB-TC01 | API danh sách sản phẩm | HTTP 200, array sản phẩm | HTTP 200, count >= 5 | PASS | - |
+| MOB-TC02 | Search keyword bình thường | Trả product match tên | API search hoạt động với keyword cơ bản | PASS | - |
+| MOB-TC03 | Search không có kết quả | API trả `[]` và UI có empty state | API trả `[]`, mobile UI không có `ListEmptyComponent` | FAIL | BUG-MOB-003 |
+| MOB-TC04 | Search query có `&` | Query được encode nguyên chuỗi | `encoded_count=0`, `unencoded_count=1` do query bị cắt | FAIL | BUG-MOB-002 |
+| MOB-TC05 | API URL mobile | Cấu hình theo môi trường | Hard-code `http://192.168.10.13:3000/api` | FAIL | BUG-MOB-001 |
+| MOB-TC06 | Loading state | Có thông báo khi load | Có `loadingProducts` và text `Đang tải...` | PASS | - |
+| MOB-TC07 | Ảnh sản phẩm | Giữ tỷ lệ chuẩn | `resizeMode="stretch"` ở listing/detail | FAIL | BUG-MOB-004 |
 
-## 2. Boundary Value Analysis - Mobile
+## 4.3 Boundary Value Analysis
 
-| TC-ID | Boundary | Input | Expected | Actual | Result | Bug |
-|-------|----------|-------|----------|--------|--------|-----|
-| BV-MOB-01 | keyword length = 0 | empty | all/current products | Not run | NOT RUN | - |
-| BV-MOB-02 | keyword length = 1 | `i` | request ok | Not run | NOT RUN | - |
-| BV-MOB-03 | long keyword | 255 chars | responsive | Not run | NOT RUN | - |
-| BV-MOB-04 | special chars | `a&b=<x>` | encode | Not encoded | FAIL | BUG-MOB-002 |
-| BV-MOB-05 | result count = 0 | no match | empty state | Missing | FAIL | BUG-MOB-003 |
-| BV-MOB-06 | result count = 1 | exact match | one product | Not run | NOT RUN | - |
+| Boundary | Expected | Actual | Result |
+|----------|----------|--------|--------|
+| search = empty | Load toàn bộ danh sách | API trả danh sách | PASS |
+| search = exact name | Có kết quả phù hợp | API trả product match | PASS |
+| search = not found | Empty state rõ ràng | FlatList rỗng, không message | FAIL |
+| search chứa `&` | Encode trước khi gọi API | Không encode | FAIL |
+| products count = 0 | Hiển thị empty UI | Không có fallback UI | FAIL |
 
-## 3. Test Execution - Mobile
+## 4.4 Metrics - Mobile
 
-| Metric | Count |
-|--------|------:|
-| Designed | 16 |
-| Executed/Reviewed | 10 |
-| Pass | 4 |
-| Fail | 6 |
-| Not run | 6 |
-| Bugs | 4 |
+| Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
+|----------|-------------------|------|------|---------|------|
+| 12 | 7 | 3 | 4 | 5 | 4 |
 
 ---
 
-# AI Gap Analysis
+# 5. Tổng kết
 
-AI giúp tạo nhanh checklist Domain Testing và BVA, nhưng dễ bỏ sót lỗi implementation nếu không đọc source. Ví dụ, AI có thể nêu yêu cầu thêm trùng sản phẩm phải tăng quantity, nhưng chỉ khi review `CartContext.jsx` mới thấy code luôn append item. Với FR-16, nếu không nhắc "rollback toàn bộ batch", AI có thể chỉ kiểm tra từng row riêng lẻ. Với Mobile, các lỗi như hard-code API URL, thiếu empty state, query không encode đều chỉ rõ khi đọc `frontend-mobile/App.js`.
+| Feature | Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
+|---------|----------|-------------------|------|------|---------|------|
+| FR-02 | 12 | 7 | 2 | 5 | 5 | 3 |
+| FR-07 | 12 | 7 | 2 | 5 | 5 | 5 |
+| FR-16 | 12 | 7 | 3 | 4 | 5 | 4 |
+| Mobile listing/search | 12 | 7 | 3 | 4 | 5 | 4 |
+| **Total** | **48** | **28** | **10** | **18** | **20** | **16** |
 
-# Test Summary
+## 5.1 Các bug quan trọng nhất
 
-| Feature | Designed | Executed/Reviewed | Passed | Failed | Not Run | Bugs |
-|---------|---------:|------------------:|-------:|-------:|--------:|-----:|
-| FR-02 Login and account lockout | 15 | 7 | 2 | 5 | 8 | 2 |
-| FR-07 Shopping cart | 18 | 12 | 4 | 8 | 6 | 5 |
-| FR-16 Product import from CSV | 15 | 4 | 0 | 4 | 11 | 3 |
-| Mobile Product listing/search | 16 | 10 | 4 | 6 | 6 | 4 |
-| **Total** | **64** | **33** | **10** | **23** | **31** | **14** |
+1. **FR-16 user thường gọi được API import admin**: lỗi access control nghiêm trọng.
+2. **FR-16 import không rollback**: sai yêu cầu all-or-nothing, làm dữ liệu không nhất quán.
+3. **FR-02 login counter tăng 2**: gây khóa tài khoản sớm hơn SRS.
+4. **FR-07 thêm trùng sản phẩm tạo duplicate row**: sai nghiệp vụ giỏ hàng cơ bản.
+5. **Mobile search không encode query**: sai kết quả với keyword có ký tự đặc biệt.
+
+## 5.2 Kết luận
+
+Sau khi chạy API test thật và review source, 4 feature đều có lỗi sai so với SRS. Các lỗi backend/API có bằng chứng HTTP response và DB state; các lỗi UI/mobile có bằng chứng source line và ảnh evidence trong các thư mục bug tương ứng.

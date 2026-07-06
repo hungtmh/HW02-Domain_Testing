@@ -1,2 +1,25 @@
-4ab9d62 docs: update 23127259 commit log
-e30bc02 docs: add 23127259 HW02 reports
+# Git Commit Log / Workspace Note
+
+SUT repository used for real test execution:
+/Users/thangnhi/Downloads/eshop-sut
+
+Latest SUT commits:
+85af3ba first upload
+2f9bf2b Initial commit
+
+Submission folder:
+/Users/thangnhi/Downloads/HW02-Domain_Testing/23127259
+
+Note:
+The submission folder is currently inside /Users/thangnhi/Documents, whose git
+working tree contains many unrelated local files and deletions. I did not create
+a new commit in that parent repository to avoid staging unrelated user data.
+
+2026-07-05 20:13 ICT test run summary:
+- Backend base URL: http://localhost:3000/api
+- Test data prefix: live_hw02_1783257224503
+- Cleanup checked: no remaining users/products with prefix live_hw02_%
+- Reports updated with UI/API evidence screenshots and FR-07 BUG-003 video evidence.
+
+GitHub team repository:
+https://github.com/hungtmh/HW02-Domain_Testing

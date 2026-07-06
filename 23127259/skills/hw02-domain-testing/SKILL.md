@@ -43,7 +43,7 @@ Chia mỗi biến thành các **lớp tương đương** (EP).
 ### Bước 5 — Ràng buộc chéo (Constraints)
 
 - **Independence**: biến độc lập → test từng biến, giữ biến khác ở giá trị hợp lệ mặc định
-- **Dependencies**: mật khẩu khớp xác nhận; coupon cần total >= min_order_amount
+- **Dependencies**: login attempts quyết định lockout; cart duplicate quyết định quantity; import CSV phụ thuộc role admin và rollback
 
 ### Bước 6 — Chọn test case (Coverage strategy)
 

@@ -90,13 +90,14 @@ Sau đổi IP: reload Expo (`r` trong terminal).
 | Admin | admin@eshop.com | Admin123! |
 | User | test@eshop.com | Test1234! |
 
-## Coupon mẫu (FR-09)
+## Feature kiểm thử trong bài 23127259
 
-| Mã | Ghi chú |
-|----|---------|
-| SAVE10 | 10%, min 300k |
-| BIGBUY | 50k fixed, min 500k |
-| EXPIRED | đã hết hạn |
+| Pool | Feature | Thành phần |
+|------|---------|------------|
+| A | FR-02 Login and account lockout | Web + Backend API |
+| B | FR-07 Shopping cart | Web + Backend API |
+| C | FR-16 Product import from CSV | Admin + Backend API |
+| D | Mobile Product listing/search | Mobile + Backend API |
 
 ## Troubleshooting
 

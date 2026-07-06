@@ -60,7 +60,7 @@ Sau khi xong các feature, tổng hợp:
 
 | Metric | Giá trị |
 |--------|---------|
-| Số feature | 2 |
+| Số feature | 4 |
 | Test case thiết kế | ? |
 | Đã thực thi | ? |
 | Pass | ? |
