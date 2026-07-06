@@ -1,25 +1,67 @@
 # Git Commit Log / Workspace Note
 
-SUT repository used for real test execution:
-/Users/thangnhi/Downloads/eshop-sut
+## Purpose
+
+This text file records the source/version context used for HW02 submission:
+
+- SUT repository commit used during real test execution.
+- Team submission repository commits for the 23127259 report package.
+- GitHub Issues created for the reported bugs.
+
+The file is included because HW02 requires a git commit log text file as part of the submission package.
+
+## SUT Repository Used For Testing
+
+- Local path: `/Users/thangnhi/Downloads/eshop-sut`
+- Backend base URL during test run: `http://localhost:3000/api`
 
 Latest SUT commits:
+
+```text
 85af3ba first upload
 2f9bf2b Initial commit
+```
 
-Submission folder:
-/Users/thangnhi/Downloads/HW02-Domain_Testing/23127259
+## Team Submission Repository
 
-Note:
-The submission folder is currently inside /Users/thangnhi/Documents, whose git
-working tree contains many unrelated local files and deletions. I did not create
-a new commit in that parent repository to avoid staging unrelated user data.
+- Repository: https://github.com/hungtmh/HW02-Domain_Testing
+- Local path: `/Users/thangnhi/Downloads/HW02-Domain_Testing`
+- Student folder in repo: `/Users/thangnhi/Downloads/HW02-Domain_Testing/23127259`
+- Standalone submission folder: `/Users/thangnhi/Documents/23127259_HW02_AI_DomainTesting_100`
 
-2026-07-05 20:13 ICT test run summary:
-- Backend base URL: http://localhost:3000/api
-- Test data prefix: live_hw02_1783257224503
-- Cleanup checked: no remaining users/products with prefix live_hw02_%
+Latest relevant report/evidence commits in `HW02-Domain_Testing`
+(excluding the housekeeping commit that updates this text file):
+
+```text
+1d86f43 docs: align 23127259 issue title format
+d623aa2 docs: add GitHub issue links for 23127259 bugs
+5a31115 docs: sync 23127259 HW02 submission
+c39f8df docs: limit 23127259 commit log
+4ab9d62 docs: update 23127259 commit log
+e30bc02 docs: add 23127259 HW02 reports
+```
+
+The current commit containing this final text-file update can be checked as
+`HEAD` on the GitHub `main` branch after push.
+
+## GitHub Issues
+
+GitHub Issues were created for all 16 bugs in the 23127259 report:
+
+- Issue range: https://github.com/hungtmh/HW02-Domain_Testing/issues/27 to https://github.com/hungtmh/HW02-Domain_Testing/issues/42
+- Title format was aligned with the team format, for example:
+  - `[FR-02] [BUG-001] Failed login counter increases by 2 instead of 1`
+  - `[FR-07] [BUG-003] Delete cart item does not show confirmation dialog`
+  - `[FR-16] [BUG-004] CSV parser does not support quoted commas`
+  - `[Mobile-Product-Listing] [BUG-004] Product images use resizeMode="stretch"`
+
+## Test Run Summary
+
+- Test run time: 2026-07-05 20:13 ICT
+- Test data prefix: `live_hw02_1783257224503`
+- Cleanup checked: no remaining users/products with prefix `live_hw02_%`
 - Reports updated with UI/API evidence screenshots and FR-07 BUG-003 video evidence.
 
-GitHub team repository:
-https://github.com/hungtmh/HW02-Domain_Testing
+## Last Update
+
+- Updated by Codex on 2026-07-06 19:09 ICT.
