@@ -22,6 +22,7 @@
 | Evidence | Lưu trong `reports/*_bugs/` theo từng feature |
 | Markdown/PDF | `README.md`, `Main_Report.md`, `Bug_Report.md`, `AI_Audit_Report.md`, `AI_Critique.md` đều có PDF tương ứng |
 | Video evidence | 1 video cho FR-07 BUG-003: `reports/FR-07_bugs/BUG-003.mov` |
+| Agent skills demo video | [https://youtu.be/ePMQMkoJTsM](https://youtu.be/ePMQMkoJTsM) |
 
 ---
 
@@ -33,7 +34,7 @@
 | 2 | Feature B - FR-07 Shopping cart | 25 | 25 | API test cart, UI evidence và video BUG-FR07-003 trong [Main_Report.md](./reports/Main_Report.md) |
 | 3 | Feature C - FR-16 Product import from CSV | 25 | 25 | API test import, access control, rollback và CSV parser review trong [Main_Report.md](./reports/Main_Report.md) |
 | 4 | Feature D - Mobile Product listing/search | 15 | 15 | API search test + source review mobile app trong [Main_Report.md](./reports/Main_Report.md) |
-| 5 | Agent Skills / AI Usage Evidence | 10 | 10 | Có [AI_Audit_Report.md](./reports/AI_Audit_Report.md), [AI_Critique.md](./reports/AI_Critique.md), `skills/`, `templates/` |
+| 5 | Agent Skills / AI Usage Evidence | 10 | 10 | Có [AI_Audit_Report.md](./reports/AI_Audit_Report.md), [AI_Critique.md](./reports/AI_Critique.md), [agent-skills/demo-video-link.md](./agent-skills/demo-video-link.md), `skills/`, `templates/` |
 | | **Tổng điểm** | **100** | **100** | Hoàn thành đủ cấu trúc nộp bài |
 
 ---
@@ -62,7 +63,7 @@ Test thực tế được chạy trên SUT tại `/Users/thangnhi/Downloads/esho
 | Test case fail | 18 | Có sai khác so với SRS |
 | Test case chưa chạy trực tiếp | 20 | Chủ yếu là UI/device boundary chưa mở thiết bị thật |
 | Tổng số bug có evidence | 16 | FR-02: 3, FR-07: 5, FR-16: 4, Mobile: 4 |
-| Demo video | 1 | FR-07 BUG-003: thao tác xóa giỏ hàng không có confirm dialog |
+| Demo video | 1 | Agent skills demo: [https://youtu.be/ePMQMkoJTsM](https://youtu.be/ePMQMkoJTsM); FR-07 BUG-003: thao tác xóa giỏ hàng không có confirm dialog |
 
 ### Kết quả theo feature
 
@@ -101,6 +102,7 @@ Toàn bộ tài liệu được tổ chức theo format repo nhóm giống thư 
 - [reports/FR-07_bugs/](./reports/FR-07_bugs/): Evidence cho FR-07, có `BUG-003.mov` và `BUG-003-preview.png`.
 - [reports/FR-16_bugs/](./reports/FR-16_bugs/): Evidence cho FR-16.
 - [reports/Mobile-product-listing_bugs/](./reports/Mobile-product-listing_bugs/): Evidence cho Mobile listing/search.
+- [agent-skills/demo-video-link.md](./agent-skills/demo-video-link.md) / [demo-video-link.pdf](./agent-skills/demo-video-link.pdf): Link YouTube demo agent skills.
 - [skills/](./skills/): Bộ skill hỗ trợ workflow HW02.
 - [templates/](./templates/): Template Domain Testing, BVA và README.
 
