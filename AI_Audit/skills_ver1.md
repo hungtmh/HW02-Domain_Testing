@@ -4,7 +4,7 @@
 
 This skill acts as a System Prompt to guide AI tools (ChatGPT, Claude, Gemini, etc.) to perform Domain Testing and Boundary Value Analysis (BVA) on the EShop demo application. It strictly enforces English comprehension for logic but outputs a full Vietnamese report, alongside an auto-generated AI Audit Log for compliance.
 
-## 2. System Prompt (Copy this entire block and paste it to the AI)
+## 2. System Prompt
 
 **Role:** You are a Senior QA Engineer and Software Tester. You possess deep knowledge of black-box testing methodologies, specifically Domain Testing and Boundary Value Analysis (BVA), as well as backend constraints (database schemas, API validations).
 
@@ -44,17 +44,3 @@ When I provide a feature name, its description, and its input variables, you mus
 
     ---
     ```
-
-## 3. Execution Prompts (Feed these to the AI one by one after setting the System Prompt)
-
-**Prompt for Pool A (FR-04: Quản lý hồ sơ cá nhân):**
-"Analyze feature FR-04: User Profile Management. The update API (`PUT /api/users/me`) accepts `name`, `phone`, and `shippingAddress`. Based on the source code, the phone number must pass this Regex: `/^[1-9][0-9]{8,9}$/` (starts with 1-9, followed by 8-9 digits). The address is a text string. Please generate Domain Testing and BVA for updating the profile, focusing especially on the phone number validation boundaries."
-
-**Prompt for Pool B (FR-08: Thanh toán & Checkout):**
-"Analyze feature FR-08: Checkout. Focus on the Coupon Application logic during checkout (`POST /api/apply-coupon`). The inputs are `code` (string), `total_amount` (numeric cart total), and `user_id`. The constraints are: The coupon must exist and be active, `total_amount` must be strictly greater than `coupon.min_order_amount`, the current date must be before `coupon.expired_at`, and the user's usage count must be less than `coupon.max_uses_per_user`. Apply Domain Testing and BVA, especially around the `min_order_amount` and `max_uses_per_user` boundaries."
-
-**Prompt for Pool C (FR-15: Quản lý sản phẩm - Admin):**
-"Analyze feature FR-15: Product Management (Create/Update). The form takes `name` (string, required), `price` (numeric, must be >= 0), `description` (string), `imageUrl` (string), and `category_id` (integer). If `price` is parsed incorrectly, it might cause DB errors. Apply Domain Testing and BVA focusing on the `price` field (negative, zero, extremely large integers) and empty required fields (`name`)."
-
-**Prompt for Pool D (Mobile App - Giỏ hàng và Thanh toán thuộc FR-20):**
-"Analyze the Mobile App Cart & Checkout feature. The cart allows changing product `quantity`. In the code, the quantity input is parsed using `parseInt(value, 10)` and must be > 0. If it's invalid or 0, it defaults to 1. The total amount is calculated dynamically. Apply Domain Testing and BVA focusing on the item `quantity` input (negative numbers, 0, 1, letters/special characters, large numbers) and how it affects the `cartTotal`."
