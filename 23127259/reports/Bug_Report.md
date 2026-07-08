@@ -14,58 +14,132 @@
 
 ## BUG-FR02-001: Failed login counter increases by 2 instead of 1
 
-- **GitHub Issue:** [#27](https://github.com/hungtmh/HW02-Domain_Testing/issues/27)
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** API Backend
+- **Test Case liên quan:** DT-03, DT-04, DT-05 / BV-01, BV-02, BV-03
+- **Liên quan SRS:** "Sau mỗi lần đăng nhập sai, hệ thống tăng bộ đếm lên đúng 1 đơn vị." (FR-02)
 
-- **Severity:** Major
-- **Priority:** High
-- **Component:** API Backend
-- **Related test cases:** FR02-TC04, FR02-TC05, FR02-TC06
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Sử dụng tài khoản test có sẵn `test@eshop.com`.
+2. Truy cập CSDL SQLite để xác nhận `login_attempts = 0` bằng cách chạy query:
+```sql
+SELECT login_attempts FROM users WHERE email = 'test@eshop.com';
+```
+3. Thực hiện gửi 1 request đăng nhập sai password thông qua PowerShell:
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email": "test@eshop.com", "password": "WrongPassword123"}'
+```
+Hoặc bằng `curl` trong macOS/Linux:
+```bash
+curl -X POST http://localhost:3000/api/login -H "Content-Type: application/json" -d '{"email": "test@eshop.com", "password": "WrongPassword123"}'
+```
+4. Kiểm tra lại giá trị cột `login_attempts` trong CSDL SQLite:
+```sql
+SELECT login_attempts FROM users WHERE email = 'test@eshop.com';
+```
 
-**Expected:** After one wrong password, `login_attempts = 1`; after two wrong passwords, `login_attempts = 2` and the account is not locked yet.
+#### Kết quả mong đợi (Expected Result):
+- Sau 1 lần đăng nhập sai, `login_attempts` được cập nhật thành `1`.
 
-**Actual:** After one wrong password, `login_attempts = 2`; after two wrong passwords, `login_attempts = 4` and `locked_until` is created.
+#### Kết quả thực tế (Actual Result):
+- Sau 1 lần đăng nhập sai, `login_attempts` tăng lên thành `2` (và tăng lên `4` ở lần 2, dẫn đến việc bị khóa tài khoản ngay lập tức khi chưa đủ 3 lần đăng nhập sai).
+- Đoạn code gây lỗi tại [server.js:L54](../../backend/server.js#L54):
+```javascript
+const newAttempts = user.login_attempts + 2;
+```
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR02-001](./FR-02_bugs/BUG-001.png)
 
-![BUG-FR02-001](./FR-02_bugs/BUG-001.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02] [BUG-001] Failed login counter increases by 2 instead of 1`
+- **Link Issue:** [#27](https://github.com/hungtmh/HW02-Domain_Testing/issues/27)
 
 ---
 
 ## BUG-FR02-002: Account lockout duration is 180 seconds instead of 30 seconds
 
-- **GitHub Issue:** [#28](https://github.com/hungtmh/HW02-Domain_Testing/issues/28)
+- **Độ nghiêm trọng (Severity):** Medium
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** API Backend
+- **Test Case liên quan:** DT-06 / BV-04, BV-05, BV-06
+- **Liên quan SRS:** "Nếu đăng nhập sai từ 3 lần trở lên liên tiếp, tài khoản bị tạm khóa 30 giây (môi trường demo)." (FR-02)
 
-- **Severity:** Medium
-- **Priority:** Medium
-- **Component:** API Backend
-- **Related test cases:** FR02-TC07
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Kích hoạt khóa tài khoản bằng cách đăng nhập sai liên tiếp để `login_attempts >= 3` (gọi API login sai 2 lần do lỗi counter tăng 2).
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/login" -Method Post -ContentType "application/json" -Body '{"email": "test@eshop.com", "password": "WrongPassword123"}'
+```
+2. Kiểm tra giá trị cột `locked_until` trong CSDL SQLite:
+```sql
+SELECT locked_until FROM users WHERE email = 'test@eshop.com';
+```
+3. Tính toán khoảng chênh lệch giữa giá trị cột `locked_until` và thời điểm thực hiện request.
 
-**Expected:** Account is locked for about 30 seconds.
+#### Kết quả mong đợi (Expected Result):
+- Tài khoản bị khóa trong vòng 30 giây (giá trị `locked_until` bằng thời gian gửi request cộng thêm 30000ms).
 
-**Actual:** Account is locked for about 180 seconds because backend uses `Date.now() + 180000`.
+#### Kết quả thực tế (Actual Result):
+- Tài khoản bị khóa trong vòng 180 giây (3 phút) do server.js thiết lập cộng thêm 180000ms.
+- Đoạn code gây lỗi tại [server.js:L57](../../backend/server.js#L57):
+```javascript
+lockedUntil = new Date(Date.now() + 180000).toISOString();
+```
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR02-002](./FR-02_bugs/BUG-002.png)
 
-![BUG-FR02-002](./FR-02_bugs/BUG-002.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02] [BUG-002] Account lockout duration is 180 seconds instead of 30 seconds`
+- **Link Issue:** [#28](https://github.com/hungtmh/HW02-Domain_Testing/issues/28)
 
 ---
 
-## BUG-FR02-003: Login email field does not use `type="email"`
+## BUG-FR02-003: Login page violates multiple HTML5 & GUI guidelines (Form fields, label, tabOrder, and error position)
 
-- **GitHub Issue:** [#29](https://github.com/hungtmh/HW02-Domain_Testing/issues/29)
+- **Độ nghiêm trọng (Severity):** Minor
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** Frontend Web Login
+- **Test Case liên quan:** DT-07 / BV-06
+- **Liên quan SRS:** 
+  - "Trường email phải dùng type=\"email\" (có validate HTML5 format)." (FR-02 / FR-22)
+  - "Trường Mật khẩu phải dùng type=\"password\" (không hiển thị rõ)." (FR-22)
+  - "Thông báo lỗi phải xuất hiện trên nút submit, không phải bên dưới." (FR-22)
+  - "Thứ tự focus theo Tab phải đi từ trên xuống dưới, trái sang phải." (FR-21)
 
-- **Severity:** Minor
-- **Priority:** Medium
-- **Component:** Frontend Web Login
-- **Related test cases:** FR02-TC03
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Mở trình duyệt và truy cập trang đăng nhập tại địa chỉ `http://localhost:5173/login`.
+2. Kiểm tra tiêu đề form đăng nhập, các nhãn (labels) và kiểu (type) của ô nhập liệu (input).
+3. Kiểm tra vị trí hiển thị của thông báo lỗi khi đăng nhập thất bại.
+4. Bấm phím Tab để kiểm tra thứ tự chuyển focus.
 
-**Expected:** Login email field uses HTML5 `type="email"`.
+#### Kết quả mong đợi (Expected Result):
+- Tiêu đề form là "Đăng Nhập". Nhãn ô Email là "Email" với input `type="email"`.
+- Ô Mật khẩu có input `type="password"`.
+- Thứ tự Tab di chuyển tuần tự: Email -> Mật khẩu -> Quên mật khẩu -> Nút Sign In.
+- Thông báo lỗi hiển thị nằm ở phía trên nút submit.
 
-**Actual:** Login form uses label `Username` and input `type="text"`.
+#### Kết quả thực tế (Actual Result):
+- Tiêu đề form bị hiển thị sai thành "Đăng Ký".
+- Nhãn của ô nhập email hiển thị là "Username" và thẻ input sử dụng `type="text"`.
+- Ô nhập mật khẩu sử dụng `type="text"`, khiến mật khẩu hiển thị dưới dạng văn bản thường khi nhập.
+- Nút submit có thuộc tính `tabIndex={1}`, phá hỏng luồng focus bàn phím tự nhiên.
+- Khối hiển thị lỗi `{error && ...}` đặt ở dòng cuối cùng của component, nằm bên dưới nút submit.
+- Đoạn code gây lỗi tại [Login.jsx](../../frontend-web/src/pages/Login.jsx):
+  - [L24](../../frontend-web/src/pages/Login.jsx#L24): `<h2 className="...">Đăng Ký</h2>`
+  - [L28](../../frontend-web/src/pages/Login.jsx#L28): `<label className="...">Username</label>`
+  - [L30](../../frontend-web/src/pages/Login.jsx#L30): `<input type="text" ... />` (cho email)
+  - [L40](../../frontend-web/src/pages/Login.jsx#L40): `<input type="text" ... />` (cho password)
+  - [L56](../../frontend-web/src/pages/Login.jsx#L56): `tabIndex={1}` trên nút submit
+  - [L66](../../frontend-web/src/pages/Login.jsx#L66): Thẻ hiển thị lỗi `{error && <div className="...">...</div>}` nằm dưới nút submit.
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR02-003](./FR-02_bugs/BUG-003.png)
 
-![BUG-FR02-003](./FR-02_bugs/BUG-003.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-02] [BUG-003] Login page violates HTML5 & GUI guidelines`
+- **Link Issue:** [#29](https://github.com/hungtmh/HW02-Domain_Testing/issues/29)
 
 ---
 
@@ -73,102 +147,150 @@
 
 ## BUG-FR07-001: Adding same product creates duplicate rows
 
-- **GitHub Issue:** [#30](https://github.com/hungtmh/HW02-Domain_Testing/issues/30)
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** Frontend Web / API Backend
+- **Test Case liên quan:** FR07-TC03 / DT-03
+- **Liên quan SRS:** "Thêm cùng một sản phẩm vào giỏ sẽ tăng số lượng, không tạo dòng mới." (FR-07)
 
-- **Severity:** Major
-- **Priority:** High
-- **Component:** Cart API / Frontend Cart Context
-- **Related test cases:** FR07-TC03
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Đăng nhập bằng tài khoản test (lấy token).
+2. Gọi API thêm sản phẩm A (ví dụ ID: 1) vào giỏ hàng:
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/cart" -Method Post -Headers @{ Authorization = "Bearer <token>" } -ContentType "application/json" -Body '{"id": 1, "name": "Sản phẩm A", "price": 100000, "quantity": 1}'
+```
+3. Tiếp tục gọi API thêm sản phẩm A lần thứ 2 với số lượng là 1:
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/cart" -Method Post -Headers @{ Authorization = "Bearer <token>" } -ContentType "application/json" -Body '{"id": 1, "name": "Sản phẩm A", "price": 100000, "quantity": 1}'
+```
+4. Lấy danh sách sản phẩm trong giỏ hàng:
+```powershell
+Invoke-RestMethod -Uri "http://localhost:3000/api/cart" -Method Get -Headers @{ Authorization = "Bearer <token>" }
+```
 
-**Expected:** Adding the same product twice produces one row with `quantity = 2`.
+#### Kết quả mong đợi (Expected Result):
+- Giỏ hàng trả về 1 dòng duy nhất cho sản phẩm A với số lượng (`quantity`) bằng 2.
 
-**Actual:** Cart creates duplicate rows for the same product.
+#### Kết quả thực tế (Actual Result):
+- Giỏ hàng trả về 2 dòng riêng biệt cho sản phẩm A, mỗi dòng có số lượng bằng 1.
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR07-001](./FR-07_bugs/BUG-001.png)
 
-![BUG-FR07-001](./FR-07_bugs/BUG-001.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-07] [BUG-001] Adding same product creates duplicate rows`
+- **Link Issue:** [#30](https://github.com/hungtmh/HW02-Domain_Testing/issues/30)
 
 ---
 
 ## BUG-FR07-002: Cart quantity has no `+/-` controls
 
-- **GitHub Issue:** [#31](https://github.com/hungtmh/HW02-Domain_Testing/issues/31)
+- **Độ nghiêm trọng (Severity):** Major
+- **Độ ưu tiên (Priority):** High
+- **Thành phần ảnh hưởng (Component):** Frontend Web
+- **Test Case liên quan:** FR07-TC04
+- **Liên quan SRS:** "Hiển thị danh sách sản phẩm với các cột: Sản phẩm, Đơn giá, Số lượng (có nút +/- để chỉnh), Thành tiền, Thao tác." (FR-07)
 
-- **Severity:** Major
-- **Priority:** High
-- **Component:** Frontend Web Cart
-- **Related test cases:** FR07-TC04
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Thêm một sản phẩm bất kỳ vào giỏ hàng.
+2. Truy cập trang giỏ hàng tại địa chỉ `http://localhost:5173/cart`.
+3. Kiểm tra cột "Số lượng" trên giao diện giỏ hàng.
 
-**Expected:** Quantity column has `+` and `-` controls.
+#### Kết quả mong đợi (Expected Result):
+- Có các nút tăng/giảm (`+` và `-`) bên cạnh con số hiển thị số lượng để người dùng chỉnh sửa.
 
-**Actual:** Quantity is shown as plain text.
+#### Kết quả thực tế (Actual Result):
+- Cột số lượng chỉ hiển thị số lượng dưới dạng văn bản tĩnh (ví dụ: `1`), không có bất kỳ nút tăng/giảm hay ô nhập liệu nào.
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR07-002](./FR-07_bugs/BUG-002.png)
 
-![BUG-FR07-002](./FR-07_bugs/BUG-002.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-07] [BUG-002] Cart quantity has no +/- controls`
+- **Link Issue:** [#31](https://github.com/hungtmh/HW02-Domain_Testing/issues/31)
 
 ---
 
 ## BUG-FR07-003: Delete cart item does not show confirmation dialog
 
-- **GitHub Issue:** [#32](https://github.com/hungtmh/HW02-Domain_Testing/issues/32)
+- **Độ nghiêm trọng (Severity):** Medium
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** Frontend Web
+- **Test Case liên quan:** FR07-TC05
+- **Liên quan SRS:** "Nút Xóa sản phẩm phải có dialog xác nhận trước khi thực hiện." (FR-07)
 
-- **Severity:** Medium
-- **Priority:** Medium
-- **Component:** Frontend Web Cart
-- **Related test cases:** FR07-TC05
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Thêm một sản phẩm vào giỏ hàng.
+2. Truy cập trang giỏ hàng `http://localhost:5173/cart`.
+3. Nhấp vào nút "Xóa" tại cột "Thao tác" của sản phẩm đó.
 
-**Expected:** Clicking `Xóa` shows a confirmation dialog before removing the item.
+#### Kết quả mong đợi (Expected Result):
+- Hệ thống hiển thị hộp thoại xác nhận (dialog) hỏi người dùng xem họ có chắc chắn muốn xóa sản phẩm đó hay không.
 
-**Actual:** The item is removed immediately without a confirm dialog.
+#### Kết quả thực tế (Actual Result):
+- Sản phẩm bị xóa ngay lập tức khỏi giỏ hàng mà không có bất kỳ hộp thoại xác nhận nào được hiển thị.
 
-**Video Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- [Open video evidence: BUG-003.mov](./FR-07_bugs/BUG-003.mov)
+- ![BUG-FR07-003 preview](./FR-07_bugs/BUG-003-preview.png)
 
-<video controls src="./FR-07_bugs/BUG-003.mov" width="720"></video>
-
-[Open video evidence: BUG-003.mov](./FR-07_bugs/BUG-003.mov)
-
-**PDF Preview:**
-
-![BUG-FR07-003 preview](./FR-07_bugs/BUG-003-preview.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-07] [BUG-003] Delete cart item does not show confirmation dialog`
+- **Link Issue:** [#32](https://github.com/hungtmh/HW02-Domain_Testing/issues/32)
 
 ---
 
 ## BUG-FR07-004: Cart total label is wrong
 
-- **GitHub Issue:** [#33](https://github.com/hungtmh/HW02-Domain_Testing/issues/33)
+- **Độ nghiêm trọng (Severity):** Medium
+- **Độ ưu tiên (Priority):** Medium
+- **Thành phần ảnh hưởng (Component):** Frontend Web
+- **Test Case liên quan:** FR07-TC07
+- **Liên quan SRS:** "Tổng tiền hiển thị nhãn chính xác: 'Tổng cộng' (không phải 'Tổng tạm tính')." (FR-07)
 
-- **Severity:** Medium
-- **Priority:** Medium
-- **Component:** Frontend Web Cart
-- **Related test cases:** FR07-TC07
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Thêm sản phẩm vào giỏ hàng.
+2. Truy cập trang giỏ hàng `http://localhost:5173/cart`.
+3. Quan sát nhãn tiêu đề của dòng tổng tiền nằm ở dưới góc trái/phải bảng.
 
-**Expected:** Total label is `Tổng cộng`.
+#### Kết quả mong đợi (Expected Result):
+- Nhãn hiển thị là `"Tổng cộng"`.
 
-**Actual:** UI shows `Tổng tạm tính`.
+#### Kết quả thực tế (Actual Result):
+- Nhãn hiển thị trên giao diện là `"Tổng tạm tính:"`.
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR07-004](./FR-07_bugs/BUG-004.png)
 
-![BUG-FR07-004](./FR-07_bugs/BUG-004.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-07] [BUG-004] Cart total label is wrong`
+- **Link Issue:** [#33](https://github.com/hungtmh/HW02-Domain_Testing/issues/33)
 
 ---
 
 ## BUG-FR07-005: Empty cart has no illustration
 
-- **GitHub Issue:** [#34](https://github.com/hungtmh/HW02-Domain_Testing/issues/34)
+- **Độ nghiêm trọng (Severity):** Minor
+- **Độ ưu tiên (Priority):** Low
+- **Thành phần ảnh hưởng (Component):** Frontend Web
+- **Test Case liên quan:** FR07-TC01
+- **Liên quan SRS:** "Giỏ hàng trống phải có hình minh họa và thông báo rõ ràng." (FR-07)
 
-- **Severity:** Minor
-- **Priority:** Low
-- **Component:** Frontend Web Cart
-- **Related test cases:** FR07-TC01
+#### Các bước tái hiện / Lệnh chạy test thực tế:
+1. Mở trang giỏ hàng `http://localhost:5173/cart` khi chưa có sản phẩm nào.
 
-**Expected:** Empty cart has an illustration/icon and a clear message.
+#### Kết quả mong đợi (Expected Result):
+- Giao diện hiển thị hình ảnh minh họa sinh động/icon giỏ hàng trống cùng với thông báo rõ ràng.
 
-**Actual:** Empty cart only shows text and a continue shopping link.
+#### Kết quả thực tế (Actual Result):
+- Giao diện chỉ có dòng chữ `"Giỏ hàng của bạn đang trống"` và đường dẫn `"Tiếp tục mua sắm"`, không có hình ảnh/hình vẽ minh họa nào kèm theo.
 
-**Evidence:**
+#### Bằng chứng kiểm thử (Evidence / Screenshot):
+- ![BUG-FR07-005](./FR-07_bugs/BUG-005.png)
 
-![BUG-FR07-005](./FR-07_bugs/BUG-005.png)
+#### Thông tin GitHub Issue:
+- **Title:** `[FR-07] [BUG-005] Empty cart has no illustration`
+- **Link Issue:** [#34](https://github.com/hungtmh/HW02-Domain_Testing/issues/34)
 
 ---
 

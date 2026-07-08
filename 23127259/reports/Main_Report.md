@@ -30,39 +30,128 @@ Các bug report chi tiết được gom trong `Bug_Report.md`, AI audit nằm tr
 
 # FEATURE A: FR-02 - Login and Account Lockout
 
-## 1.1 Domain Analysis
+## 1. Domain Testing — FR-02: Đăng nhập & Khóa tài khoản
 
-### SRS chính
+**MSSV:** 23127259  
+**Ngày:** 2026-07-08  
+**SUT:** Web Client (`frontend-web/src/pages/Login.jsx`) + API Backend (`backend/server.js`: `/api/login`) + CSDL SQLite DB State
 
-- Người dùng nhập Email và Mật khẩu.
-- Mỗi lần đăng nhập sai tăng bộ đếm đúng 1.
-- Sai từ 3 lần liên tiếp thì khóa tài khoản 30 giây.
-- Đăng nhập thành công trả JWT và reset số lần sai.
-- Trường email trên form login phải dùng `type="email"`.
+---
 
-### Input variables
+### Bước 1 — Phạm vi
+- **FR reference:** FR-02: Đăng nhập & Khóa tài khoản trong [README.md](../../README.md)
+- **Files liên quan:**
+  - Frontend: [Login.jsx](../../frontend-web/src/pages/Login.jsx)
+  - Backend: [server.js](../../backend/server.js)
 
-| ID | Biến | Domain hợp lệ | Domain không hợp lệ / edge |
-|----|------|---------------|-----------------------------|
-| V1 | `email` | Email tồn tại, đúng định dạng | Không tồn tại, rỗng, sai định dạng |
-| V2 | `password` | Khớp mật khẩu user | Sai, rỗng |
-| V3 | `login_attempts` | 0, 1, 2, 3 | Tăng sai, không reset |
-| V4 | `locked_until` | `null` hoặc đã hết hạn | Còn hiệu lực; boundary 29s, 30s, 31s |
+### Bước 2 — Input Variables
+| ID | Biến | Kiểu | Nguồn | Ràng buộc SRS |
+|----|------|------|-------|---------------|
+| V1 | `email` | String | UI Form / API req.body | Phải đúng định dạng (`user@domain.com`), input dùng `type="email"` |
+| V2 | `password` | String | UI Form / API req.body | Khớp mật khẩu tương ứng của user trong DB |
+| V3 | `login_attempts` | Integer | CSDL users.login_attempts | Tăng đúng 1 đơn vị sau mỗi lần sai. Reset về 0 khi đăng nhập thành công. |
+| V4 | `locked_until` | ISO String | CSDL users.locked_until | Khóa 30 giây nếu đăng nhập sai từ 3 lần trở lên liên tiếp. |
 
-### Equivalence partitions
+### Bước 3 — Domains
+| Biến | Valid Domain | Invalid Domain | Special |
+|------|--------------|----------------|---------|
+| `email` | Email đã đăng ký trong hệ thống (VD: `test@eshop.com`) | Email chưa đăng ký, email sai định dạng (thiếu @, thiếu domain) | Rỗng (`""`), null, khoảng trắng đầu/cuối, SQL injection payload |
+| `password` | Khớp mật khẩu tương ứng của user | Không khớp mật khẩu trong CSDL | Rỗng (`""`), null, khoảng trắng, ký tự đặc biệt, XSS payload |
+| `login_attempts` | 0, 1, 2 | `< 0`, `>= 3` (sẽ dẫn đến trạng thái bị khóa) | `null` |
+| `locked_until` | `null` hoặc thời điểm đã trôi qua (`new Date() > new Date(locked_until)`) | Thời điểm tương lai còn hiệu lực | Giá trị không hợp lệ (chuỗi không đúng format Date) |
 
-| EP-ID | Loại | Mô tả | Đại diện |
-|-------|------|-------|----------|
-| EP-FR02-01 | Valid | Email/password đúng | `admin@eshop.com / Admin123!` |
-| EP-FR02-02 | Invalid | Email không tồn tại | `missing@example.com` |
-| EP-FR02-03 | Invalid | Password sai | `Wrong123!` |
-| EP-FR02-04 | State | Tài khoản chưa khóa sau 1-2 lần sai | attempts = 1, 2 |
-| EP-FR02-05 | State | Tài khoản bị khóa sau 3 lần sai | attempts >= 3 |
+### Bước 4 — Equivalence Partitions
+| EP-ID | Mô tả | Biến | Giá trị đại diện |
+|-------|-------|------|------------------|
+| EP-FR02-01 | Đăng nhập với email và password hợp lệ | V1, V2 | `test@eshop.com / Test1234!` |
+| EP-FR02-02 | Đăng nhập với email không tồn tại | V1 | `nonexistent@eshop.com` |
+| EP-FR02-03 | Đăng nhập với email đúng nhưng mật khẩu sai | V1, V2 | `test@eshop.com / Wrong123!` |
+| EP-FR02-04 | Đăng nhập sai lần 1 hoặc 2 (tài khoản chưa bị khóa) | V3, V4 | attempts = 1 hoặc 2, `locked_until = null` |
+| EP-FR02-05 | Đăng nhập sai từ lần 3 trở lên (tài khoản bị khóa) | V3, V4 | attempts = 3, `locked_until` còn hiệu lực |
 
-## 1.2 Executed Test Cases
+### Bước 5 — Constraints
+| C-ID | Ràng buộc | Loại |
+|------|-----------|------|
+| C-FR02-01 | Đăng nhập thành công reset bộ đếm và mở khóa | dependency |
+| C-FR02-02 | Đăng nhập thất bại tăng bộ đếm thêm đúng 1 đơn vị | dependency |
+| C-FR02-03 | Đăng nhập thất bại lần thứ 3 liên tiếp trở lên sẽ khóa tài khoản trong 30 giây | business rule |
+| C-FR02-04 | Email input ở giao diện phải dùng `type="email"` để tận dụng HTML5 validation | GUI rule |
 
-| TC-ID | Mô tả | Expected | Actual | Result | Bug |
-|-------|-------|----------|--------|--------|-----|
+### Bước 6 — Test Cases
+| TC-ID | Mô tả | Input | Expected (SRS) | EP/Constraint | Actual | Pass/Fail | Bug-ID |
+|-------|-------|-------|----------------|---------------|--------|-----------|--------|
+| DT-01 | Đăng nhập thành công với thông tin đúng | `test@eshop.com / Test1234!` | HTTP 200, trả về JWT Token và thông tin user | EP-FR02-01, C-FR02-01 | HTTP 200, token = true | PASS | - |
+| DT-02 | Đăng nhập thất bại do email không tồn tại | `nonexistent@eshop.com / Test1234!` | HTTP 401, thông báo lỗi generic "Invalid email or password" | EP-FR02-02 | HTTP 401, `"Invalid email or password"` | PASS | - |
+| DT-03 | Đăng nhập thất bại do sai mật khẩu lần 1 | `test@eshop.com / Wrong123!` | HTTP 401, DB `login_attempts = 1`, `locked_until = null` | EP-FR02-03, EP-FR02-04, C-FR02-02 | HTTP 401, DB `login_attempts = 2` | FAIL | BUG-FR02-001 |
+| DT-04 | Đăng nhập thất bại do sai mật khẩu lần 2 | `test@eshop.com / Wrong123!` | HTTP 401, DB `login_attempts = 2`, `locked_until = null` | EP-FR02-04, C-FR02-02 | HTTP 401, DB `login_attempts = 4`, `locked_until` được tạo | FAIL | BUG-FR02-001 |
+| DT-05 | Đăng nhập thất bại lần 3 liên tiếp | `test@eshop.com / Wrong123!` | HTTP 403, khóa tài khoản 30 giây, tạo `locked_until` | EP-FR02-05, C-FR02-03 | Bị khóa ở lần 2 (attempts = 4) | FAIL | BUG-FR02-001 |
+| DT-06 | Đăng nhập thành công sau khi đã mở khóa | `test@eshop.com / Test1234!` (sau 30 giây khóa) | Đăng nhập thành công, reset attempts về 0 và `locked_until = null` | C-FR02-01 | Giao diện đăng nhập bình thường | PASS | - |
+| DT-07 | Kiểm tra thuộc tính `type="email"` của email input trên UI | Render UI | Email input có thuộc tính `type="email"` | C-FR02-04 | `Login.jsx` sử dụng `type="text"` | FAIL | BUG-FR02-003 |
+
+### Tóm tắt coverage
+- Số EP: 5
+- Số TC: 7
+- EP chưa cover: 0
+
+---
+
+## 2. Boundary Value Analysis — FR-02: Đăng nhập & Khóa tài khoản
+
+**MSSV:** 23127259  
+**Ngày:** 2026-07-08
+
+---
+
+### Bước 1 — Boundaries từ SRS
+| B-ID | Biến | Ràng buộc | Min | Max | Kiểu |
+|------|------|-----------|-----|-----|------|
+| B-01 | `login_attempts` | Khóa tài khoản khi sai từ 3 lần trở lên liên tiếp | 1 | 3 | count |
+| B-02 | Lock duration | Thời gian khóa tài khoản là 30 giây | 30 giây | 30 giây | time |
+
+### Bước 2 — BVA Points
+| Point | Biến | Giá trị | Quan hệ biên |
+|-------|------|---------|--------------|
+| P-01 | `login_attempts` | 0 | Dưới biên hợp lệ (attempts = 0) |
+| P-02 | `login_attempts` | 1 | Biên hợp lệ nhỏ nhất (chưa khóa) |
+| P-03 | `login_attempts` | 2 | Biên hợp lệ trung tâm (chưa khóa) |
+| P-04 | `login_attempts` | 3 | Biên bắt đầu khóa |
+| P-05 | Lock duration | 29 giây | Ngay trước khi hết hạn khóa (chưa mở khóa) |
+| P-06 | Lock duration | 30 giây | Vừa chạm ngưỡng mở khóa |
+| P-07 | Lock duration | 31 giây | Đã qua ngưỡng mở khóa |
+
+### Bước 3 — Test Cases
+| TC-ID | Input | Boundary | Expected (SRS) | Actual | Pass/Fail | Bug-ID |
+|-------|-------|----------|----------------|--------|-----------|--------|
+| BV-01 | `test@eshop.com / Wrong123!` (lần 1) | attempts = 1 | Chưa khóa, `login_attempts = 1` | `login_attempts = 2` | FAIL | BUG-FR02-001 |
+| BV-02 | `test@eshop.com / Wrong123!` (lần 2) | attempts = 2 | Chưa khóa, `login_attempts = 2` | `login_attempts = 4`, khóa tài khoản | FAIL | BUG-FR02-001 |
+| BV-03 | `test@eshop.com / Wrong123!` (lần 3) | attempts = 3 | Khóa tài khoản 30s, `login_attempts = 3`, `locked_until` có giá trị | Đã bị khóa ở lần 2 | FAIL | BUG-FR02-001 |
+| BV-04 | Đăng nhập đúng ở giây thứ 29 của thời gian khóa | lock time = 29s | Báo lỗi khóa tài khoản (HTTP 403) | Vẫn bị khóa (thời gian khóa thực tế là 180s) | FAIL | BUG-FR02-002 |
+| BV-05 | Đăng nhập đúng ở giây thứ 30 của thời gian khóa | lock time = 30s | Đăng nhập thành công, reset attempts | Vẫn bị khóa (chưa đủ 180s) | FAIL | BUG-FR02-002 |
+| BV-06 | Đăng nhập đúng ở giây thứ 31 của thời gian khóa | lock time = 31s | Đăng nhập thành công, reset attempts | Vẫn bị khóa (chưa đủ 180s) | FAIL | BUG-FR02-002 |
+
+### Bước 4 — Robust / Edge (bổ sung)
+| TC-ID | Input | Ghi chú |
+|-------|-------|---------|
+| BV-R01 | Email = `""`, Password = `""` | Rỗng toàn bộ |
+| BV-R02 | Email = `"  test@eshop.com  "`, Password = `"Test1234!"` | Email có khoảng trắng thừa |
+| BV-R03 | Email = `' OR 1=1 --`, Password = `""` | SQL Injection kiểm tra backend |
+| BV-R04 | Email = `<script>alert('xss')</script>@eshop.com` | XSS payload trong email |
+
+### Tóm tắt
+- Số boundary: 2
+- Số TC: 10 (6 boundary + 4 robust)
+- Fail: 6
+
+---
+
+## 3. Test Execution — FR-02: Đăng nhập & Khóa tài khoản
+
+### Kết quả chạy test thực tế trên SUT
+
+Các test case trên giao diện được kiểm thử thủ công và rà soát code tĩnh; các test case trên tầng API được chạy bằng các request HTTP trực tiếp đến server thông qua PowerShell và `curl`.
+
+| TC-ID | Mô tả | Expected | Actual từ test/source | Result | Bug |
+|-------|-------|----------|-----------------------|--------|-----|
 | FR02-TC01 | Login đúng bằng user mới tạo | HTTP 200, có JWT | HTTP 200, token = true | PASS | - |
 | FR02-TC02 | Login email không tồn tại | HTTP 401, lỗi generic | HTTP 401, `Invalid email or password` | PASS | - |
 | FR02-TC03 | Form login dùng email input | `<input type="email">` | `Login.jsx` dùng `type="text"` và label `Username` | FAIL | BUG-FR02-003 |
@@ -71,22 +160,27 @@ Các bug report chi tiết được gom trong `Bug_Report.md`, AI audit nằm tr
 | FR02-TC06 | Login đúng sau 2 lần sai | Vẫn login được vì chưa đủ 3 lần sai | HTTP 403, tài khoản đã bị khóa | FAIL | BUG-FR02-001 |
 | FR02-TC07 | Thời gian khóa | Khoảng 30 giây | Khoảng 180 giây | FAIL | BUG-FR02-002 |
 
-## 1.3 Boundary Value Analysis
-
-| Boundary | Expected | Actual từ test/source | Result |
-|----------|----------|-----------------------|--------|
-| attempts = 0 | Login đúng pass, attempts reset | HTTP 200 có token | PASS |
-| attempts = 1 | Chưa khóa, attempts = 1 | attempts = 2 | FAIL |
-| attempts = 2 | Chưa khóa | Đã tạo `locked_until` | FAIL |
-| attempts = 3 | Bắt đầu khóa | Bị khóa sớm do counter tăng 2 | FAIL |
-| lock time = 30s | Hết khóa quanh giây 30 | Source dùng `180000ms` | FAIL |
-| email field type | HTML5 email validation | Source dùng `type="text"` | FAIL |
-
-## 1.4 Metrics - FR-02
-
+### Metrics - FR-02
 | Designed | Executed/Reviewed | Pass | Fail | Not run | Bugs |
 |----------|-------------------|------|------|---------|------|
-| 12 | 7 | 2 | 5 | 5 | 3 |
+| 12       | 7                 | 2    | 5    | 5       | 3    |
+
+---
+
+## 4. AI Gap Analysis — FR-02: Đăng nhập & Khóa tài khoản
+
+### 1. Những lỗi và kịch bản kiểm thử AI thông thường bỏ sót (AI Gaps)
+| Kịch bản kiểm thử / Lỗi bị bỏ sót | Lý do AI bỏ sót (Root cause of AI gap) | Bài học rút ra & Giải pháp khắc phục |
+|-----|-----|-----|
+| Kiểm tra giá trị thực của `login_attempts` trong CSDL sau mỗi lần thất bại | AI chỉ quan sát response bên ngoài (HTTP 401) mà không kiểm tra DB state trực tiếp, do đó không biết counter bị tăng 2 đơn vị mỗi lần thay vì 1. | Cần bổ sung bước kiểm thử hộp xám (Gray-box), kiểm tra trực tiếp trạng thái CSDL SQLite để xác minh logic đếm. |
+| Kiểm tra cấu trúc thẻ input (`type="email"` và `type="password"`) và thứ tự Tab | AI tập trung vào logic chức năng của form mà bỏ qua các thuộc tính HTML5/GUI của thẻ input và `tabIndex` làm ảnh hưởng đến trải nghiệm người dùng bàn phím. | Cần thực hiện review tĩnh (Static Code Review) tệp [Login.jsx](file:///Volumes/Thang/HW02-Domain_Testing/frontend-web/src/pages/Login.jsx) để đối chiếu trực tiếp cấu trúc HTML/JSX với SRS. |
+| Kiểm tra vị trí thông báo lỗi | AI thường chỉ xác nhận thông báo lỗi có hiển thị mà không đối chiếu vị trí hiển thị (trên/dưới nút submit) theo yêu cầu đặc tả GUI. | Thêm tiêu chí "vị trí hiển thị" vào expected results trong thiết kế ca kiểm thử giao diện. |
+
+### 2. Cách cải tiến prompt để tối ưu hóa AI
+1. Cung cấp cụ thể tệp nguồn [server.js](file:///Volumes/Thang/HW02-Domain_Testing/backend/server.js) phần `/api/login` cho AI và yêu cầu rà soát các giá trị hằng số (180000ms vs 30000ms, increment value `+ 2` vs `+ 1`).
+2. Yêu cầu AI sinh thêm các test case chuyên biệt cho giao diện (GUI criteria: tabOrder, inputTypes, errorPosition) thay vì chỉ kiểm tra happy path/negative path chức năng đơn thuần.
+
+---
 
 ---
 
@@ -149,6 +243,19 @@ BUG-FR07-003 được ghi nhận bằng video thao tác UI: khi bấm `Xóa` tro
 [Open video evidence: FR-07_bugs/BUG-003.mov](./FR-07_bugs/BUG-003.mov)
 
 ![BUG-FR07-003 preview](./FR-07_bugs/BUG-003-preview.png)
+
+## 2.6 AI Gap Analysis — FR-07: Shopping Cart
+
+### 1. Những lỗi và kịch bản kiểm thử AI thông thường bỏ sót (AI Gaps)
+| Kịch bản kiểm thử / Lỗi bị bỏ sót | Lý do AI bỏ sót (Root cause of AI gap) | Bài học rút ra & Giải pháp khắc phục |
+|-----|-----|-----|
+| Kiểm thử gộp sản phẩm trùng lặp trong cả Client State và Backend API State | AI thường chỉ tập trung vào logic UI của trang Cart mà bỏ qua việc API Backend (`POST /api/cart`) cũng có thể lưu trữ trùng lặp nếu client gửi request trực tiếp qua script. | Phải kết hợp kiểm thử cả hộp đen (Black-box) trên UI và hộp xám (Gray-box) bằng cách kiểm tra trực tiếp API/Database state. |
+| Kiểm tra các nút tăng/giảm (+/-) trên giao diện tĩnh (Static Review) | AI thiết kế các ca kiểm thử hành vi tăng/giảm nhưng không phát hiện ra rằng giao diện React của SUT hoàn toàn không vẽ (render) nút này. | Cần thực hiện review tĩnh (Static Code Review) tệp [Cart.jsx](file:///Volumes/Thang/HW02-Domain_Testing/frontend-web/src/pages/Cart.jsx) thay vì chỉ giả định giao diện có đủ nút dựa trên đặc tả SRS. |
+| Trạng thái giỏ hàng rỗng (Empty State) với hình ảnh minh họa | AI chỉ kiểm tra thông báo chữ "giỏ hàng trống" mà không kiểm tra sự tồn tại của hình ảnh/icon minh họa (thiếu thẻ `<img>` hoặc SVG). | Cần phân tích thiết kế giao diện chi tiết, kiểm tra sự tồn tại của các thành phần đồ họa/hình ảnh khi giỏ hàng trống. |
+
+### 2. Cách cải tiến prompt để tối ưu hóa AI
+1. Cung cấp trực tiếp mã nguồn Frontend ([CartContext.jsx](file:///Volumes/Thang/HW02-Domain_Testing/frontend-web/src/context/CartContext.jsx)) và Backend ([server.js](file:///Volumes/Thang/HW02-Domain_Testing/backend/server.js)) cho AI khi thiết kế test case, thay vì chỉ cung cấp đặc tả SRS.
+2. Yêu cầu AI tạo riêng một nhóm test case cho "Độ trung thực của Giao diện (UI Fidelity)" để đối chiếu trực tiếp các thẻ HTML/JSX thực tế (như thẻ `<button>` tăng giảm, thẻ `<img>` cho empty state) với SRS.
 
 ---
 

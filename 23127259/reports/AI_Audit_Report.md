@@ -178,6 +178,62 @@ Tôi đã hoàn tất Markdown reports và evidence. Hãy hỗ trợ tôi kiểm
 - Tôi kiểm tra lại preview video FR-07 BUG-003 trong PDF.
 - Tôi xác nhận evidence cuối cùng nằm đúng thư mục, được report tham chiếu và được liên kết từ GitHub Issues.
 - Tôi cập nhật link GitHub Issues thật (#27-#42) vào bug report sau khi tạo issue trên repo nhóm.
+---
+
+## Interaction 007 - 2026-07-08
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Gemini / Antigravity |
+| Date & Time | 2026-07-08 16:04 |
+| Phase | Report refinement |
+| Task | Cấu trúc hóa báo cáo và hoàn thiện quy trình kiểm thử cho FR-07 |
+
+### Prompt
+
+```text
+@hw02-workflow làm HW02 chp FR-07 Shopping Cart
+```
+
+### AI Output tóm tắt
+
+- Lập kế hoạch thực hiện hoàn chỉnh quy trình HW02 cho FR-07 Shopping Cart.
+- Bổ sung bảng AI Gap Analysis cho FR-07 vào [Main_Report.md](file:///Volumes/Thang/HW02-Domain_Testing/23127259/reports/Main_Report.md).
+- Cập nhật định dạng lỗi `BUG-FR07-001` đến `BUG-FR07-005` trong [Bug_Report.md](file:///Volumes/Thang/HW02-Domain_Testing/23127259/reports/Bug_Report.md) theo mẫu chuẩn của môn học, bổ sung các lệnh PowerShell `Invoke-RestMethod` cụ thể.
+
+### Human Review
+
+- Tôi đã kiểm tra các câu lệnh PowerShell và thấy chúng khớp với cấu trúc API của SUT.
+- Xác nhận các lỗi giao diện và logic đã được ghi nhận đúng thực tế.
+
+---
+
+## Interaction 008 - 2026-07-08
+
+| Field | Nội dung |
+|-------|----------|
+| Tool | Gemini / Antigravity |
+| Date & Time | 2026-07-08 16:13 |
+| Phase | Report refinement |
+| Task | Cấu trúc hóa báo cáo và hoàn thiện quy trình kiểm thử cho FR-02 |
+
+### Prompt
+
+```text
+@hw02-workflow làm HW02 cho Feature A - FR-02 Login and account lockout
+```
+
+### AI Output tóm tắt
+
+- Lập kế hoạch thực hiện hoàn chỉnh quy trình HW02 cho FR-02 Login and account lockout.
+- Định dạng và mở rộng phần kiểm thử miền (Domain Testing) và kiểm thử giá trị biên (Boundary Value Analysis) của FR-02 trong [Main_Report.md](file:///Volumes/Thang/HW02-Domain_Testing/23127259/reports/Main_Report.md) theo đúng cấu trúc 6 bước Domain Testing và 4 bước BVA của các templates.
+- Cập nhật định dạng lỗi `BUG-FR02-001` đến `BUG-FR02-003` trong [Bug_Report.md](file:///Volumes/Thang/HW02-Domain_Testing/23127259/reports/Bug_Report.md) theo mẫu chuẩn, bổ sung các lệnh PowerShell `Invoke-RestMethod` và `curl` cụ thể để tái hiện các lỗi đếm attempts và thời gian khóa, đồng thời ghi nhận chi tiết các lỗi GUI/HTML5 trên giao diện đăng nhập (tiêu đề, label, type input, tabIndex, error position).
+- Bổ sung bảng phân tích khoảng trống của AI (AI Gap Analysis) cho FR-02.
+
+### Human Review
+
+- Tôi đã kiểm tra lại các ca kiểm thử biên (BVA) và các phân vùng tương đương của FR-02.
+- Xác nhận các lỗi được phân tích chính xác, bao gồm lỗi counter tăng 2 và thời gian khóa 180 giây của server, cùng hàng loạt lỗi giao diện HTML5/GUI được chỉ ra cụ thể theo từng dòng code.
 
 ---
 
