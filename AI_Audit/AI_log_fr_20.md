@@ -13,3 +13,8 @@
 **The AI output:** "Refined EP, BVA, Test Case Design, Execution skeleton, Bug Report & Summary for FR-20 to strictly align with skills_ver3.md (v2). Converted Step 1 & 2 to structured VEC/IEC & 3-point BVA, reformatted Step 3 Test Design to 8-column format (Valid/Invalid type, no actual/severity), reformatted Step 5 Bug Report to 11-column table, added Appendix A for specifications inconsistencies and Appendix B for reserved API testing. Appended audit log to AI_log_fr_20.md."
 
 ---
+
+**Name of the AI tool:** Antigravity (powered by Gemini 3.1 Pro)
+**Date and time:** 2026-07-09T01:15:00+07:00
+**Your prompt:** "Yeu cau tuong tu nhu tren" (Apply the same execution prediction updates to FR-20 based on provided actual results).
+**The AI output:** Analyzed frontend-mobile/App.js and backend/server.js to verify the user's predicted actual results for FR-20 (Mobile App Cart & Checkout). Confirmed the logic matches the user's predictions: the off-by-one error (`parsed + 1`) at L620, the slice error (`cart.slice(0, -1)`) at L391, and parsing vulnerabilities with decimals/mixed strings. Inserted the user's test execution data into the Section 4 Skeleton. Tagged all UI-visible failed tests and Bugs (01 to 09) with '<mark>**[CẦN CHỤP ẢNH LỖI]**</mark>' to guide manual evidence capture. Updated test execution metrics in Section 6 (23 Designed, 13 Passed, 10 Failed, 0 Blocked).

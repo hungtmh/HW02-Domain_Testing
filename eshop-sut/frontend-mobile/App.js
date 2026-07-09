@@ -1,19 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  FlatList,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
-const API_URL = "http://192.168.10.13:3000/api"; // IP LAN để chạy được trên iOS/Android và thiết bị thật
+const API_URL = "http://192.168.100.246:3000/api"; // IP LAN để chạy được trên iOS/Android và thiết bị thật
 
 const formatMoney = (value) => `${Number(value).toLocaleString()} ₫`;
 
@@ -133,16 +122,13 @@ export default function App() {
 
   const addToCart = (selectedProduct, selectedQuantity = 1) => {
     const safeQuantity = normalizeQuantity(selectedQuantity);
-    const existingIndex = cart.findIndex(
-      (item) => item.id === selectedProduct.id,
-    );
+    const existingIndex = cart.findIndex((item) => item.id === selectedProduct.id);
 
     if (existingIndex >= 0) {
       const newCart = [...cart];
       newCart[existingIndex] = {
         ...newCart[existingIndex],
-        quantity:
-          normalizeQuantity(newCart[existingIndex].quantity) + safeQuantity,
+        quantity: normalizeQuantity(newCart[existingIndex].quantity) + safeQuantity,
       };
       setCart(newCart);
     } else {
@@ -208,13 +194,10 @@ export default function App() {
 
   const handleRegister = async () => {
     setRegisterError("");
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
     if (!strongPasswordRegex.test(registerPassword)) {
-      setRegisterError(
-        "Mật khẩu quá yếu! Phải dài tối thiểu 8 ký tự, gồm chữ hoa, chữ thường, số và KÝ TỰ ĐẶC BIỆT.",
-      );
+      setRegisterError("Mật khẩu quá yếu! Phải dài tối thiểu 8 ký tự, gồm chữ hoa, chữ thường, số và KÝ TỰ ĐẶC BIỆT.");
       return;
     }
 
@@ -248,9 +231,7 @@ export default function App() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Không lấy được OTP.");
-      setForgotMessage(
-        "Nếu email tồn tại trong hệ thống, mã OTP đã được gửi đến email của bạn.",
-      );
+      setForgotMessage("Nếu email tồn tại trong hệ thống, mã OTP đã được gửi đến email của bạn.");
       setForgotStep(2);
     } catch (error) {
       Alert.alert("Lỗi", error.message || "Có lỗi xảy ra.");
@@ -258,13 +239,9 @@ export default function App() {
   };
 
   const handleResetPassword = async () => {
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
     if (!strongPasswordRegex.test(newPassword)) {
-      Alert.alert(
-        "Lỗi",
-        "Mật khẩu quá yếu! Phải dài tối thiểu 8 ký tự, gồm chữ hoa, chữ thường, số và KÝ TỰ ĐẶC BIỆT.",
-      );
+      Alert.alert("Lỗi", "Mật khẩu quá yếu! Phải dài tối thiểu 8 ký tự, gồm chữ hoa, chữ thường, số và KÝ TỰ ĐẶC BIỆT.");
       return;
     }
 
@@ -274,8 +251,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: forgotEmail, resetToken, newPassword }),
       });
-      if (!response.ok)
-        throw new Error("Mã OTP không đúng hoặc có lỗi xảy ra.");
+      if (!response.ok) throw new Error("Mã OTP không đúng hoặc có lỗi xảy ra.");
       Alert.alert("Thành công", "Đổi mật khẩu thành công!");
       setView("login");
     } catch (error) {
@@ -285,10 +261,7 @@ export default function App() {
 
   const handleUpdateProfile = async () => {
     if (!/^[1-9][0-9]{8,9}$/.test(phone)) {
-      Alert.alert(
-        "Lỗi",
-        "Số điện thoại không hợp lệ. Vui lòng nhập đúng 9-10 chữ số.",
-      );
+      Alert.alert("Lỗi", "Số điện thoại không hợp lệ. Vui lòng nhập đúng 9-10 chữ số.");
       return;
     }
 
@@ -425,12 +398,8 @@ export default function App() {
         <Text style={styles.brand}>EShop Mobile</Text>
       </TouchableOpacity>
       <View style={styles.navLinks}>
-        <TouchableOpacity
-          onPress={() => (user ? setView("profile") : setView("login"))}
-        >
-          <Text style={styles.navText}>
-            {user ? `Chào, ${user.name}` : "Đăng nhập"}
-          </Text>
+        <TouchableOpacity onPress={() => (user ? setView("profile") : setView("login"))}>
+          <Text style={styles.navText}>{user ? `Chào, ${user.name}` : "Đăng nhập"}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setView("cart")}>
           <Text style={styles.navText}>Giỏ ({cart.length})</Text>
@@ -445,35 +414,23 @@ export default function App() {
       {renderHeader()}
       {children}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          © 2026 EShop SUT. Dành cho mục đích kiểm thử.
-        </Text>
+        <Text style={styles.footerText}>© 2026 EShop SUT. Dành cho mục đích kiểm thử.</Text>
       </View>
     </SafeAreaView>
   );
 
   const renderProduct = ({ item }) => (
     <View style={styles.productCard}>
-      <Image
-        source={{ uri: item.imageUrl }}
-        style={styles.productImage}
-        resizeMode="stretch"
-      />
+      <Image source={{ uri: item.imageUrl }} style={styles.productImage} resizeMode="stretch" />
       <Text style={styles.productName} numberOfLines={1}>
         {item.name}
       </Text>
       <Text style={styles.productPrice}>{formatMoney(item.price)}</Text>
       <View style={styles.productActions}>
-        <TouchableOpacity
-          style={[styles.secondaryButton, styles.actionFlex]}
-          onPress={() => openProductDetail(item.id)}
-        >
+        <TouchableOpacity style={[styles.secondaryButton, styles.actionFlex]} onPress={() => openProductDetail(item.id)}>
           <Text style={styles.secondaryButtonText}>Xem chi tiết</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.actionFlex]}
-          onPress={() => addToCart(item, 1)}
-        >
+        <TouchableOpacity style={[styles.button, styles.actionFlex]} onPress={() => addToCart(item, 1)}>
           <Text style={styles.buttonText}>Thêm vào giỏ</Text>
         </TouchableOpacity>
       </View>
@@ -486,24 +443,12 @@ export default function App() {
         <View style={styles.searchSection}>
           <Text style={styles.header}>Danh sách sản phẩm</Text>
           <View style={styles.searchRow}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Tìm kiếm..."
-              value={search}
-              onChangeText={setSearch}
-            />
-            <TouchableOpacity
-              style={styles.searchButton}
-              onPress={handleSearch}
-            >
+            <TextInput style={styles.searchInput} placeholder="Tìm kiếm..." value={search} onChangeText={setSearch} />
+            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.buttonText}>Tìm</Text>
             </TouchableOpacity>
           </View>
-          {!!search && !errorHtml && (
-            <Text style={styles.searchResultText}>
-              Kết quả tìm kiếm cho: {search}
-            </Text>
-          )}
+          {!!search && !errorHtml && <Text style={styles.searchResultText}>Kết quả tìm kiếm cho: {search}</Text>}
         </View>
 
         {errorHtml ? (
@@ -512,22 +457,9 @@ export default function App() {
           </ScrollView>
         ) : (
           <>
-            {loadingProducts && (
-              <Text style={styles.mutedText}>Đang tải...</Text>
-            )}
-            <FlatList
-              data={products}
-              renderItem={renderProduct}
-              keyExtractor={(item, index) =>
-                item?.id ? item.id.toString() : index.toString()
-              }
-              contentContainerStyle={styles.productList}
-            />
-            {products.length > 0 && (
-              <Text style={styles.resultCount}>
-                Hiển thị {products.length} sản phẩm
-              </Text>
-            )}
+            {loadingProducts && <Text style={styles.mutedText}>Đang tải...</Text>}
+            <FlatList data={products} renderItem={renderProduct} keyExtractor={(item, index) => (item?.id ? item.id.toString() : index.toString())} contentContainerStyle={styles.productList} />
+            {products.length > 0 && <Text style={styles.resultCount}>Hiển thị {products.length} sản phẩm</Text>}
           </>
         )}
       </View>,
@@ -552,22 +484,13 @@ export default function App() {
     return renderScreen(
       <ScrollView style={styles.padded}>
         <View style={styles.detailCard}>
-          <Image
-            source={{ uri: product.imageUrl }}
-            style={styles.detailImage}
-            resizeMode="stretch"
-          />
+          <Image source={{ uri: product.imageUrl }} style={styles.detailImage} resizeMode="stretch" />
           <Text style={styles.detailName}>{product.name}</Text>
           <Text style={styles.detailPrice}>{formatMoney(product.price)}</Text>
           <Text style={styles.description}>{product.description}</Text>
 
           <Text style={styles.label}>Số lượng:</Text>
-          <TextInput
-            style={styles.quantityInput}
-            keyboardType="numeric"
-            value={quantity}
-            onChangeText={setQuantity}
-          />
+          <TextInput style={styles.quantityInput} keyboardType="numeric" value={quantity} onChangeText={setQuantity} />
 
           <TouchableOpacity
             style={styles.greenButton}
@@ -576,11 +499,8 @@ export default function App() {
               setAdded(true);
               setClickCount(0);
               setTimeout(() => setAdded(false), 2000);
-            }}
-          >
-            <Text style={styles.buttonText}>
-              {added ? "Đã thêm" : "Thêm vào giỏ hàng"}
-            </Text>
+            }}>
+            <Text style={styles.buttonText}>{added ? "Đã thêm" : "Thêm vào giỏ hàng"}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>,
@@ -615,17 +535,12 @@ export default function App() {
                         onChangeText={(text) => {
                           const newCart = [...cart];
                           const parsed = parseInt(text, 10);
-                          newCart[index].quantity =
-                            Number.isFinite(parsed) && parsed > 0
-                              ? parsed + 1
-                              : 1;
+                          newCart[index].quantity = Number.isFinite(parsed) && parsed > 0 ? parsed + 1 : 1;
                           setCart(newCart);
                         }}
                       />
                     </View>
-                    <Text>
-                      Thành tiền: {formatMoney(item.price * item.quantity)}
-                    </Text>
+                    <Text>Thành tiền: {formatMoney(item.price * item.quantity)}</Text>
                   </View>
                   <TouchableOpacity onPress={() => removeFromCart(index)}>
                     <Text style={styles.deleteText}>Xóa</Text>
@@ -634,20 +549,12 @@ export default function App() {
               ))}
             </ScrollView>
 
-            <Text style={styles.totalText}>
-              Tổng tạm tính: {formatMoney(cartTotal)}
-            </Text>
+            <Text style={styles.totalText}>Tổng tạm tính: {formatMoney(cartTotal)}</Text>
             <View style={styles.actionRow}>
-              <TouchableOpacity
-                style={[styles.grayButton, styles.actionFlex]}
-                onPress={goHome}
-              >
+              <TouchableOpacity style={[styles.grayButton, styles.actionFlex]} onPress={goHome}>
                 <Text style={styles.buttonText}>← Mua tiếp</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.checkoutBtn, styles.actionFlex]}
-                onPress={openCheckout}
-              >
+              <TouchableOpacity style={[styles.checkoutBtn, styles.actionFlex]} onPress={openCheckout}>
                 <Text style={styles.buttonText}>Tiến hành thanh toán</Text>
               </TouchableOpacity>
             </View>
@@ -662,9 +569,7 @@ export default function App() {
         {checkoutSuccess ? (
           <View style={styles.successBox}>
             <Text style={styles.successTitle}>Thanh toán thành công!</Text>
-            <Text style={styles.centerText}>
-              Cảm ơn bạn đã mua sắm tại EShop.
-            </Text>
+            <Text style={styles.centerText}>Cảm ơn bạn đã mua sắm tại EShop.</Text>
             <TouchableOpacity onPress={goHome}>
               <Text style={styles.linkText}>Quay lại trang chủ</Text>
             </TouchableOpacity>
@@ -676,18 +581,12 @@ export default function App() {
             <Text style={styles.sectionTitle}>Sản phẩm:</Text>
             {cart.map((item, index) => (
               <Text key={`${item.id}-${index}`} style={styles.orderLine}>
-                • {item.name} x {String(item.quantity)} —{" "}
-                {formatMoney(item.price * item.quantity)}
+                • {item.name} x {String(item.quantity)} — {formatMoney(item.price * item.quantity)}
               </Text>
             ))}
 
             <Text style={styles.label}>Tổng tiền thanh toán (VND):</Text>
-            <TextInput
-              style={[styles.textInput, styles.disabledInput, styles.redInput]}
-              keyboardType="numeric"
-              value={String(cartTotal)}
-              editable={false}
-            />
+            <TextInput style={[styles.textInput, styles.disabledInput, styles.redInput]} keyboardType="numeric" value={String(cartTotal)} editable={false} />
 
             <View style={styles.couponBox}>
               <Text style={styles.sectionTitle}>Mã Giảm Giá</Text>
@@ -703,53 +602,23 @@ export default function App() {
                   }}
                   autoCapitalize="characters"
                 />
-                <TouchableOpacity
-                  style={[
-                    styles.orangeButton,
-                    (!couponCode.trim() || applyingCoupon) &&
-                      styles.disabledButton,
-                  ]}
-                  disabled={applyingCoupon || !couponCode.trim()}
-                  onPress={handleApplyCoupon}
-                >
-                  <Text style={styles.buttonText}>
-                    {applyingCoupon ? "..." : "Áp dụng"}
-                  </Text>
+                <TouchableOpacity style={[styles.orangeButton, (!couponCode.trim() || applyingCoupon) && styles.disabledButton]} disabled={applyingCoupon || !couponCode.trim()} onPress={handleApplyCoupon}>
+                  <Text style={styles.buttonText}>{applyingCoupon ? "..." : "Áp dụng"}</Text>
                 </TouchableOpacity>
               </View>
-              {!!couponError && (
-                <Text style={styles.errorSmall}>{couponError}</Text>
-              )}
+              {!!couponError && <Text style={styles.errorSmall}>{couponError}</Text>}
               {!!couponResult && (
                 <View style={styles.couponResult}>
                   <Text>✅ {couponResult.message}</Text>
-                  <Text>
-                    Tiết kiệm: {formatMoney(couponResult.discount_amount)}
-                  </Text>
-                  <Text style={styles.finalAmount}>
-                    Thành tiền: {formatMoney(couponResult.final_amount)}
-                  </Text>
+                  <Text>Tiết kiệm: {formatMoney(couponResult.discount_amount)}</Text>
+                  <Text style={styles.finalAmount}>Thành tiền: {formatMoney(couponResult.final_amount)}</Text>
                 </View>
               )}
             </View>
 
-            <Text style={styles.finalTotal}>
-              Tổng thanh toán:{" "}
-              {formatMoney(
-                couponResult ? couponResult.final_amount : cartTotal,
-              )}
-            </Text>
-            <TouchableOpacity
-              style={[
-                styles.checkoutBtn,
-                checkoutLoading && styles.disabledButton,
-              ]}
-              disabled={checkoutLoading}
-              onPress={handleConfirmCheckout}
-            >
-              <Text style={styles.buttonText}>
-                {checkoutLoading ? "Đang xử lý..." : "Xác Nhận Thanh Toán"}
-              </Text>
+            <Text style={styles.finalTotal}>Tổng thanh toán: {formatMoney(couponResult ? couponResult.final_amount : cartTotal)}</Text>
+            <TouchableOpacity style={[styles.checkoutBtn, checkoutLoading && styles.disabledButton]} disabled={checkoutLoading} onPress={handleConfirmCheckout}>
+              <Text style={styles.buttonText}>{checkoutLoading ? "Đang xử lý..." : "Xác Nhận Thanh Toán"}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -761,21 +630,9 @@ export default function App() {
       <ScrollView contentContainerStyle={styles.formContainer}>
         <Text style={styles.headerCenter}>Đăng Nhập</Text>
         <Text style={styles.label}>Username</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-        />
+        <TextInput style={styles.textInput} placeholder="Email" value={email} onChangeText={setEmail} autoCapitalize="none" />
         <Text style={styles.label}>Mật khẩu</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Mật khẩu"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <TextInput style={styles.textInput} placeholder="Mật khẩu" value={password} onChangeText={setPassword} secureTextEntry />
         <TouchableOpacity onPress={() => setView("forgotPassword")}>
           <Text style={styles.forgotLink}>Quên mật khẩu?</Text>
         </TouchableOpacity>
@@ -798,33 +655,14 @@ export default function App() {
     renderScreen(
       <ScrollView contentContainerStyle={styles.formContainer}>
         <Text style={styles.headerCenter}>Đăng Ký Tài Khoản</Text>
-        {!!registerError && (
-          <Text style={styles.errorBoxText}>{registerError}</Text>
-        )}
+        {!!registerError && <Text style={styles.errorBoxText}>{registerError}</Text>}
         <Text style={styles.label}>Họ Tên</Text>
-        <TextInput
-          style={styles.textInput}
-          value={registerName}
-          onChangeText={setRegisterName}
-        />
+        <TextInput style={styles.textInput} value={registerName} onChangeText={setRegisterName} />
         <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.textInput}
-          value={registerEmail}
-          onChangeText={setRegisterEmail}
-          autoCapitalize="none"
-        />
+        <TextInput style={styles.textInput} value={registerEmail} onChangeText={setRegisterEmail} autoCapitalize="none" />
         <Text style={styles.label}>Mật khẩu</Text>
-        <TextInput
-          style={styles.textInput}
-          value={registerPassword}
-          onChangeText={setRegisterPassword}
-          secureTextEntry
-        />
-        <Text style={styles.hintText}>
-          Yêu cầu: Tối thiểu 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc
-          biệt.
-        </Text>
+        <TextInput style={styles.textInput} value={registerPassword} onChangeText={setRegisterPassword} secureTextEntry />
+        <Text style={styles.hintText}>Yêu cầu: Tối thiểu 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt.</Text>
         <TouchableOpacity style={styles.redButton} onPress={handleRegister}>
           <Text style={styles.buttonText}>Đăng Ký</Text>
         </TouchableOpacity>
@@ -843,16 +681,8 @@ export default function App() {
         {forgotStep === 1 ? (
           <>
             <Text style={styles.label}>Nhập Email của bạn</Text>
-            <TextInput
-              style={styles.textInput}
-              value={forgotEmail}
-              onChangeText={setForgotEmail}
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleForgotPasswordRequest}
-            >
+            <TextInput style={styles.textInput} value={forgotEmail} onChangeText={setForgotEmail} autoCapitalize="none" />
+            <TouchableOpacity style={styles.button} onPress={handleForgotPasswordRequest}>
               <Text style={styles.buttonText}>Lấy mã OTP</Text>
             </TouchableOpacity>
           </>
@@ -860,29 +690,13 @@ export default function App() {
           <>
             <Text style={styles.messageBox}>{forgotMessage}</Text>
             <Text style={styles.label}>Mã OTP (4 số)</Text>
-            <TextInput
-              style={styles.textInput}
-              value={resetToken}
-              onChangeText={setResetToken}
-              keyboardType="numeric"
-            />
+            <TextInput style={styles.textInput} value={resetToken} onChangeText={setResetToken} keyboardType="numeric" />
             <Text style={styles.label}>Mật khẩu mới</Text>
-            <TextInput
-              style={styles.textInput}
-              value={newPassword}
-              onChangeText={setNewPassword}
-              secureTextEntry
-            />
-            <TouchableOpacity
-              style={styles.greenButton}
-              onPress={handleResetPassword}
-            >
+            <TextInput style={styles.textInput} value={newPassword} onChangeText={setNewPassword} secureTextEntry />
+            <TouchableOpacity style={styles.greenButton} onPress={handleResetPassword}>
               <Text style={styles.buttonText}>Đặt lại mật khẩu</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.greenButton}
-              onPress={() => setForgotStep(1)}
-            >
+            <TouchableOpacity style={styles.greenButton} onPress={() => setForgotStep(1)}>
               <Text style={styles.buttonText}>← Quay lại</Text>
             </TouchableOpacity>
           </>
@@ -905,36 +719,14 @@ export default function App() {
             <View style={styles.profileCard}>
               <Text style={styles.header}>Hồ sơ của bạn</Text>
               <Text style={styles.label}>Email (Không đổi)</Text>
-              <TextInput
-                style={[styles.textInput, styles.disabledInput]}
-                value={user.email || ""}
-                editable={false}
-              />
+              <TextInput style={[styles.textInput, styles.disabledInput]} value={user.email || ""} editable={false} />
               <Text style={styles.label}>Họ Tên</Text>
-              <TextInput
-                style={styles.textInput}
-                value={name}
-                onChangeText={setName}
-              />
+              <TextInput style={styles.textInput} value={name} onChangeText={setName} />
               <Text style={styles.label}>Số điện thoại</Text>
-              <TextInput
-                style={styles.textInput}
-                value={phone}
-                onChangeText={setPhone}
-                placeholder="VD: 0912345678"
-                keyboardType="phone-pad"
-              />
+              <TextInput style={styles.textInput} value={phone} onChangeText={setPhone} placeholder="VD: 0912345678" keyboardType="phone-pad" />
               <Text style={styles.label}>Địa chỉ giao hàng</Text>
-              <TextInput
-                style={[styles.textInput, styles.addressInput]}
-                value={shippingAddress}
-                onChangeText={setShippingAddress}
-                multiline
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleUpdateProfile}
-              >
+              <TextInput style={[styles.textInput, styles.addressInput]} value={shippingAddress} onChangeText={setShippingAddress} multiline />
+              <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
                 <Text style={styles.buttonText}>Cập nhật</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.redButton} onPress={logout}>
@@ -950,19 +742,11 @@ export default function App() {
                 orders.map((o) => (
                   <View key={o.id} style={styles.orderCard}>
                     <Text style={styles.orderTitle}>Đơn #{o.id}</Text>
-                    <Text>
-                      Ngày đặt:{" "}
-                      {o.created_at
-                        ? new Date(o.created_at).toLocaleDateString()
-                        : ""}
-                    </Text>
+                    <Text>Ngày đặt: {o.created_at ? new Date(o.created_at).toLocaleDateString() : ""}</Text>
                     <Text>Tổng tiền: {formatMoney(o.total_amount || 0)}</Text>
                     <Text>Trạng thái: {statusLabel(o.status)}</Text>
                     {(o.status === "pending" || o.status === "confirmed") && (
-                      <TouchableOpacity
-                        style={styles.smallRedButton}
-                        onPress={() => cancelOrder(o.id)}
-                      >
+                      <TouchableOpacity style={styles.smallRedButton} onPress={() => cancelOrder(o.id)}>
                         <Text style={styles.smallButtonText}>Hủy đơn</Text>
                       </TouchableOpacity>
                     )}

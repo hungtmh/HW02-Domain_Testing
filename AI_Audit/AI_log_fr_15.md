@@ -11,3 +11,10 @@
 **Date and time:** 2026-07-08T21:34:00+07:00
 **Your prompt:** "Kiểm chứng thông tin trên và bổ sung nếu thiếu đồng thời tinh chỉnh lại báo cáo theo đúng version mới skill3."
 **The AI output:** "Verified and updated the Domain Testing, BVA, Test Case Design, and Execution Skeleton for FR-15: Product Management. Added detailed descriptions and positions for 8 bugs, including the React state override (BUG-FR15-01), lack of labels and asterisks (BUG-FR15-02), lack of frontend validation for price (BUG-FR15-03), and h2 tag for page title (BUG-FR15-04). Also identified and added 4 other bugs (security authorization bypass, missing server-side validation, even-ID price string coercion, and unformatted price on UI). Moved all API-bypass/Postman test cases to Phụ lục B. Overwrote report/FR-15_TestReport.md."
+
+---
+
+**Name of the AI tool:** Antigravity (powered by Gemini 3.1 Pro)
+**Date and time:** 2026-07-09T01:00:00+07:00
+**Your prompt:** "Yêu cầu tương tự cho : - A01 — tạo sản phẩm thành công nhưng: (1) nhánh tạo mới không có thông báo thành công (thiếu alert, chỉ nhánh Sửa mới có), và (2) danh sách hiển thị giá thô 1500000 ₫ (L590) thay vì có phân cách hàng nghìn → không khớp Expected."
+**The AI output:** Verified the user's predictions via static code analysis of frontend-admin/src/App.jsx. Confirmed both predictions for FR15-TC-A01: the create branch lacks an `alert` (BUG-FR15-09) and the price list display lacks thousand separators (BUG-FR15-05). Evaluated the rest of the test cases and updated the Test Execution Skeleton (Section 4) with expected failure outcomes, highlighting UI issues with '<mark>**[CẦN CHỤP ẢNH LỖI]**</mark>'. Updated the Bug Report (Section 5) by adding BUG-FR15-09 (Missing success alert on creation) and assigning the correct screenshot tags. Refreshed test metrics in Section 6.

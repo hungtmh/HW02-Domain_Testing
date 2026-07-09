@@ -6,3 +6,10 @@
 **The AI output:** Generated Domain Testing, BVA analysis, and Test Case table (36 test cases in 6 groups A–F) for FR-08: Checkout. Identified 6 bugs including 3 CRITICAL severity vulnerabilities related to `editableTotal` client-side manipulation and blind `total_amount` acceptance on backend. Saved to FR-08_TestReport.md
 
 ---
+
+**Name of the AI tool:** Antigravity (powered by Gemini 3.1 Pro)
+**Date and time:** 2026-07-09T00:47:17+07:00
+**Your prompt:** "Tuong tu nhu tren thi toi co du doan nhu the nay. Kiểm chứng xem kết quả trên có sai sót không và chỗ nào cần chụp ảnh thì note chụp ảnh"
+**The AI output:** Verified all test case predictions via static code analysis of Checkout.jsx and server.js. Confirmed all critical bugs (clearCart missing, unvalidated total_amount in body, incorrect percent math formula causing 10x price increase, and min_order_amount `>` operator issue). Populated the Test Execution Skeleton table in FR-08_TestReport.md with the actual behaviors, statuses, and bug IDs. Updated the tester name to 'Ninh Văn Khải' and the date to '2026-07-09'. Corrected the testing environment from 'Web localhost:3000' to the frontend Vite URL 'Web localhost:5173'. Added BUG-FR08-06 and BUG-FR08-07 to Section 5. Highlighted all test cases and bug reports that require UI screenshot evidence with '<mark>**[CẦN CHỤP ẢNH LỖI]**</mark>' and marked backend-only tests with appropriate code/API verification tags. Updated test metrics in Section 6.
+
+---
